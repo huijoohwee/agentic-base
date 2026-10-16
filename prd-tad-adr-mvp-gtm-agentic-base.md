@@ -1,18 +1,18 @@
 ---
 title: "agentic-base: Headless Data and Views"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.34"
-revision: "0.9.34"
+version: "0.9.35"
+revision: "0.9.35"
 date: "2026-10-16"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "headless-data-base"
-prd_revision: "0.9.34"
-tad_revision: "0.9.34"
-adr_revision: "0.9.34"
-mvp_revision: "0.9.34"
-gtm_revision: "0.9.34"
+prd_revision: "0.9.35"
+tad_revision: "0.9.35"
+adr_revision: "0.9.35"
+mvp_revision: "0.9.35"
+gtm_revision: "0.9.35"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -43,7 +43,7 @@ source_docs:
 
 One joined specification for a portable structured-data base that owns versioned base/table/field contracts, persistence for explicitly assigned datasets, and deterministic Table, Multi-dimensional Table, Kanban, and Calendar projections. It also owns folder/file/document metadata and a future sync contract; bytes pass through one replaceable adapter. This private repository is the sole source for the existing Graph shared views and settings. Graph consumes Base React modules; Shoply in `agentic-commerce-os` consumes the bounded offline browser artifact. Table and Multi-dimensional Table share one Base grid; host data, actions, and lifecycle stay in consumers. No competing renderer is maintained.
 
-**Recommendation:** keep `agentic-base` private and canonical, with read-only Actions access for Graph and Shoply; do not create alternate view sources. The Base React exports and offline browser artifact are implemented on the current lane but are not yet merged or pinned. PR #1470 is closed with its branch preserved; its view work is not fully merged, and the authorized path is to resolve conflicts on that branch, refresh against current Graph main, run Integration Gate, then merge only with green proof. Graph remains runtime owner until its exact Base pin is integrated. Consumers retain schema, data, Markdown/frontmatter, authorization, actions, persistence policy, and outer shell lifecycle. Keep remote storage behind a hard $0 gate; no deployment or public release is authorized.
+**Recommendation:** keep `agentic-base` private and canonical, with read-only Actions access for Graph and Shoply; do not create alternate view sources. Base PR #3 merged at `815a57e89e5eb96139ccef8d6d2c74974c57c934` and contains the React views plus bounded offline browser artifact. This follow-on exposes the Table host provider through the existing package entry point. Graph remains runtime owner until its exact Base pin and renderer cutover are integrated; the retained Graph PR #1470 branch is being resolved against current `main` and must pass its `Integration Gate` before merge. Consumers retain schema, data, Markdown/frontmatter, authorization, actions, persistence policy, and outer shell lifecycle. Keep remote storage behind a hard $0 gate; no deployment or public release is authorized.
 
 ## PRD — purpose, users, and pain
 
@@ -491,7 +491,7 @@ This specification grants no deployment, public package publication, or producti
 
 ## MVP — smallest dependency-closed slice
 
-**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, private React package, bounded offline browser artifact, and one evidence workflow · ADR-1–6 at headless-data-base@0.9.34. R11/R12 and any remote host remain gated.
+**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, private React package, bounded offline browser artifact, and one evidence workflow · ADR-1–6 at headless-data-base@0.9.35. R11/R12 and any remote host remain gated.
 
 | Must slice | VCC | Evidence reference | Local / delivered rung |
 |---|---|---|---|
@@ -549,7 +549,7 @@ This specification grants no deployment, public package publication, or producti
 
 ## PRD-TAD-ADR-MVP-GTM coverage record
 
-**Join:** headless-data-base@0.9.34 · **As of:** 2026-10-16 · **Owner:** Portable structured-data and file product function
+**Join:** headless-data-base@0.9.35 · **As of:** 2026-10-16 · **Owner:** Portable structured-data and file product function
 
 **0:** A portable record store and view contract is a grounded technical opportunity; external pain, reach, and WTP are unknown. **1:** One developer creates and reopens an authorized dataset offline, then projects the same records into four views; observe two consumer integrations, data recovery, and time-to-first-view after an authorized package release.
 
@@ -572,7 +572,7 @@ This specification grants no deployment, public package publication, or producti
 | C15 Audience projections | deferred | Coverage record | No deck, business plan, or financial model evidence | Product function | Create only for a named audience |
 | C16 Learning and next increment | covered | GTM | Successor Context and stop conditions defined | Product function | Review after two consumer observations |
 
-**Coverage:** headless-data-base@0.9.34; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
+**Coverage:** headless-data-base@0.9.35; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
 
 ## Planning record
 
@@ -588,7 +588,7 @@ This specification grants no deployment, public package publication, or producti
 | headless-data-base@0.9.12 → 0.9.13 → 0.9.18 → 0.9.23 → 0.9.24 → 0.9.25 → 0.9.26 → 0.9.27 | C: centralize Graph Dashboard visuals and reuse while PR #1470 retains overlapping view paths · I: source-map the DashboardCanvas content shell, MainPanel settings frame and shared section header, Workflow Manager list/detail shell, selection/flip frame, section shell, metric/card shells, widget editor, template palette, resize control, and pure row/column math into Base; inject toolbar, settings, sizing, drag policy, and persistence; keep Graph Dashboard data, Markdown editing, MCP commands, and Mission composition in the consumer and route their shared visual imports to Base · D: preserve private source and Graph runtime pending integration | R: authorized private UI extraction · A: Base owns shared visual components and pure row/column layout math; Graph supplies host configuration, controls, editor fields/actions, drag/drop policy, and domain state · O: strict Dashboard TypeScript and `npm run check` pass; all 44 mapped source/candidate digests match; the responsive DashboardCanvas shell has a 1,232px content area at 1280px and remains within a 288px content area at 320px; at 1280px the board renders two 610px columns; at 320px its 288px board stacks both cells with no page overflow; neutral layout helper checks return snapped 480px and fluid `calc()` widths; resize keyboard/touch checks pass; no console warnings/errors or fetch/XHR. PR #1470 remains OPEN and GitHub reports mergeable=CONFLICTING (merge state DIRTY), at base `85cae4f78c40b5161b387b5f734978bc404f422d`, head `483a024b62ca498db7f0987d5ed8328c6f94a217`, with no reported checks. Graph `AGENTS.md` directs agents to stop when an active PR owns the semantic scope; keep the PR open and wait for integration before Graph source edits or consumer cutover. No Graph source cutover, commit, push, release, or deployment |
 | headless-data-base@0.9.29 | C: close the Graph PR integration question using current branch and gate evidence · I: run Base checks and Graph `ci:integration`; inspect PR branch protection and conflict resolution · D: keep the Base package private and retain PR #1470 open under the prior user direction | R: user-directed conflict-resolution/integration request · A: GitHub requires the `Integration Gate`; its status is reported by GitHub on the PR head · O: Base `npm run check` passed (13/13), strict React TypeScript passed (51 modules), and 54/54 migration digests match Graph main. Graph `ci:integration` passed on main, whose tree equals the locally conflict-resolved candidate; `ci:affected` reported 0/11 owner checks because no paths changed. PR #1470 remains OPEN/DIRTY/CONFLICTING; GitHub reports no PR checks, and branch protection requires `Integration Gate`. Resolving conflicts in favor of current main produces zero changed paths, so no nonempty candidate exists to merge; PR left open per prior explicit direction. No push, release, cutover, or deployment | 2026-10-16 |
 | headless-data-base@0.9.30 | C: resolve the requested Graph PR integration without reintroducing a duplicate/stale view implementation · I: compare exact PR history with protected Graph main, run its exact-head integration checks, and close the superseded duplicate · D: retain the private Base package and do not merge stale Graph branch content | R: user-directed conflict and integration request; prior instruction to keep #1470 open is superseded by the newer merge request · A: #1471 merged the functional commits from #1470, and the protected branch still requires `Integration Gate` · O: #1471 merge `40d33424a5a2c76521f011ba578889b9a2470012` records all functional #1470 commits plus later Calendar refinement; stale #1470 head compares as 10 files, 44 insertions, 347 deletions versus that merge snapshot. Exact-head local integration reached `ci:affected` but failed closed on `blocked-workflow-selection-member-binding`; no GitHub status exists for #1470. Closed #1470 as superseded, retained its branch, and made no source changes. `npm run reap` remains blocked by >256 local lane refs. No Base/Graph cutover, publish, release, or deploy | 2026-10-16 |
-| headless-data-base@0.9.34 | C: Shoply needs the same Graph table visuals in a vanilla-JS offline runtime · I: add one bounded Base browser entry and artifact while retaining Base as the only view source · D: keep the repo private, use exact consumer pins, preserve the old #1470 branch for conflict resolution, and prohibit duplicate renderers | R: prior authorization for private Base, read-only consumer keys, implementation, checks, and protected merge after green proof · A: Base owns shared visuals and headless contracts; consumers own schemas, data, actions, persistence policy, and effects · O: Base source/build added; Graph/Shoply import cutovers and PR #1470 Integration Gate remain open; no deploy | 2026-10-16 |
+| headless-data-base@0.9.35 | C: consumers need stable React entry points to reuse Base-owned Graph views · I: export the existing Table host provider through the established package subpath and pin consumers to an exact merged revision · D: keep Base private; Graph and Shoply consume one owner without local visual variants | R: user-directed private repository and read-only consumer access; latest request authorizes conflict resolution, Integration Gate, and merge of the preserved Graph branch · A: Base owns shared view presentation; consumers keep their domain models, data, authorization, actions, persistence policy, and outer shell lifecycle · O: PR #3 exact source/artifact remains merged at `815a57e`; Table host provider export is added here; Graph renderer cutover and Shoply exact pin are still open; no public release, remote storage, or deployment | 2026-10-16 |
 
 ## Open decisions and gates
 

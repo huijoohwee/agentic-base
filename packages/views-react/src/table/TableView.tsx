@@ -580,3 +580,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     </TableCore>
   )
 })
+
+export { TableHostProvider } from './TableHostContext'
+export type { TableHostAdapter } from './TableHostContext'
