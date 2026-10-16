@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#17324d">
+    <meta name="description" content="A local-first demo of one portable structured-data base and four deterministic view projections.">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+    <link rel="manifest" href="/demo/manifest.webmanifest">
+    <link rel="stylesheet" href="/demo/styles.css?v=5">
+    <title>agentic-base local demo</title>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">LOCAL · OFFLINE · HEADLESS CORE</p>
+          <h1>agentic-base</h1>
+          <p class="lede">One dataset, four deterministic projections. This demo exposes raw data; consumer-owned UI renders it.</p>
+        </div>
+        <p id="connection" class="connection" role="status">Checking local status…</p>
+      </header>
+
+      <section id="setup" class="panel" aria-labelledby="setup-title">
+        <h2 id="setup-title">Start a local sample</h2>
+        <p>Create one local base and sample tasks. Nothing is uploaded.</p>
+        <button id="create-sample" class="primary" type="button">Create local sample</button>
+      </section>
+
+      <section id="workspace" hidden>
+        <section class="panel" aria-labelledby="add-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="add-title">Add a task</h2>
+              <p id="revision" class="muted">Base revision pending</p>
+            </div>
+            <button id="reload" class="secondary" type="button">Reload data</button>
+          </div>
+          <form id="task-form" class="task-form">
+            <label>Title <input name="title" required maxlength="120" autocomplete="off"></label>
+            <label>Status
+              <select name="status" required>
+                <option>Todo</option><option>Doing</option><option>Done</option>
+              </select>
+            </label>
+            <label>Due date <input name="due" type="date"></label>
+            <label>Points <input name="points" type="number" inputmode="decimal" step="any"></label>
+            <label>Region <input name="region" maxlength="80" autocomplete="off"></label>
+            <button class="primary submit" type="submit">Save task</button>
+          </form>
+        </section>
+
+        <section class="panel" aria-labelledby="views-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="views-title">Views</h2>
+              <p id="view-caption" class="muted">Inspect a projection over the same records.</p>
+            </div>
+            <label class="view-picker">Projection
+              <select id="view-kind">
+                <option value="table">Table</option>
+                <option value="matrix">Multi-dimensional Table</option>
+                <option value="kanban">Kanban</option>
+                <option value="calendar">Calendar</option>
+              </select>
+            </label>
+            <label id="month-picker" class="month-picker" hidden>Month <input id="month" type="month"></label>
+          </div>
+          <p id="message" class="message" role="status" aria-live="polite"></p>
+          <div id="projection" class="projection" tabindex="0" aria-label="Raw projection JSON"></div>
+        </section>
+      </section>
+
+      <footer>
+        <span>Origin-scoped IndexedDB</span>
+        <span id="offline-state">Offline app shell pending</span>
+        <span>No account · No sync · No server store</span>
+      </footer>
+    </main>
+    <script type="module" src="/demo/app.mjs?v=5"></script>
+  </body>
+</html>

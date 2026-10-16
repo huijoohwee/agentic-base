@@ -1,0 +1,10 @@
+{
+  "name": "agentic-base local demo",
+  "short_name": "agentic-base",
+  "description": "Local-first structured data and view projections",
+  "start_url": "/demo/",
+  "scope": "/demo/",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#17324d"
+}

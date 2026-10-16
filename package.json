@@ -1,0 +1,53 @@
+{
+  "name": "@agentic-base/views-react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./table": "./packages/views-react/src/table/TableView.tsx",
+    "./table/multi-dimensional": "./packages/views-react/src/table/MultiDimTableView.tsx",
+    "./kanban": "./packages/views-react/src/kanban/KanbanView.tsx",
+    "./calendar": "./packages/views-react/src/calendar/index.ts",
+    "./settings": "./packages/views-react/src/settings/index.ts",
+    "./panels": "./packages/views-react/src/panels/index.ts",
+    "./dashboard": "./packages/views-react/src/dashboard/index.ts"
+  },
+  "files": [
+    "src/**/*.mjs",
+    "packages/views-react/src/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "setup": "agentic-os setup",
+    "doctor": "agentic-os doctor",
+    "lane": "agentic-os start",
+    "release:common": "agentic-os release-common",
+    "check": "node scripts/check-syntax.mjs && node scripts/compact-json.mjs --check && tsc --noEmit -p packages/views-react/tsconfig.json && node --test && node scripts/evidence.mjs && npm --prefix node_modules/agentic-os run evals",
+    "dev": "node scripts/dev-server.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "lucide-react": "^0.562.0",
+    "d3": "^7.9.0",
+    "@types/d3": "^7.4.3"
+  },
+  "peerDependenciesMeta": {
+    "d3": { "optional": true },
+    "@types/d3": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/d3": "7.4.3",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "d3": "7.9.0",
+    "lucide-react": "0.562.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "typescript": "~5.8.3",
+    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/93e08e7fed9d641682949063246d0a0006878534"
+  }
+}

@@ -1,0 +1,11 @@
+.agentic-base-floating-panel-root { position: relative; min-width: 0; min-height: 0; }
+.agentic-base-floating-panel { position: relative; display: flex; min-width: 0; min-height: 0; max-width: calc(100vw - 1rem); max-height: calc(100dvh - 1rem); overflow: hidden; border: 1px solid var(--base-border, #d1d5db); border-radius: .5rem; box-shadow: var(--base-shadow-overlay, 0 8px 24px #0003); pointer-events: auto; color: var(--base-text-primary, #111827); background: var(--base-panel, #fff); }
+.agentic-base-floating-panel-inner { display: flex; min-width: 0; min-height: 0; flex-direction: column; gap: .25rem; padding: var(--base-toolbar-compact-padding, .5rem); }
+.agentic-base-floating-panel-expanded { width: 100%; height: 100%; }
+.agentic-base-floating-panel-header { display: flex; min-width: 0; width: 100%; min-height: var(--base-control-height, 2.25rem); flex: 0 0 auto; align-items: center; justify-content: space-between; gap: .25rem; user-select: none; }
+.agentic-base-floating-panel-draggable { cursor: move; }
+.agentic-base-floating-panel-close { display: inline-flex; min-width: 2.5rem; min-height: 2.5rem; align-items: center; justify-content: center; border: 1px solid var(--base-border, #d1d5db); border-radius: .375rem; color: inherit; background: transparent; }
+.agentic-base-floating-panel-close:focus-visible { outline: 2px solid var(--base-accent, #3b82f6); outline-offset: 2px; }
+@media (max-width: 640px) {
+  .agentic-base-floating-panel { max-width: calc(100vw - .5rem); max-height: calc(100dvh - .5rem); }
+}

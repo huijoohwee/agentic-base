@@ -1,0 +1,7 @@
+.agentic-base-dashboard-widget-board { container: agentic-base-dashboard-widgets / inline-size; }
+.agentic-base-dashboard-widget-rows { display: flex; flex-wrap: wrap; align-items: flex-start; }
+.agentic-base-dashboard-widget-cell { width: 100%; flex: 0 0 100%; }
+.agentic-base-dashboard-widget-row-break { flex: 0 0 100%; height: 0; }
+@container agentic-base-dashboard-widgets (min-width: 640px) {
+  .agentic-base-dashboard-widget-cell { width: var(--agentic-base-dashboard-column-width); flex-basis: var(--agentic-base-dashboard-column-width); }
+}
