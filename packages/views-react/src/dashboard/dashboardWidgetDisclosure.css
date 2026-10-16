@@ -1,0 +1,8 @@
+.agentic-base-dashboard-disclosure {
+  border: 1px solid var(--agentic-base-dashboard-border, #d1d5db);
+  border-radius: .25rem;
+  padding: .75rem;
+  background: var(--agentic-base-dashboard-panel-bg, #fff);
+  color: var(--agentic-base-dashboard-text-primary, #111827);
+}
+.agentic-base-dashboard-disclosure-summary { cursor: pointer; font-size: .875rem; font-weight: 600; }

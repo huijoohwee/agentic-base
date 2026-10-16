@@ -1,0 +1,48 @@
+.agentic-base-settings-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--agentic-base-settings-border, #d1d5db);
+  border-radius: 0.25rem;
+  color: var(--agentic-base-settings-text, #111827);
+  background: var(--agentic-base-settings-surface, #fff);
+}
+
+.agentic-base-settings-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  border-bottom: 1px solid var(--agentic-base-settings-border, #d1d5db);
+  padding: 0.375rem 0.5rem;
+  background: var(--agentic-base-settings-header, #f9fafb);
+}
+
+.agentic-base-settings-panel-title {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 50%;
+}
+
+.agentic-base-settings-panel-summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--agentic-base-settings-muted, #6b7280);
+  font-size: 0.75rem;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agentic-base-settings-panel-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.5rem 0;
+  background: var(--agentic-base-settings-surface, #fff);
+}

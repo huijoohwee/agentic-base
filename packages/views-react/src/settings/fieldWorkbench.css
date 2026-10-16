@@ -1,0 +1,56 @@
+.agentic-base-field-workbench {
+  min-width: 0;
+  min-height: 16rem;
+  container: agentic-base-field-workbench / inline-size;
+  color: var(--agentic-base-settings-text, #111827);
+  background: var(--agentic-base-settings-surface, #fff);
+}
+
+.agentic-base-field-workbench-toolbar {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--agentic-base-settings-border, #d1d5db);
+  padding: 0.375rem 0.5rem;
+  background: var(--agentic-base-settings-header, #f9fafb);
+}
+
+.agentic-base-field-workbench-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: inherit;
+}
+
+.agentic-base-field-workbench-list,
+.agentic-base-field-workbench-detail { min-width: 0; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.agentic-base-field-workbench-list { border-right: 1px solid var(--agentic-base-settings-border, #d1d5db); }
+.agentic-base-field-workbench-list-header,
+.agentic-base-field-workbench-detail-header { min-height: 2.25rem; border-bottom: 1px solid var(--agentic-base-settings-border, #d1d5db); padding: 0.375rem 0.625rem; }
+.agentic-base-field-workbench-list-header .agentic-base-settings-section-header-title,
+.agentic-base-field-workbench-detail-header .agentic-base-settings-section-header-title { font-size: 0.8125rem; }
+.agentic-base-field-workbench-list-summary { color: var(--agentic-base-settings-muted, #6b7280); font-size: 0.75rem; }
+.agentic-base-field-workbench-list-content,
+.agentic-base-field-workbench-detail-content { min-width: 0; padding: 0.5rem; }
+.agentic-base-field-workbench-search { display: flex; min-width: 8rem; flex: 1 1 12rem; align-items: center; gap: 0.5rem; border: 1px solid var(--agentic-base-settings-border, #d1d5db); border-radius: 0.25rem; padding: 0.375rem 0.5rem; color: var(--agentic-base-settings-muted, #6b7280); background: var(--agentic-base-settings-surface, #fff); }
+.agentic-base-field-workbench-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--agentic-base-settings-text, #111827); background: transparent; font-size: 0.75rem; }
+.agentic-base-field-workbench-group + .agentic-base-field-workbench-group { margin-top: 0.75rem; }
+.agentic-base-field-workbench-group > header { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.125rem; color: var(--agentic-base-settings-muted, #6b7280); font-size: 0.75rem; }
+.agentic-base-field-workbench-group > header span { border-radius: 0.25rem; padding: 0.0625rem 0.3rem; background: var(--agentic-base-settings-header, #f9fafb); }
+.agentic-base-field-workbench-group > div { display: grid; gap: 0.25rem; }
+.agentic-base-field-workbench-item { display: flex; width: 100%; min-width: 0; align-items: center; gap: 0.5rem; border: 1px solid transparent; border-radius: 0.25rem; padding: 0.45rem; text-align: left; color: inherit; background: transparent; cursor: pointer; }
+.agentic-base-field-workbench-item:hover { background: var(--agentic-base-settings-header, #f9fafb); }
+.agentic-base-field-workbench-item[aria-pressed="true"] { border-color: var(--agentic-base-settings-active-border, #60a5fa); background: var(--agentic-base-settings-active-bg, #eff6ff); }
+.agentic-base-field-workbench-item-icon { display: grid; width: 1.25rem; height: 1.25rem; flex: 0 0 auto; place-items: center; border: 1px solid var(--agentic-base-settings-border, #d1d5db); border-radius: 0.25rem; color: var(--agentic-base-settings-muted, #6b7280); font-size: 0.625rem; }
+.agentic-base-field-workbench-item-copy { display: grid; min-width: 0; flex: 1 1 auto; gap: 0.125rem; font-size: 0.8125rem; }
+.agentic-base-field-workbench-item-copy > span,
+.agentic-base-field-workbench-item-copy > small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agentic-base-field-workbench-item-copy > small { color: var(--agentic-base-settings-muted, #6b7280); font-size: 0.6875rem; }
+.agentic-base-field-workbench-item-type { max-width: 40%; overflow: hidden; border: 1px solid var(--agentic-base-settings-border, #d1d5db); border-radius: 0.25rem; padding: 0.125rem 0.375rem; color: var(--agentic-base-settings-muted, #6b7280); font-size: 0.6875rem; text-overflow: ellipsis; white-space: nowrap; }
+
+@container agentic-base-field-workbench (max-width: 680px) {
+  .agentic-base-field-workbench-split { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(10rem, min(40vh, 24rem)) minmax(14rem, 1fr); }
+  .agentic-base-field-workbench-list { border-right: 0; border-bottom: 1px solid var(--agentic-base-settings-border, #d1d5db); }
+}

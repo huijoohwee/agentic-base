@@ -1,0 +1,51 @@
+.agentic-base-dashboard-layout {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.agentic-base-dashboard-layout-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  border-bottom: 1px solid var(--agentic-base-dashboard-border, #d1d5db);
+  padding-bottom: 0.75rem;
+}
+
+.agentic-base-dashboard-layout-heading,
+.agentic-base-dashboard-layout-description,
+.agentic-base-dashboard-layout-overview,
+.agentic-base-dashboard-layout-metrics,
+.agentic-base-dashboard-layout-sections {
+  min-width: 0;
+}
+
+.agentic-base-dashboard-layout-hero {
+  height: 72px;
+  min-width: 0;
+}
+
+.agentic-base-dashboard-layout-observation {
+  margin: 0;
+  color: var(--agentic-base-dashboard-text-tertiary, #6b7280);
+  font-size: 0.75rem;
+}
+
+.agentic-base-dashboard-layout-sections > section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .agentic-base-dashboard-layout-header {
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 28%);
+  }
+
+  .agentic-base-dashboard-layout-hero {
+    height: 96px;
+  }
+}

@@ -1,0 +1,40 @@
+@import "__AGENTIC_GRAPH_ROOT__/node_modules/tailwindcss/index.css";
+@source "../src";
+@source "__AGENTIC_GRAPH_ROOT__/canvas/src/lib/ui/responsiveElementClasses.ts";
+@source "__AGENTIC_GRAPH_ROOT__/canvas/src/lib/ui/textLayout.ts";
+@source "__AGENTIC_GRAPH_ROOT__/canvas/src/lib/ui/theme-tokens.ts";
+@source "__AGENTIC_GRAPH_ROOT__/grph-shared/src/ui/themeTokens.ts";
+@source "__AGENTIC_GRAPH_ROOT__/grph-shared/src/ui/selectedRowClasses.ts";
+@source "__AGENTIC_GRAPH_ROOT__/canvas/src/features/markdown/ui/MarkdownDataViewChips.tsx";
+@source "__AGENTIC_GRAPH_ROOT__/canvas/src/features/markdown-workspace/main/viewer/WorkspaceDataViewNewRecordButton.tsx";
+
+@import "__AGENTIC_GRAPH_ROOT__/canvas/src/styles/kgTokens.generated.css";
+@import "__AGENTIC_GRAPH_ROOT__/canvas/src/styles/application-typography.css";
+@import "__AGENTIC_GRAPH_ROOT__/canvas/src/styles/responsive-toolbar.css";
+@import "__AGENTIC_GRAPH_ROOT__/canvas/src/styles/markdown-kanban-actions.css";
+@import "__AGENTIC_GRAPH_ROOT__/canvas/src/styles/markdown-data-view-table.css";
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--kg-app-bg, #f3f4f6);
+  color: var(--kg-text-primary, #111827);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+:root {
+  --agentic-base-dashboard-panel-bg: var(--kg-panel-bg, #fff);
+  --agentic-base-dashboard-border: var(--kg-border, #d1d5db);
+  --agentic-base-dashboard-text-primary: var(--kg-text-primary, #111827);
+  --agentic-base-dashboard-text-secondary: var(--kg-text-secondary, #4b5563);
+  --agentic-base-dashboard-text-tertiary: var(--kg-text-tertiary, #6b7280);
+  --agentic-base-settings-surface: var(--kg-panel-bg, #fff);
+  --agentic-base-settings-border: var(--kg-border, #d1d5db);
+  --agentic-base-settings-header: var(--kg-panel-header-bg, #f9fafb);
+  --agentic-base-settings-text: var(--kg-text-primary, #111827);
+  --agentic-base-settings-muted: var(--kg-text-tertiary, #6b7280);
+}
+
+button, input, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }

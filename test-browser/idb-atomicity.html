@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
+    <title>IndexedDB atomicity check</title>
+  </head>
+  <body>
+    <main>
+      <h1>IndexedDB atomicity check</h1>
+      <p>This check uses a temporary database and deletes it when finished.</p>
+      <output id="result" role="status">Running…</output>
+    </main>
+    <script type="module" src="/test-browser/idb-atomicity.mjs"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+.agentic-base-dashboard-section,
+.agentic-base-dashboard-section-header { min-width: 0; }
+.agentic-base-dashboard-section-header { margin-bottom: .75rem; }
+.agentic-base-dashboard-section-description {
+  margin: .25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  color: var(--agentic-base-dashboard-text-secondary, #4b5563);
+}
