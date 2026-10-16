@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-const target = 'packages/views-react/migration-source.json'
+const targets = ['package-lock.json', 'packages/views-react/migration-source.json']
 const compactManifest = input => {
   const manifest = JSON.parse(input)
   const rows = Object.entries(manifest).map(([key, value]) => {
@@ -17,7 +17,10 @@ const compactManifest = input => {
   return `{\n${rows.map(row => `  ${row}`).join(',\n')}\n}\n`
 }
 
-const outputs = new Map([[target, compactManifest(fs.readFileSync(target, 'utf8'))]])
+const outputs = new Map([
+  [targets[0], `${JSON.stringify(JSON.parse(fs.readFileSync(targets[0], 'utf8')))}\n`],
+  [targets[1], compactManifest(fs.readFileSync(targets[1], 'utf8'))],
+])
 for (const [file, output] of outputs) {
   const lineCount = output.trimEnd().split('\n').length
   if (lineCount >= 600) throw new Error(`${file} exceeds the <600-line repository budget (${lineCount})`)

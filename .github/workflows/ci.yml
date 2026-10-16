@@ -22,6 +22,6 @@ jobs:
         with:
           node-version: 22
       - name: Install the exact development toolchain
-        run: npm install --no-audit --no-fund --package-lock=false
+        run: npm ci --no-audit --no-fund
       - name: Verify source and contract
         run: npm run check
