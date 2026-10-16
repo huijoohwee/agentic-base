@@ -1,0 +1,35 @@
+{
+  "schema": "agentic-os/repository-profile/v1",
+  "repository": "github.com/huijoohwee/agentic-base",
+  "canonical": {
+    "localRef": "refs/heads/main",
+    "remoteRef": "refs/remotes/origin/main"
+  },
+  "adapters": {
+    "repository": {
+      "id": "git",
+      "version": "1"
+    },
+    "provider": {
+      "id": "github",
+      "version": "1"
+    }
+  },
+  "requiredChecks": [],
+  "capabilities": [
+    "retain-all-cleanup"
+  ],
+  "authority": {
+    "runtime": "consumer",
+    "release": "consumer"
+  },
+  "cleanup": {
+    "worktreeProjection": "retain",
+    "worktreeRegistration": "retain",
+    "remoteTrackingRef": "retain",
+    "localBranch": "retain",
+    "remoteBranch": "retain",
+    "unreachableObjects": "retain"
+  },
+  "profileDigest": "a7cc80a4587682a5801dfdeff4712852eee6220c98db8c6f6baa94501a9d5831"
+}
