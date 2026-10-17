@@ -1,18 +1,18 @@
 ---
 title: "agentic-base: Headless Data and Views"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.35"
-revision: "0.9.35"
-date: "2026-10-16"
+version: "0.9.36"
+revision: "0.9.36"
+date: "2026-10-17"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "headless-data-base"
-prd_revision: "0.9.35"
-tad_revision: "0.9.35"
-adr_revision: "0.9.35"
-mvp_revision: "0.9.35"
-gtm_revision: "0.9.35"
+prd_revision: "0.9.36"
+tad_revision: "0.9.36"
+adr_revision: "0.9.36"
+mvp_revision: "0.9.36"
+gtm_revision: "0.9.36"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -491,7 +491,7 @@ This specification grants no deployment, public package publication, or producti
 
 ## MVP — smallest dependency-closed slice
 
-**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, private React package, bounded offline browser artifact, and one evidence workflow · ADR-1–6 at headless-data-base@0.9.35. R11/R12 and any remote host remain gated.
+**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, private React package, bounded offline browser artifact, and one evidence workflow · ADR-1–6 at headless-data-base@0.9.36. R11/R12 and any remote host remain gated.
 
 | Must slice | VCC | Evidence reference | Local / delivered rung |
 |---|---|---|---|
@@ -509,7 +509,7 @@ This specification grants no deployment, public package publication, or producti
 
 **Minimum scope:** portable contract, native browser-local structured persistence, bounded record operations, four projections, and conformance fixtures; no file-sync implementation, remote object service, UI framework, or external calls. **Won't:** all items listed under “Won't this increment.”
 
-**Readiness:** the headless core is dev-proven. One private root package source-maps Graph's Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, view settings, MainPanel/Workflow Manager presentation, and FloatingPanel shell. Table surfaces share one grid. Full parity, accessibility, FloatingPanel lifecycle, exact consumer pins, file storage, remote sync, and production VCCs remain open. Graph still owns its live runtime; Shoply in `agentic-commerce-os` is the second planned consumer. No RELEASE or DEPLOY receipt exists.
+**Readiness:** the headless core is dev-proven. One private root package source-maps Graph's Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, view settings, MainPanel/Workflow Manager presentation, and FloatingPanel shell. Table surfaces share one grid. Shared dashboard cards render consumer-owned `data-*` attributes unchanged, so host selectors and automation remain at the consumer boundary without making Base depend on consumer semantics. Full parity, accessibility, FloatingPanel lifecycle, exact consumer pins, file storage, remote sync, and production VCCs remain open. Graph still owns its live runtime; Shoply in `agentic-commerce-os` is the second planned consumer. No RELEASE or DEPLOY receipt exists.
 
 ## Roadmap and bounded execution
 
@@ -517,7 +517,7 @@ This specification grants no deployment, public package publication, or producti
 |---|---|---|---|---|---|
 | 0. Confirm source scope and consumer use cases | P1, currently hypothesized | User authorized private internal reuse of the views and settings content; no data transfer | Record exact source paths and internal grant; Base is private; require source-rights review and an approved FOSS license before public distribution, plus one dataset and two use cases before data cutover | External wait has no ETA; recheck on owner evidence | If a gate fails, keep Graph runtime intact and stop before data cutover |
 | 1. Implement local base vertical slice | P1/P2 | One owner package with IndexedDB; one CI workflow; no duplicate owner | Implemented locally; close V1–V6/V10 gaps and prove failure recovery before promotion | 24 active hours; 16 modules; <600 lines/file; <500 kB/chunk; $0 runtime, no new dependencies | Stop at cap; retain unmet VCCs; no shared-host work |
-| 1b. Move Graph UI into the Base owner | P1/P2 | Centralize Table, Multi-dimensional Table, Kanban, Calendar, saved-view/settings content, generic field configuration, neutral dashboard layout math and visuals; Graph supplies data/schema adapters and host shells | V9; exact source inventory, internal grant, dependency-closed stages, shared fixtures, and live UI parity; remove superseded Graph paths only with a gated consumer pin | 20 active minutes per slice; ≤15 modules; ≤500 KiB changed; <600 lines/file; <500 kB/chunk; lazy Calendar; no new service | Stop at rights or parity gates; retain the current Graph runtime and exact source until consumer pin |
+| 1b. Move Graph UI into the Base owner | P1/P2 | Centralize Table, Multi-dimensional Table, Kanban, Calendar, saved-view/settings content, generic field configuration, neutral dashboard layout math and visuals; Graph supplies data/schema adapters, consumer-owned `data-*` markers, and host shells | V9; exact source inventory, internal grant, dependency-closed stages, shared fixtures, and live UI parity; remove superseded Graph paths only with a gated consumer pin | 20 active minutes per slice; ≤15 modules; ≤500 KiB changed; <600 lines/file; <500 kB/chunk; lazy Calendar; no new service | Stop at rights or parity gates; retain the current Graph runtime and exact source until consumer pin |
 | 2. Prove two consumer contracts and choose a host shape | P3/P4 | Validate table and document use cases; no data movement | Two signed-off use cases; measured local/edge constraints; FOSS runtime and scoped-auth candidate | 8 active-hour discovery cap; provider/rights wait has no ETA | If no common need/host shape fits, retain local stores and defer sharing |
 | 3. Define local resource/object contract | P4 | One owner package, local metadata/bytes, no remote store | V11; mobile create/read/rename/delete/export and digest/recovery checks | 8 active hours; 8 modules; no network or paid service | Stop if browser quota, recovery, or device limits fail; remote sync stays deferred |
 | 4. Prove shared adapter and explicit sync | P3/P4 | One owner endpoint, one remote object store per namespace; optional edge reference only if hard $0 stop exists | V7/V12; local simulation, scoped auth, conflict/recovery evidence, billing cap, deploy/rollback receipts | Separate 16 active-hour cap after two-consumer gate; no overage or paid plan | Stop if no mechanical $0 cap or FOSS-compatible path; keep remote sync off |
@@ -549,7 +549,7 @@ This specification grants no deployment, public package publication, or producti
 
 ## PRD-TAD-ADR-MVP-GTM coverage record
 
-**Join:** headless-data-base@0.9.35 · **As of:** 2026-10-16 · **Owner:** Portable structured-data and file product function
+**Join:** headless-data-base@0.9.36 · **As of:** 2026-10-17 · **Owner:** Portable structured-data and file product function
 
 **0:** A portable record store and view contract is a grounded technical opportunity; external pain, reach, and WTP are unknown. **1:** One developer creates and reopens an authorized dataset offline, then projects the same records into four views; observe two consumer integrations, data recovery, and time-to-first-view after an authorized package release.
 
@@ -572,7 +572,7 @@ This specification grants no deployment, public package publication, or producti
 | C15 Audience projections | deferred | Coverage record | No deck, business plan, or financial model evidence | Product function | Create only for a named audience |
 | C16 Learning and next increment | covered | GTM | Successor Context and stop conditions defined | Product function | Review after two consumer observations |
 
-**Coverage:** headless-data-base@0.9.35; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
+**Coverage:** headless-data-base@0.9.36; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
 
 ## Planning record
 
@@ -589,6 +589,7 @@ This specification grants no deployment, public package publication, or producti
 | headless-data-base@0.9.29 | C: close the Graph PR integration question using current branch and gate evidence · I: run Base checks and Graph `ci:integration`; inspect PR branch protection and conflict resolution · D: keep the Base package private and retain PR #1470 open under the prior user direction | R: user-directed conflict-resolution/integration request · A: GitHub requires the `Integration Gate`; its status is reported by GitHub on the PR head · O: Base `npm run check` passed (13/13), strict React TypeScript passed (51 modules), and 54/54 migration digests match Graph main. Graph `ci:integration` passed on main, whose tree equals the locally conflict-resolved candidate; `ci:affected` reported 0/11 owner checks because no paths changed. PR #1470 remains OPEN/DIRTY/CONFLICTING; GitHub reports no PR checks, and branch protection requires `Integration Gate`. Resolving conflicts in favor of current main produces zero changed paths, so no nonempty candidate exists to merge; PR left open per prior explicit direction. No push, release, cutover, or deployment | 2026-10-16 |
 | headless-data-base@0.9.30 | C: resolve the requested Graph PR integration without reintroducing a duplicate/stale view implementation · I: compare exact PR history with protected Graph main, run its exact-head integration checks, and close the superseded duplicate · D: retain the private Base package and do not merge stale Graph branch content | R: user-directed conflict and integration request; prior instruction to keep #1470 open is superseded by the newer merge request · A: #1471 merged the functional commits from #1470, and the protected branch still requires `Integration Gate` · O: #1471 merge `40d33424a5a2c76521f011ba578889b9a2470012` records all functional #1470 commits plus later Calendar refinement; stale #1470 head compares as 10 files, 44 insertions, 347 deletions versus that merge snapshot. Exact-head local integration reached `ci:affected` but failed closed on `blocked-workflow-selection-member-binding`; no GitHub status exists for #1470. Closed #1470 as superseded, retained its branch, and made no source changes. `npm run reap` remains blocked by >256 local lane refs. No Base/Graph cutover, publish, release, or deploy | 2026-10-16 |
 | headless-data-base@0.9.35 | C: consumers need stable React entry points to reuse Base-owned Graph views · I: export the existing Table host provider through the established package subpath and pin consumers to an exact merged revision · D: keep Base private; Graph and Shoply consume one owner without local visual variants | R: user-directed private repository and read-only consumer access; latest request authorizes conflict resolution, Integration Gate, and merge of the preserved Graph branch · A: Base owns shared view presentation; consumers keep their domain models, data, authorization, actions, persistence policy, and outer shell lifecycle · O: PR #3 exact source/artifact remains merged at `815a57e`; Table host provider export is added here; Graph renderer cutover and Shoply exact pin are still open; no public release, remote storage, or deployment | 2026-10-16 |
+| headless-data-base@0.9.36 | C: Graph browser automation and host integrations require stable DOM markers on the shared dashboard card roots · I: expose a typed, consumer-owned `data-*` passthrough on Base `DashboardWidgetCard` and retain Graph marker ownership in its adapter · D: Base preserves shared presentation; it does not interpret consumer attribute names or own Graph selectors | R: authorized continuation of the private shared-view cutover · A: Base owns the root element and visuals; consumers own selector semantics · O: `npm run check` passes (13/13 tests, strict React TypeScript, browser artifact check, and Agentic OS budgets); Graph browser verification, PR, and protected integration remain pending; no deployment or public release | 2026-10-17 |
 
 ## Open decisions and gates
 

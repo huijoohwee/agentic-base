@@ -15,6 +15,11 @@ type DashboardWidgetDragState = {
   registerElement?: (id: string, element: HTMLElement | null) => void
 }
 
+/** Host-owned data attributes rendered unchanged on the shared card root. */
+export type DashboardWidgetDataAttributes = {
+  [attribute: `data-${string}`]: string | undefined
+}
+
 export type DashboardWidgetCardProps = DashboardWidgetDragState & {
   id: string
   label: string
@@ -24,10 +29,12 @@ export type DashboardWidgetCardProps = DashboardWidgetDragState & {
   children: React.ReactNode
   canEditFootnote?: boolean
   className?: string
+  dataAttributes?: DashboardWidgetDataAttributes
 }
 
 export function DashboardWidgetCard({
   id, label, title, subtitle, footnote, children, canEditFootnote = false, className = '',
+  dataAttributes,
   cardDragProps = { draggable: false }, cardDropProps = {}, draggingId = null, dragOverId = null,
   commitFlashId = null, dropPreview, selectionSurfaceClassName = '',
   indicatorColor = 'var(--agentic-base-dashboard-indicator, #3b82f6)', registerElement = () => {},
@@ -39,6 +46,7 @@ export function DashboardWidgetCard({
     style={visual.style} ref={element => registerElement(id, element)} data-agentic-base-dashboard-card={id}
     data-agentic-base-dashboard-card-draggable={cardDragProps.draggable ? 'true' : undefined}
     tabIndex={0} role="group" aria-label={label} aria-grabbed={cardDragProps.draggable ? dragging : undefined}
+    {...dataAttributes}
     {...cardDropProps} draggable={cardDragProps.draggable} onDragStart={cardDragProps.onDragStart} onDragEnd={cardDragProps.onDragEnd}>
     {dropTarget ? dropPreview : null}
     <header className="agentic-base-dashboard-card-header agentic-base-dashboard-card-drag-region" data-agentic-base-dashboard-card-drag-region>

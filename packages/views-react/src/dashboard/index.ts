@@ -13,7 +13,7 @@ export type { DashboardWidgetFrameProps, DashboardWidgetFrameToolbarState } from
 export { DashboardWidgetSection } from './DashboardWidgetSection'
 export type { DashboardWidgetSectionProps } from './DashboardWidgetSection'
 export { DashboardMetricTile, DashboardWidgetCard } from './DashboardWidgetCards'
-export type { DashboardMetricTileProps, DashboardWidgetCardProps } from './DashboardWidgetCards'
+export type { DashboardMetricTileProps, DashboardWidgetCardProps, DashboardWidgetDataAttributes } from './DashboardWidgetCards'
 export { DashboardWidgetLayoutSettings } from './DashboardWidgetLayoutSettings'
 export type { DashboardLayoutOption, DashboardWidgetLayoutSettingsProps } from './DashboardWidgetLayoutSettings'
 export { DashboardWidgetEditor } from './DashboardWidgetEditor'
