@@ -15,7 +15,9 @@
       "version": "1"
     }
   },
-  "requiredChecks": [],
+  "requiredChecks": [
+    "check"
+  ],
   "capabilities": [
     "retain-all-cleanup"
   ],
@@ -24,12 +26,12 @@
     "release": "consumer"
   },
   "cleanup": {
-    "worktreeProjection": "retain",
-    "worktreeRegistration": "retain",
-    "remoteTrackingRef": "retain",
     "localBranch": "retain",
     "remoteBranch": "retain",
-    "unreachableObjects": "retain"
+    "remoteTrackingRef": "retain",
+    "unreachableObjects": "retain",
+    "worktreeProjection": "retain",
+    "worktreeRegistration": "retain"
   },
-  "profileDigest": "a7cc80a4587682a5801dfdeff4712852eee6220c98db8c6f6baa94501a9d5831"
+  "profileDigest": "40d0751348bd63154629b069de9eaaa3f43b73e1b0cd612f25d9c2458a5c2be9"
 }
