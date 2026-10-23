@@ -250,7 +250,7 @@
 .agentic-base-data-row[aria-selected="true"] .agentic-base-row-drag-handle { opacity: 1; }
 .agentic-base-row-expand {
   position: absolute;
-  inset-inline-start: var(--agentic-base-data-tree-indent, 0px);
+  inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem));
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -282,7 +282,7 @@
   vertical-align: middle;
   cursor: pointer;
 }
-.agentic-base-row-select-label-group { inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + 27px); }
+.agentic-base-row-select-label-group { inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem) + 27px); }
 .agentic-base-row-index {
   display: inline-flex;
   width: 1.5rem;

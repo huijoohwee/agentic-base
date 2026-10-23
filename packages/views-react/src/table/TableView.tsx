@@ -44,6 +44,9 @@ export const TABLE_INITIAL_RENDER_ROW_LIMIT = 32
 export const TABLE_RENDER_ROW_INCREMENT = 32
 const TABLE_HIERARCHY_COLUMN_WIDTH_PX = 64
 const TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX = 80
+const TABLE_HIERARCHY_CONTROL_INSET_PX = 12
+const TABLE_HIERARCHY_CONTROL_SIZE_PX = 24
+const TABLE_HIERARCHY_GROUP_SELECTION_OFFSET_PX = 27
 export const TABLE_FIELD_COLUMN_ID = '__field'
 export const TableView = React.memo(function TableView(props: TableViewProps) {
   const {
@@ -254,7 +257,9 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     : TABLE_HIERARCHY_COLUMN_WIDTH_PX
   const hierarchyColumnWidthPx = Math.max(
     baseHierarchyColumnWidthPx,
-    maximumVisibleRowIndent * 24 + (props.selectedRowId !== undefined && Boolean(onActivateRow) ? 52 : 24),
+    maximumVisibleRowIndent * 24 + TABLE_HIERARCHY_CONTROL_INSET_PX + (props.selectedRowId !== undefined && Boolean(onActivateRow)
+      ? TABLE_HIERARCHY_GROUP_SELECTION_OFFSET_PX + TABLE_HIERARCHY_CONTROL_SIZE_PX
+      : TABLE_HIERARCHY_CONTROL_SIZE_PX),
   )
   const rowRecordTableWidth = (hasNestedRowHierarchy ? hierarchyColumnWidthPx : 0)
     + visibleColumnMeta.reduce((sum, { col }) => sum + readColumnWidth(col.id, readDefaultColumnWidth(col.name)), 0)
