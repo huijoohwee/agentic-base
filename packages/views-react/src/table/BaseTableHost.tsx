@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   BarChart3, Calendar, CheckSquare, ChevronDown, ChevronRight, ChevronsDown, ChevronsRight,
-  Clock, Hash, Link2, ListChecks, MapPin, Paperclip, Type, User, Users,
+  Clock, GripVertical, Hash, Link2, ListChecks, MapPin, Paperclip, Type, User, Users,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { TableHostAdapter } from './TableHostContext'
@@ -41,7 +41,7 @@ function BaseTagChip({ value }: { value: string }) {
     ['#fff1f2', '#fecdd3', '#9f1239'], ['#fff7ed', '#fed7aa', '#9a3412'],
   ]
   const key = value.trim().toLowerCase()
-  const fixedTone = ({ todo: 0, doing: 1, done: 3, backlog: 0, wip: 1, blocked: 4, '1': 7, '2': 5, '3': 6 } as Record<string, number>)[key]
+  const fixedTone = ({ todo: 0, doing: 1, done: 3, backlog: 0, wip: 1, blocked: 4, '1': 7, '2': 5, '3': 6, scalar: 4, map: 4, list: 4, pending: 7, keep: 3, remove: 4, accessibility: 1, 'brand profile': 0, token: 1, theme: 1, component: 1, guideline: 1, example: 1 } as Record<string, number>)[key]
   let hash = 0
   for (let index = 0; index < key.length; index += 1) hash = (hash * 31 + key.charCodeAt(index)) >>> 0
   const tone = palette[fixedTone ?? hash % palette.length]!
@@ -59,12 +59,12 @@ function BaseColumnTypeMenu(props: AnyProps) {
 function BaseColumnHeaderMenu(props: AnyProps) {
   const [filterValue, setFilterValue] = React.useState('')
   const [filterOp, setFilterOp] = React.useState(props.filter?.defaultOp ?? 'contains')
-  return <div aria-label={props.ariaLabel} style={{ display: 'grid', gap: 8, fontSize: 13 }}>
-    <div style={{ display: 'grid', gap: 4 }}>
+  return <section aria-label={props.ariaLabel} style={{ display: 'grid', gap: 8, fontSize: 13 }}>
+    <section aria-label="Column type" style={{ display: 'grid', gap: 4 }}>
       <span style={{ color: '#64748b' }}>{props.typeSummaryLabel}</span>
       <strong>{props.typeValueLabel}</strong>
       {props.renderTypeMenu?.()}
-    </div>
+    </section>
     {props.filter ? <form onSubmit={event => { event.preventDefault(); props.filter.onApply({ op: filterOp, value: filterValue }); props.closeMenu?.() }} style={{ display: 'grid', gap: 6 }}>
       <select aria-label="Filter operation" value={filterOp} onChange={event => setFilterOp(event.target.value)}>{props.filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}</select>
       <input aria-label="Filter value" value={filterValue} onChange={event => setFilterValue(event.target.value)} />
@@ -73,24 +73,24 @@ function BaseColumnHeaderMenu(props: AnyProps) {
     {props.onSortAsc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortAsc(); props.closeMenu?.() }}>Sort ascending</button> : null}
     {props.onSortDesc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortDesc(); props.closeMenu?.() }}>Sort descending</button> : null}
     {props.onHideInView ? <button type="button" style={buttonStyle} onClick={() => { props.onHideInView(); props.closeMenu?.() }}>Hide in view</button> : null}
-  </div>
+  </section>
 }
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
   const close = React.useCallback(() => setOpen(false), [])
   const Icon = props.Icon ?? Type
-  return <div style={{ position: 'relative', minWidth: 0 }}>
+  return <span role="group" aria-label={props.ariaLabel} style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
     <button type="button" aria-label={props.ariaLabel} aria-expanded={open} onClick={() => setOpen(value => !value)} style={columnHeaderStyle}>
       <Icon size={14} aria-label={props.label} />
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" aria-label="Open column menu" />
     </button>
-    {open ? <div role="dialog" aria-label={props.ariaLabel} style={popoverStyle}>
+    {open ? <section role="dialog" aria-label={props.ariaLabel} style={popoverStyle}>
       {props.menu?.({ close })}
       <button type="button" aria-label="Close column menu" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
-    </div> : null}
-  </div>
+    </section> : null}
+  </span>
 }
 
 function BaseAddColumnMenu(props: AnyProps) {
@@ -108,13 +108,21 @@ function BaseAddColumnMenu(props: AnyProps) {
 
 function BaseHierarchyCell(props: AnyProps) {
   const hasChildren = props.childCount > 0
-  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{ '--agentic-base-data-tree-depth': String(props.depth) } as React.CSSProperties}>
+  const isRecordRow = props.scope === 'row'
+  const selectionEnabled = Boolean(props.selectable && isRecordRow)
+  const expandableLabel = `${props.collapsed ? 'Expand' : 'Collapse'} nested group${props.selectionLabel ? `: ${props.selectionLabel}` : ''}`
+  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{
+    '--agentic-base-data-tree-depth': String(props.depth),
+    '--agentic-base-data-tree-indent': `${Math.max(0, Number(props.depth)) * 24}px`,
+  } as React.CSSProperties}>
     <span className="agentic-base-data-tree-control">
-      {props.selectable ? <label className="agentic-base-row-select-label">
-        <input type="checkbox" className="agentic-base-row-select" aria-label={`Select row: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onClick={event => event.stopPropagation()} onChange={() => props.onSelect?.()} />
+      {selectionEnabled && !hasChildren ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
+      {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`}>
+        <input type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onClick={event => event.stopPropagation()} onChange={() => props.onSelect?.()} />
+        {Number(props.rowNumber) > 0 ? <span className="agentic-base-row-index">{props.rowNumber}</span> : null}
       </label> : null}
-      {hasChildren ? <button type="button" aria-label={`${props.collapsed ? 'Expand' : 'Collapse'} nested row`} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: 'inherit', background: 'transparent', cursor: 'pointer' }}>
-        <ChevronRight size={12} aria-label={props.collapsed ? 'Expand nested row' : 'Collapse nested row'} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+      {hasChildren ? <button type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }}>
+        <ChevronRight size={12} aria-label={expandableLabel} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
       </button> : null}
     </span>
   </td>
@@ -171,8 +179,8 @@ function BaseCellSelectPopover(props: AnyProps) {
     props.onUpdateCell({ rowId: meta.rowId, columnId: meta.colId, nextValue: String(value ?? '') })
     props.setEditingNull()
   }
-  return <div role="dialog" aria-label={`Choose ${meta.column.name}`} style={{ position: 'fixed', zIndex: 50, top: bounds.bottom + 4, left: bounds.left, minWidth: Math.max(180, bounds.width), padding: 8, border: '1px solid #d5dae2', borderRadius: 6, background: '#fff', boxShadow: '0 8px 24px #17203324' }}>
-    {options.length ? <div style={{ display: 'grid', gap: 4, maxHeight: 240, overflowY: 'auto' }}>
+  return <section role="dialog" aria-label={`Choose ${meta.column.name}`} style={{ position: 'fixed', zIndex: 50, top: bounds.bottom + 4, left: bounds.left, minWidth: Math.max(180, bounds.width), padding: 8, border: '1px solid #d5dae2', borderRadius: 6, background: '#fff', boxShadow: '0 8px 24px #17203324' }}>
+    {options.length ? <section aria-label="Available values" style={{ display: 'grid', gap: 4, maxHeight: 240, overflowY: 'auto' }}>
       {options.map(value => {
         const selected = isMulti ? props.draft.split(/[\n,]/u).map((item: string) => item.trim()).includes(value) : props.draft === value
         return <button key={value} type="button" aria-pressed={selected} onClick={() => {
@@ -184,12 +192,12 @@ function BaseCellSelectPopover(props: AnyProps) {
           {selected ? <CheckSquare size={14} aria-label="Selected" /> : null}{value}
         </button>
       })}
-    </div> : <input aria-label={`${meta.column.name} value`} value={props.draft} onChange={event => props.setDraft(event.target.value)} />}
-    <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+    </section> : <input aria-label={`${meta.column.name} value`} value={props.draft} onChange={event => props.setDraft(event.target.value)} />}
+    <footer style={{ display: 'flex', gap: 6, marginTop: 8 }}>
       <button type="button" style={buttonStyle} onClick={() => apply()}>Apply</button>
       <button type="button" style={buttonStyle} onClick={props.setEditingNull}>Cancel</button>
-    </div>
-  </div>
+    </footer>
+  </section>
 }
 
 function readDepth(row: ViewRow, levelIndex?: number, indentIndex?: number): number {
@@ -244,6 +252,7 @@ const baseHost: TableHostAdapter = {
       text: 'text-[color:var(--agentic-base-text-primary)]',
       cellBorder: 'border-[color:var(--agentic-base-border)]',
       rowHoverHighlight: 'hover:bg-[var(--agentic-base-row-hover)]',
+      rowSelected: 'agentic-base-data-row-selected',
     },
     text: {
       primary: 'text-[color:var(--agentic-base-text-primary)]',

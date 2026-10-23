@@ -14,7 +14,9 @@ export type TableViewProps = {
   canConfigure?: boolean
   onUpdateCell: (args: { rowId: string; columnId: string; nextValue: string }) => void
   onActivateRow?: (rowId: string) => void
+  onDeselectRow?: (rowId: string) => void
   selectedRowId?: string | null
+  ariaLabel?: string
   onNewRecord?: () => void
   onAddColumn?: (args: { name: string; columnType: ViewColumnType }) => void
   onChangeColumnType?: (args: { columnId: string; nextType: ViewColumnType }) => void
@@ -41,6 +43,7 @@ const safeLinkHref = (raw: string): string | null => {
 export const TABLE_INITIAL_RENDER_ROW_LIMIT = 32
 export const TABLE_RENDER_ROW_INCREMENT = 32
 const TABLE_HIERARCHY_COLUMN_WIDTH_PX = 64
+const TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX = 80
 export const TABLE_FIELD_COLUMN_ID = '__field'
 export const TableView = React.memo(function TableView(props: TableViewProps) {
   const {
@@ -163,6 +166,17 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     [contentColumnIndex, indentColumnIndex, levelColumnIndex, lineColumnIndex, renderedRows],
   )
   const { areAllNestedRowsCollapsed, collapsedNestedRowIds, hasNestedRowHierarchy, toggleAllNestedRows, toggleNestedRow, visibleNestedRowStates } = useNestedRowCollapse({ rows: renderedRows, levelColumnIndex, indentColumnIndex })
+  const minimumVisibleRowDepth = visibleNestedRowStates.reduce((minimum: number, state: { depth: number }) => Math.min(minimum, state.depth), Number.POSITIVE_INFINITY)
+  const maximumVisibleRowIndent = visibleNestedRowStates.reduce((maximum: number, state: { depth: number }) => Math.max(maximum, state.depth - minimumVisibleRowDepth), 0)
+  const rowNumberById = new Map<string, number>()
+  const siblingRowCounts = new Map<number, number>()
+  for (const state of visibleNestedRowStates) {
+    for (const depth of siblingRowCounts.keys()) if (depth > state.depth) siblingRowCounts.delete(depth)
+    if (state.childCount > 0) continue
+    const rowNumber = (siblingRowCounts.get(state.depth) ?? 0) + 1
+    siblingRowCounts.set(state.depth, rowNumber)
+    rowNumberById.set(state.row.id, rowNumber)
+  }
   const workspaceCellSelectPanelPlacement = React.useSyncExternalStore(
     workspaceTablePreferencesStore.subscribe,
     () => workspaceTablePreferencesStore.getSnapshot().workspaceCellSelectPanelPlacement,
@@ -235,7 +249,14 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     const index = view.columns.findIndex(column => column.id === view.titleColumnId)
     return index >= 0 ? index : 0
   }, [view.columns, view.titleColumnId])
-  const rowRecordTableWidth = (hasNestedRowHierarchy ? TABLE_HIERARCHY_COLUMN_WIDTH_PX : 0)
+  const baseHierarchyColumnWidthPx = props.selectedRowId !== undefined && Boolean(onActivateRow)
+    ? TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX
+    : TABLE_HIERARCHY_COLUMN_WIDTH_PX
+  const hierarchyColumnWidthPx = Math.max(
+    baseHierarchyColumnWidthPx,
+    maximumVisibleRowIndent * 24 + (props.selectedRowId !== undefined && Boolean(onActivateRow) ? 52 : 24),
+  )
+  const rowRecordTableWidth = (hasNestedRowHierarchy ? hierarchyColumnWidthPx : 0)
     + visibleColumnMeta.reduce((sum, { col }) => sum + readColumnWidth(col.id, readDefaultColumnWidth(col.name)), 0)
     + (canMutate && props.onAddColumn ? 52 : 0)
   const tableFit = props.tableFit === 'container' ? 'container' : 'content'
@@ -284,7 +305,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
   return (
     <TableCore
       columns={[
-        ...(hasNestedRowHierarchy ? [{ id: '__hierarchy', width: TABLE_HIERARCHY_COLUMN_WIDTH_PX }] : []),
+        ...(hasNestedRowHierarchy ? [{ id: '__hierarchy', width: hierarchyColumnWidthPx }] : []),
         ...visibleColumnMeta.map(({ col }) => ({ id: col.id, width: readColumnWidth(col.id, readDefaultColumnWidth(col.name)) })),
         ...(canMutate && props.onAddColumn ? [{ id: '__add', width: 52 }] : []),
       ]}
@@ -293,11 +314,11 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       bodyClassName={themeTokens.table.text}
       tableClassName={tableSizeClassName}
       tableStyle={tableStyle}
-      ariaLabel="Table view"
+      ariaLabel={props.ariaLabel ?? 'Table view'}
       header={(
         <tr>
             {hasNestedRowHierarchy ? (
-              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] w-16 border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}>
+              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`} style={{ width: hierarchyColumnWidthPx }}>
                 <NestedRowsBulkToggle collapsed={areAllNestedRowsCollapsed} onToggle={toggleAllNestedRows} />
               </th>
             ) : null}
@@ -397,12 +418,23 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
             const isNestedRowCollapsed = collapsedNestedRowIds.has(r.id)
             const selected = props.selectedRowId === r.id
             const selectionEnabled = props.selectedRowId !== undefined && Boolean(onActivateRow) && hasNestedRowHierarchy
+            const rowIndentLevel = Math.max(0, rowDepth - minimumVisibleRowDepth)
             const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
             return <tr
               key={r.id}
-              className={[`${themeTokens.table.rowHoverHighlight} transition-colors`, onActivateRow ? 'cursor-pointer' : '', selected ? 'bg-blue-50/80 outline outline-1 -outline-offset-1 outline-[var(--kg-primary)]' : ''].join(' ')}
+              className={[
+                'agentic-base-data-row',
+                `${themeTokens.table.rowHoverHighlight} transition-colors`,
+                onActivateRow ? 'agentic-base-data-row-activatable' : '',
+                selected ? themeTokens.table.rowSelected : '',
+              ].filter(Boolean).join(' ')}
               aria-selected={props.selectedRowId === undefined ? undefined : selected}
-              data-kg-markdown-data-view-row-nested-depth={String(rowDepth)}
+              data-agentic-base-row-depth={String(rowDepth)}
+              data-agentic-base-row-parent={childCount > 0 ? 'true' : undefined}
+              data-agentic-base-row-hierarchy={hasNestedRowHierarchy ? 'true' : undefined}
+              style={hasNestedRowHierarchy
+                ? { '--agentic-base-row-label-offset': `${rowIndentLevel * 24}px` } as React.CSSProperties
+                : undefined}
               onClick={
                 onActivateRow
                   ? (e) => {
@@ -414,7 +446,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
               }
             >
               {hasNestedRowHierarchy ? (
-                <HierarchyCell cellPaddingClassName={cellPaddingClassName} depth={rowDepth} childCount={childCount} collapsed={isNestedRowCollapsed} scope="row" onToggle={() => toggleNestedRow(r.id)} selectable={selectionEnabled} selected={selected} selectionLabel={rowLabel} onSelect={() => onActivateRow?.(r.id)} />
+                <HierarchyCell cellPaddingClassName={cellPaddingClassName} depth={rowIndentLevel} childCount={childCount} collapsed={isNestedRowCollapsed} scope="row" onToggle={() => toggleNestedRow(r.id)} selectable={selectionEnabled} selected={selected} selectionLabel={rowLabel} rowNumber={rowNumberById.get(r.id)} onSelect={() => selected ? props.onDeselectRow?.(r.id) : onActivateRow?.(r.id)} />
               ) : null}
               {visibleColumnMeta.map(({ col: c, index: colIndex }) => {
                 const value = String(r.cells[colIndex] ?? '')
@@ -522,7 +554,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                       </section>
                     ) : (
                       <span className={[dataViewTableValueClass, fieldLineClassName, value ? '' : themeTokens.text.tertiary].join(' ')} aria-label={renderedDisplayIsTruncated ? renderedDisplayValue : undefined}>
-                        {value ? (renderedRawValue === value ? renderInlineText(value) : renderedDisplayValue) : (canMutate ? '—' : '')}
+                        {value ? (renderedRawValue === value ? renderInlineText(value) : renderedDisplayValue) : '—'}
                       </span>
                     ))}
                   </td>

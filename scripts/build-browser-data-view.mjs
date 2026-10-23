@@ -8,18 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = 'packages/views-react/src'
 const outputRoot = path.join(root, 'packages/views-react/dist')
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
-const inputs = [
-  `${sourceRoot}/browser/DataViewBrowserAdapter.tsx`,
-  `${sourceRoot}/browser/browserDataView.css`,
-  `${sourceRoot}/browser/index.ts`,
-  `${sourceRoot}/table/DataTableCore.tsx`,
-  `${sourceRoot}/table/TableCore.tsx`,
-]
 const digest = value => createHash('sha256').update(value).digest('hex')
-const inputRows = inputs.map(relative => {
-  const bytes = fs.readFileSync(path.join(root, relative))
-  return { path: relative, bytes: bytes.length, sha256: digest(bytes) }
-})
 const built = await build({
   absWorkingDir: root,
   entryPoints: [`${sourceRoot}/browser/index.ts`],
@@ -39,6 +28,15 @@ const built = await build({
 if (built.outputFiles.length !== 1) throw new Error('Expected one browser JavaScript bundle.')
 const outputMetadata = Object.values(built.metafile.outputs).find(output => output.entryPoint === `${sourceRoot}/browser/index.ts`)
 if (!outputMetadata || outputMetadata.imports.length) throw new Error('Browser artifact must contain no external imports.')
+const inputRows = Object.keys(built.metafile.inputs)
+  .filter(relative => relative.startsWith(`${sourceRoot}/`))
+  .concat(`${sourceRoot}/browser/browserDataView.css`)
+  .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
+  .sort()
+  .map(relative => {
+    const bytes = fs.readFileSync(path.join(root, relative))
+    return { path: relative, bytes: bytes.length, sha256: digest(bytes) }
+  })
 const files = new Map([
   ['browser-data-view.js', built.outputFiles[0].contents],
   ['browser-data-view.css', fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`))],

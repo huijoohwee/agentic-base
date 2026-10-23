@@ -13,13 +13,13 @@
   "inputs": [
     {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
-      "bytes": 5708,
-      "sha256": "ed9638a6abccf089d92a3363ce5e98569ea3547149be9f218b8328e098138960"
+      "bytes": 8753,
+      "sha256": "97e44f572c3ac9f15140b08c2f04a8c2ade5f0c9974356da3b8f9bcced2a2d1e"
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 4225,
-      "sha256": "ee6a45c167cac9525f2291e1acc5a7fa79e72df5d2bd0be4ba38641be317e78f"
+      "bytes": 9853,
+      "sha256": "b84dc06e0bc2a8427ecece087099fb8f36740402e79792eda02056cbdd3d1988"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -27,26 +27,46 @@
       "sha256": "38310e61f58a6cbec4ddc354e6bcda4319602df70886980226e86c456c8effa6"
     },
     {
-      "path": "packages/views-react/src/table/DataTableCore.tsx",
-      "bytes": 3327,
-      "sha256": "c5dc0c131d3eae6170e4395c7881c7716ec524040c2750c40cda316226fd1454"
+      "path": "packages/views-react/src/table/BaseTableHost.tsx",
+      "bytes": 22392,
+      "sha256": "25ee942063e1b76f0a7307ceff9d5ef7cd8416bec55df77d8f58e522ed6a8cc4"
+    },
+    {
+      "path": "packages/views-react/src/table/ColumnsTableView.tsx",
+      "bytes": 13379,
+      "sha256": "2484ff34770b45acca64f81c8744b4a69dce26ea40f0c8d2b7680cdb6dedf9fa"
     },
     {
       "path": "packages/views-react/src/table/TableCore.tsx",
       "bytes": 1327,
       "sha256": "c3c3daffe91f462625cba8eefa0f518ab8d0f131e4a74ccc5232e2ea33dfa9a9"
+    },
+    {
+      "path": "packages/views-react/src/table/TableHostContext.tsx",
+      "bytes": 1370,
+      "sha256": "6db07011e56ba2d5091ed010791e49b77c78a883f13bd0be623e9f0781cc24f9"
+    },
+    {
+      "path": "packages/views-react/src/table/TableView.tsx",
+      "bytes": 32533,
+      "sha256": "92eb2f26558bcb8b56a5a55f34279fcefbe9cadee80abfeb0b1c42a7b3fd69f3"
+    },
+    {
+      "path": "packages/views-react/src/table/ViewColumnType.ts",
+      "bytes": 1543,
+      "sha256": "3971e7e50ddf1fc5c3cbcdfe752e04b8421901d4394851f1fbe3cf1334e0e463"
     }
   ],
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 148590,
-      "sha256": "3444a7f66befeb59a39b506a36b3467b4801d9c15d756a90171b6ae7e2716a5d"
+      "bytes": 194447,
+      "sha256": "79106e15bcc134e3bf3a6aed137218bc9f35483025fb735e372d2c59c16135e7"
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 4225,
-      "sha256": "ee6a45c167cac9525f2291e1acc5a7fa79e72df5d2bd0be4ba38641be317e78f"
+      "bytes": 9853,
+      "sha256": "b84dc06e0bc2a8427ecece087099fb8f36740402e79792eda02056cbdd3d1988"
     }
   ]
 }

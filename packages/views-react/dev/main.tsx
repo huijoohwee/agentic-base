@@ -400,6 +400,10 @@ function Preview() {
     setSelectedRowId(rowId)
     setSelected(rows.find(row => row.id === rowId)?.cells[0] || rowId)
   }, [rows])
+  const deselectRow = React.useCallback((rowId: string) => {
+    setSelectedRowId(current => current === rowId ? null : current)
+    setSelected(current => current === (rows.find(row => row.id === rowId)?.cells[0] || rowId) ? 'No record selected' : current)
+  }, [rows])
   const onUpdateCell = React.useCallback(({ rowId, columnId, nextValue }: { rowId: string; columnId: string; nextValue: string }) => {
     const columnIndex = columns.findIndex(column => column.id === columnId)
     setRows(current => current.map(row => row.id === rowId ? { ...row, cells: row.cells.map((value, index) => index === columnIndex ? nextValue : value) } : row))
@@ -445,7 +449,7 @@ function Preview() {
   }, [])
   return <main className="mx-auto min-h-screen max-w-screen-2xl p-4 sm:p-6">
     <header className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-[color:var(--kg-border)] pb-3">
-      <div><p className="m-0 text-xs uppercase tracking-wide text-[color:var(--kg-text-tertiary)]">Private package preview · existing host adapter</p><h1 className="m-0 text-xl font-semibold text-[color:var(--kg-text-primary)]">Shared data views</h1></div>
+      <div><p className="m-0 text-xs uppercase tracking-wide text-[color:var(--kg-text-tertiary)]">Unpublished package preview · existing host adapter</p><h1 className="m-0 text-xl font-semibold text-[color:var(--kg-text-primary)]">Shared data views</h1></div>
       <span className="text-sm text-[color:var(--kg-text-secondary)]">Same Base component · host-supplied Graph tokens and controls</span>
     </header>
     <nav className="mb-3 flex min-w-0 flex-wrap gap-2" aria-label="Data view layout">
@@ -476,7 +480,7 @@ function Preview() {
       <p className="mb-2 text-xs text-[color:var(--kg-text-secondary)]">Select a lane control to edit status, drag a card, or use its menu. No data leaves this browser tab.</p>
       <KanbanHostProvider value={graphHost}><KanbanView view={view} canMutate onUpdateCell={onUpdateCell} onNewRecord={onNewRecord} onReorderRows={onReorderRows} onActivateRow={activateRow} /></KanbanHostProvider>
     </> : <React.Suspense fallback={<p role="status">Loading Table view…</p>}>
-      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} onActivateRow={activateRow} />
+      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} onActivateRow={activateRow} onDeselectRow={deselectRow} />
     </React.Suspense>}
     <output className="mt-4 block border-t border-[color:var(--kg-border)] pt-3 text-xs text-[color:var(--kg-text-secondary)]" aria-live="polite">{selected}</output>
   </main>
