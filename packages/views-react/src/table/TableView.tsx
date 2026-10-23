@@ -239,7 +239,9 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     + visibleColumnMeta.reduce((sum, { col }) => sum + readColumnWidth(col.id, readDefaultColumnWidth(col.name)), 0)
     + (canMutate && props.onAddColumn ? 52 : 0)
   const tableFit = props.tableFit === 'container' ? 'container' : 'content'
-  const tableSizeClassName = tableFit === 'container' ? 'min-w-full w-full' : 'min-w-max w-max'
+  const tableSizeClassName = tableFit === 'container'
+    ? 'min-w-full w-full agentic-base-data-table'
+    : 'min-w-max w-max agentic-base-data-table'
   const tableStyle: React.CSSProperties = tableFit === 'container'
     ? { minWidth: rowRecordTableWidth, width: '100%' }
     : { width: rowRecordTableWidth }
@@ -583,3 +585,4 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
 
 export { TableHostProvider } from './TableHostContext'
 export type { TableHostAdapter } from './TableHostContext'
+export { createBaseTableHost } from './BaseTableHost'
