@@ -4,6 +4,13 @@
   width: 100%;
   height: 100%;
   overflow: auto;
+  --agentic-base-table-header-bg: #f9fafb;
+  --agentic-base-text-primary: #111827;
+  --agentic-base-text-secondary: #4b5563;
+  --agentic-base-text-tertiary: #6b7280;
+  --agentic-base-border: #e5e7eb;
+  --agentic-base-row-hover: #f9fafb;
+  --agentic-base-action-hover: #f3f4f6;
   color: var(--agentic-base-text, #172033);
   background: var(--agentic-base-surface, #fff);
   font: 14px/1.45 system-ui, sans-serif;
@@ -41,6 +48,7 @@
 .agentic-base-data-row-activatable:focus-visible,
 .agentic-base-data-more:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: -2px; }
 .agentic-base-data-table td > span { white-space: pre-wrap; }
+.agentic-base-data-table td > span.agentic-base-data-table-value { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .agentic-base-data-empty { color: var(--agentic-base-muted, #64748b); }
 .agentic-base-data-more {
   min-height: 44px;

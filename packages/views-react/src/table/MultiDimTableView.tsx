@@ -16,3 +16,5 @@ export const MultiDimTableView = React.memo(function MultiDimTableView(props: Mu
     <TableView {...tableProps} />
   </section>
 })
+
+export { createBaseTableHost } from './BaseTableHost'

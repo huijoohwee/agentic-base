@@ -138,6 +138,38 @@ const initialRows: ViewRow[] = [
   { id: 'task-5', cells: ['Publish release notes', 'Done', 'Alex', 'release', '2026-10-31'] },
 ]
 
+const multiDimensionalColumns = [
+  { id: 'level', name: 'Level', kind: 'text' as const },
+  { id: 'indent', name: 'Indent', kind: 'text' as const },
+  { id: 'key', name: 'Key', kind: 'text' as const },
+  { id: 'type', name: 'Type', kind: 'select' as const, options: ['map', 'scalar'] },
+  { id: 'scalar-value', name: 'Scalar Value', kind: 'select' as const, options: ['Accessibility', 'Brand profile', 'Component'] },
+  { id: 'list-value', name: 'List Value', kind: 'multi-select' as const },
+  { id: 'summary', name: 'Summary', kind: 'text' as const },
+  { id: 'output', name: 'Output', kind: 'select' as const, options: ['PENDING', 'KEEP', 'REMOVE'] },
+]
+
+const multiDimensionalRows: ViewRow[] = [
+  { id: 'group-accessibility', cells: ['', '0', 'Accessibility', 'map', '', '', '5 items', ''] },
+  { id: 'narrow-overflow', cells: ['L1', '2', 'Narrow viewport overflow', 'scalar', 'Accessibility', 'mobile, touch', 'Review guidance; not conformance evidence', 'PENDING'] },
+  { id: 'reading-order', cells: ['L1', '2', 'Reading order and text hierarchy', 'scalar', 'Accessibility', 'keyboard, screen reader', 'Review guidance; not conformance evidence', 'PENDING'] },
+  { id: 'reduced-motion', cells: ['L1', '2', 'Reduced motion and rendered contrast', 'scalar', 'Accessibility', 'motion, contrast', 'Review guidance; not conformance evidence', 'PENDING'] },
+  { id: 'group-brand', cells: ['', '0', 'Brand profile', 'map', '', '', '3 items', ''] },
+  { id: 'graph-mark', cells: ['L1', '2', 'Agentic Graph mark', 'scalar', 'Brand profile', 'SVG, favicon', 'Brand asset reference', 'PENDING'] },
+  { id: 'airvio-favicon', cells: ['L1', '2', 'Airvio favicon asset', 'scalar', 'Brand profile', 'SVG, PNG', 'Brand asset reference', 'PENDING'] },
+  { id: 'group-components', cells: ['', '0', 'Components', 'map', '', '', '3 items', ''] },
+  { id: 'table-core', cells: ['L1', '2', 'TableCore', 'scalar', 'Component', 'React, table grid', 'Shared table runtime', 'PENDING'] },
+  { id: 'multi-dimensional-table', cells: ['L1', '2', 'MultiDimTableView', 'scalar', 'Component', 'React, workspace view', 'Shared multi-dimensional table entry point', 'PENDING'] },
+  { id: 'browser-adapter', cells: ['L1', '2', '@agentic-base/views-react · offline browser DataViewAdapter', 'scalar', 'Component', 'offline, browser', 'Browser table adapter; source-local review only', 'PENDING'] },
+]
+
+const multiDimensionalView: ViewModel = {
+  columns: multiDimensionalColumns,
+  rows: multiDimensionalRows,
+  titleColumnId: 'key',
+  groupByColumnId: 'scalar-value',
+}
+
 function DashboardPreview() {
   const [showNotes, setShowNotes] = React.useState(true)
   const [chartsExpanded, setChartsExpanded] = React.useState(true)
@@ -349,7 +381,7 @@ function Preview() {
   const [rows, setRows] = React.useState(initialRows)
   const [selected, setSelected] = React.useState('No record selected')
   const [selectedRowId, setSelectedRowId] = React.useState<string | null>(null)
-  const [activeView, setActiveView] = React.useState<'kanban' | 'table' | 'multiDimensional' | 'calendar' | 'dashboard' | 'workflow' | 'viewSettings' | 'floatingPanel'>('kanban')
+  const [activeView, setActiveView] = React.useState<'kanban' | 'table' | 'multiDimensional' | 'calendar' | 'dashboard' | 'workflow' | 'viewSettings' | 'floatingPanel'>('multiDimensional')
   const [savedViews, setSavedViews] = React.useState<SavedViewOption[]>([
     { id: 'table', name: 'Table View', layout: 'table' },
     { id: 'multi', name: 'Multi-dimensional Table', layout: 'multiDimTable' },
@@ -444,7 +476,7 @@ function Preview() {
       <p className="mb-2 text-xs text-[color:var(--kg-text-secondary)]">Select a lane control to edit status, drag a card, or use its menu. No data leaves this browser tab.</p>
       <KanbanHostProvider value={graphHost}><KanbanView view={view} canMutate onUpdateCell={onUpdateCell} onNewRecord={onNewRecord} onReorderRows={onReorderRows} onActivateRow={activateRow} /></KanbanHostProvider>
     </> : <React.Suspense fallback={<p role="status">Loading Table view…</p>}>
-      <LazyTablePreview view={view} multiDimensional={activeView === 'multiDimensional'} canMutate onUpdateCell={onUpdateCell} onNewRecord={onNewRecord} selectedRowId={selectedRowId} onActivateRow={activateRow} />
+      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} onActivateRow={activateRow} />
     </React.Suspense>}
     <output className="mt-4 block border-t border-[color:var(--kg-border)] pt-3 text-xs text-[color:var(--kg-text-secondary)]" aria-live="polite">{selected}</output>
   </main>

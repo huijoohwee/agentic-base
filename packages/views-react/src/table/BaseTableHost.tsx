@@ -1,0 +1,315 @@
+import React from 'react'
+import {
+  BarChart3, Calendar, CheckSquare, ChevronDown, ChevronRight, ChevronsDown, ChevronsRight,
+  Clock, Hash, Link2, ListChecks, MapPin, Paperclip, Type, User, Users,
+} from 'lucide-react'
+import type { ComponentType } from 'react'
+import type { TableHostAdapter } from './TableHostContext'
+import type { ViewRow } from '../kanban/KanbanHostContext'
+import { VIEW_COLUMN_TYPE_OPTIONS } from './ViewColumnType'
+
+type AnyProps = Record<string, any>
+type RowState<Row extends ViewRow> = { row: Row; depth: number; childCount: number; hidden: boolean }
+const neutralStoreSnapshot = Object.freeze({ workspaceCellSelectPanelPlacement: 'bottom-start' })
+const iconByColumnType: Record<string, ComponentType<any>> = {
+  checkbox: CheckSquare, date: Calendar, 'multi-select': ListChecks, number: Hash,
+  progress: BarChart3, select: ChevronDown, link: Link2, geodata: MapPin, text: Type,
+  'created-time': Clock, attachment: Paperclip, member: Users, 'created-by': User,
+}
+
+const buttonStyle: React.CSSProperties = {
+  minHeight: 28, display: 'inline-flex', alignItems: 'center', gap: 6,
+  border: '1px solid #d5dae2', borderRadius: 4, padding: '3px 7px',
+  color: '#334155', background: '#fff', font: 'inherit', cursor: 'pointer',
+}
+const columnHeaderStyle: React.CSSProperties = {
+  minHeight: 24, display: 'inline-flex', alignItems: 'center', gap: 6,
+  minWidth: 0, maxWidth: '100%', padding: 0, border: 0, borderRadius: 0,
+  color: '#172033', background: 'transparent', font: 'inherit', cursor: 'pointer',
+}
+const popoverStyle: React.CSSProperties = {
+  position: 'absolute', zIndex: 40, top: '100%', left: 0, minWidth: 190,
+  padding: 8, border: '1px solid #d5dae2', borderRadius: 6,
+  background: '#fff', color: '#172033', boxShadow: '0 8px 24px #17203324',
+}
+
+function BaseTagChip({ value }: { value: string }) {
+  const palette = [
+    ['#f3f4f6', '#d1d5db', '#4b5563'], ['#eff6ff', '#bfdbfe', '#1d4ed8'],
+    ['#fefce8', '#fde68a', '#a16207'], ['#f0fdf4', '#bbf7d0', '#15803d'],
+    ['#fef2f2', '#fecaca', '#b91c1c'], ['#faf5ff', '#e9d5ff', '#6b21a8'],
+    ['#fff1f2', '#fecdd3', '#9f1239'], ['#fff7ed', '#fed7aa', '#9a3412'],
+  ]
+  const key = value.trim().toLowerCase()
+  const fixedTone = ({ todo: 0, doing: 1, done: 3, backlog: 0, wip: 1, blocked: 4, '1': 7, '2': 5, '3': 6 } as Record<string, number>)[key]
+  let hash = 0
+  for (let index = 0; index < key.length; index += 1) hash = (hash * 31 + key.charCodeAt(index)) >>> 0
+  const tone = palette[fixedTone ?? hash % palette.length]!
+  return <span style={{ display: 'inline-flex', alignItems: 'center', minHeight: 25, padding: '4px 8px', border: `1px solid ${tone[1]}`, borderRadius: 4, background: tone[0], color: tone[2], whiteSpace: 'nowrap', fontSize: 12, lineHeight: '15px', fontWeight: 500 }}>{value}</span>
+}
+
+function BaseColumnTypeMenu(props: AnyProps) {
+  return <select aria-label={props.ariaLabel} value={props.value} disabled={props.disabled} onChange={event => { props.onSelect?.(event.target.value); props.close?.() }}>
+    {VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}
+  </select>
+}
+
+function BaseColumnHeaderMenu(props: AnyProps) {
+  const [filterValue, setFilterValue] = React.useState('')
+  const [filterOp, setFilterOp] = React.useState(props.filter?.defaultOp ?? 'contains')
+  return <div aria-label={props.ariaLabel} style={{ display: 'grid', gap: 8, fontSize: 13 }}>
+    <div style={{ display: 'grid', gap: 4 }}>
+      <span style={{ color: '#64748b' }}>{props.typeSummaryLabel}</span>
+      <strong>{props.typeValueLabel}</strong>
+      {props.renderTypeMenu?.()}
+    </div>
+    {props.filter ? <form onSubmit={event => { event.preventDefault(); props.filter.onApply({ op: filterOp, value: filterValue }); props.closeMenu?.() }} style={{ display: 'grid', gap: 6 }}>
+      <select aria-label="Filter operation" value={filterOp} onChange={event => setFilterOp(event.target.value)}>{props.filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}</select>
+      <input aria-label="Filter value" value={filterValue} onChange={event => setFilterValue(event.target.value)} />
+      <button type="submit" style={buttonStyle}>Apply filter</button>
+    </form> : null}
+    {props.onSortAsc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortAsc(); props.closeMenu?.() }}>Sort ascending</button> : null}
+    {props.onSortDesc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortDesc(); props.closeMenu?.() }}>Sort descending</button> : null}
+    {props.onHideInView ? <button type="button" style={buttonStyle} onClick={() => { props.onHideInView(); props.closeMenu?.() }}>Hide in view</button> : null}
+  </div>
+}
+
+function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
+  const [open, setOpen] = React.useState(false)
+  const close = React.useCallback(() => setOpen(false), [])
+  const Icon = props.Icon ?? Type
+  return <div style={{ position: 'relative', minWidth: 0 }}>
+    <button type="button" aria-label={props.ariaLabel} aria-expanded={open} onClick={() => setOpen(value => !value)} style={columnHeaderStyle}>
+      <Icon aria-hidden="true" size={14} />
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
+      <ChevronDown aria-hidden="true" size={13} color="#64748b" />
+    </button>
+    {open ? <div role="dialog" aria-label={props.ariaLabel} style={popoverStyle}>
+      {props.menu?.({ close })}
+      <button type="button" aria-label="Close column menu" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
+    </div> : null}
+  </div>
+}
+
+function BaseAddColumnMenu(props: AnyProps) {
+  const [name, setName] = React.useState('')
+  const [type, setType] = React.useState('text')
+  return <details style={{ position: 'relative' }}>
+    <summary aria-label={props.ariaLabel} className={props.summaryClassName} style={{ ...buttonStyle, cursor: 'pointer', listStyle: 'none' }}>+</summary>
+    <form style={popoverStyle} onSubmit={event => { event.preventDefault(); if (!name.trim() || !props.canMutate) return; props.onAddColumn({ name: name.trim(), columnType: type }); setName('') }}>
+      <label style={{ display: 'grid', gap: 4 }}>Column name<input value={name} onChange={event => setName(event.target.value)} /></label>
+      <label style={{ display: 'grid', gap: 4, marginTop: 8 }}>Type<select value={type} onChange={event => setType(event.target.value)}>{VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}</select></label>
+      <button type="submit" style={{ ...buttonStyle, marginTop: 8 }}>Add column</button>
+    </form>
+  </details>
+}
+
+function BaseHierarchyCell(props: AnyProps) {
+  const hasChildren = props.childCount > 0
+  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} data-agentic-base-hierarchy-depth={props.depth} style={{ position: 'relative', width: 64, minWidth: 64, padding: '8px 6px', borderBottom: '1px solid #e5e7eb', verticalAlign: 'middle' }}>
+    <span aria-hidden="true" style={{ display: 'inline-block', width: Math.min(8, props.depth) * 6, height: 1, borderTop: props.depth ? '1px solid #cbd5e1' : 0 }} />
+    {hasChildren ? <button type="button" aria-label={`${props.collapsed ? 'Expand' : 'Collapse'} nested row`} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}>
+      <ChevronRight size={14} aria-hidden="true" style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+    </button> : <span aria-hidden="true" style={{ display: 'inline-block', width: 24 }} />}
+  </td>
+}
+
+function BaseNestedRowsBulkToggle(props: { collapsed: boolean; onToggle: () => void }) {
+  const Icon = props.collapsed ? ChevronsRight : ChevronsDown
+  return <button type="button" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}><Icon size={14} aria-hidden="true" /></button>
+}
+
+function BaseInlineTextCellEditor(props: AnyProps) {
+  const [value, setValue] = React.useState(String(props.initialValue ?? ''))
+  const settled = React.useRef(false)
+  const finish = (commit: boolean) => {
+    if (settled.current) return
+    settled.current = true
+    if (commit) props.onCommit(value); else props.onCancel()
+  }
+  return <textarea autoFocus aria-label={props.ariaLabel} value={value} onChange={event => setValue(event.target.value)} onKeyDown={event => {
+    if (event.key === 'Escape') { event.preventDefault(); finish(false) }
+    if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) { event.preventDefault(); finish(true) }
+  }} onBlur={() => finish(true)} style={{ width: '100%', minHeight: 32, resize: 'vertical', font: 'inherit' }} />
+}
+
+function BaseColumnResizeHandle(props: AnyProps) {
+  const start = React.useRef<{ x: number; width: number } | null>(null)
+  const update = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!start.current) return
+    const width = Math.max(64, Math.min(640, start.current.width + event.clientX - start.current.x))
+    props.onPreview(props.columnId, width)
+  }
+  const finish = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!start.current) return
+    update(event)
+    const width = Math.max(64, Math.min(640, start.current.width + event.clientX - start.current.x))
+    props.onCommit(props.columnId, width)
+    start.current = null
+  }
+  return <button type="button" role="separator" aria-orientation="vertical" aria-valuemin={64} aria-valuemax={640} aria-valuenow={props.width} aria-label={`Resize ${props.columnId}`} onPointerDown={event => { start.current = { x: event.clientX, width: props.width }; event.currentTarget.setPointerCapture(event.pointerId) }} onPointerMove={update} onPointerUp={finish} onPointerCancel={() => { start.current = null }} onKeyDown={event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+    event.preventDefault()
+    const width = Math.max(64, Math.min(640, props.width + (event.key === 'ArrowRight' ? 16 : -16)))
+    props.onPreview(props.columnId, width); props.onCommit(props.columnId, width)
+  }} style={{ position: 'absolute', zIndex: 32, top: 0, right: -3, width: 7, height: '100%', padding: 0, border: 0, background: 'transparent', cursor: 'col-resize', touchAction: 'none' }} />
+}
+
+function BaseCellSelectPopover(props: AnyProps) {
+  const meta = props.editingMeta
+  if (!meta || !props.canMutate || meta.uiType === 'checkbox') return null
+  const isMulti = meta.baseKind === 'multi-select'
+  const options: string[] = isMulti ? props.editingMultiSelectOptions : props.editingSelectOptions
+  const bounds = meta.anchorEl.getBoundingClientRect()
+  const apply = (value = props.draft) => {
+    props.onUpdateCell({ rowId: meta.rowId, columnId: meta.colId, nextValue: String(value ?? '') })
+    props.setEditingNull()
+  }
+  return <div role="dialog" aria-label={`Choose ${meta.column.name}`} style={{ position: 'fixed', zIndex: 50, top: bounds.bottom + 4, left: bounds.left, minWidth: Math.max(180, bounds.width), padding: 8, border: '1px solid #d5dae2', borderRadius: 6, background: '#fff', boxShadow: '0 8px 24px #17203324' }}>
+    {options.length ? <div style={{ display: 'grid', gap: 4, maxHeight: 240, overflowY: 'auto' }}>
+      {options.map(value => {
+        const selected = isMulti ? props.draft.split(/[\n,]/u).map((item: string) => item.trim()).includes(value) : props.draft === value
+        return <button key={value} type="button" aria-pressed={selected} onClick={() => {
+          if (!isMulti) { apply(value); return }
+          const next = new Set<string>(props.draft.split(/[\n,]/u).map((item: string) => item.trim()).filter(Boolean))
+          if (next.has(value)) next.delete(value); else next.add(value)
+          props.setDraft([...next].join(', '))
+        }} style={{ ...buttonStyle, justifyContent: 'flex-start', background: selected ? '#eff6ff' : '#fff' }}>
+          {selected ? <CheckSquare size={14} aria-hidden="true" /> : null}{value}
+        </button>
+      })}
+    </div> : <input aria-label={`${meta.column.name} value`} value={props.draft} onChange={event => props.setDraft(event.target.value)} />}
+    <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+      <button type="button" style={buttonStyle} onClick={() => apply()}>Apply</button>
+      <button type="button" style={buttonStyle} onClick={props.setEditingNull}>Cancel</button>
+    </div>
+  </div>
+}
+
+function readDepth(row: ViewRow, levelIndex?: number, indentIndex?: number): number {
+  const level = levelIndex == null || levelIndex < 0 ? '' : String(row.cells[levelIndex] ?? '').trim()
+  const levelMatch = /^L(\d+)$/i.exec(level)
+  const explicitLevel = levelMatch ? Number.parseInt(levelMatch[1], 10) : 0
+  if (explicitLevel > 0) return Math.min(8, explicitLevel)
+  const indent = indentIndex == null || indentIndex < 0 ? 0 : Number.parseInt(String(row.cells[indentIndex] ?? '').trim(), 10)
+  return Number.isFinite(indent) && indent > 0 ? Math.min(8, Math.floor(indent / 2)) : 0
+}
+
+function rowStates<Row extends ViewRow>(rows: readonly Row[], collapsedIds: ReadonlySet<string>, levelIndex?: number, indentIndex?: number): RowState<Row>[] {
+  const states = rows.map(row => ({ row, depth: readDepth(row, levelIndex, indentIndex), childCount: 0, hidden: false }))
+  const collapsedDepths: number[] = []
+  for (let index = 0; index < states.length; index += 1) {
+    const state = states[index]!
+    while (collapsedDepths.length && collapsedDepths[collapsedDepths.length - 1]! >= state.depth) collapsedDepths.pop()
+    state.hidden = collapsedDepths.length > 0
+    if (collapsedIds.has(state.row.id)) collapsedDepths.push(state.depth)
+    for (let next = index + 1; next < states.length && states[next]!.depth > state.depth; next += 1) {
+      if (states[next]!.depth === state.depth + 1) state.childCount += 1
+    }
+  }
+  return states
+}
+
+function useBaseNestedRowCollapse<Row extends ViewRow>(args: { rows: readonly Row[]; levelColumnIndex?: number; indentColumnIndex?: number }) {
+  const [collapsedNestedRowIds, setCollapsedNestedRowIds] = React.useState<Set<string>>(() => new Set())
+  const states = React.useMemo(() => rowStates(args.rows, collapsedNestedRowIds, args.levelColumnIndex, args.indentColumnIndex), [args.indentColumnIndex, args.levelColumnIndex, args.rows, collapsedNestedRowIds])
+  const visibleNestedRowStates = React.useMemo(() => states.filter(state => !state.hidden), [states])
+  const parents = React.useMemo(() => states.filter(state => state.childCount > 0).map(state => state.row.id), [states])
+  const areAllNestedRowsCollapsed = parents.length > 0 && parents.every(id => collapsedNestedRowIds.has(id))
+  const toggleNestedRow = React.useCallback((id: string) => setCollapsedNestedRowIds(previous => {
+    const next = new Set(previous)
+    if (next.has(id)) next.delete(id); else next.add(id)
+    return next
+  }), [])
+  const toggleAllNestedRows = React.useCallback(() => setCollapsedNestedRowIds(previous => {
+    const next = new Set(previous)
+    for (const id of parents) { if (areAllNestedRowsCollapsed) next.delete(id); else next.add(id) }
+    return next
+  }), [areAllNestedRowsCollapsed, parents])
+  return { areAllNestedRowsCollapsed, collapsedNestedRowIds, hasNestedRowHierarchy: states.some(state => state.depth > 0 || state.childCount > 0), toggleAllNestedRows, toggleNestedRow, visibleNestedRowStates }
+}
+
+const baseHost: TableHostAdapter = {
+  contract: 'agentic-base/table-host/v1',
+  themeTokens: {
+    table: {
+      headerBg: 'bg-[var(--agentic-base-table-header-bg)]',
+      text: 'text-[color:var(--agentic-base-text-primary)]',
+      cellBorder: 'border-[color:var(--agentic-base-border)]',
+      rowHoverHighlight: 'hover:bg-[var(--agentic-base-row-hover)]',
+    },
+    text: {
+      primary: 'text-[color:var(--agentic-base-text-primary)]',
+      secondary: 'text-[color:var(--agentic-base-text-secondary)]',
+      tertiary: 'text-[color:var(--agentic-base-text-tertiary)]',
+    },
+    button: { hoverBg: 'hover:bg-[var(--agentic-base-action-hover)]' },
+    panel: { border: 'border-[color:var(--agentic-base-border)]' },
+    icon: { color: 'text-[color:var(--agentic-base-text-secondary)]' },
+  },
+  copy: { newRecordLabel: 'New record' },
+  styles: {
+    actionRowClass: 'agentic-base-action-row', compactGlyphClass: 'agentic-base-compact-glyph', dataViewMenuPanelClass: 'agentic-base-menu-panel',
+    dataViewTableFrameClass: 'agentic-base-data-view', dataViewTableProgressClass: 'agentic-base-progress',
+    dataViewTableValueClass: 'agentic-base-data-table-value', elementRowClass: 'flex min-w-0 items-center', inlineElementRowClass: 'inline-flex min-w-0 items-center',
+    menuIconActionClass: 'agentic-base-menu-icon-action', textTruncateClass: 'truncate', toolbarRowScrollClass: 'flex min-w-0 overflow-x-auto', stickyHeaderClass: 'agentic-base-data-table-sticky-header',
+  },
+  icons: { iconByColumnType },
+  components: {
+    TagChip: BaseTagChip, ColumnTypeMenu: BaseColumnTypeMenu, AddColumnMenu: BaseAddColumnMenu,
+    ColumnHeaderPropertyTypeMenu: BaseColumnHeaderPropertyTypeMenu, ColumnHeaderMenu: BaseColumnHeaderMenu,
+    HierarchyCell: BaseHierarchyCell, InlineTextCellEditor: BaseInlineTextCellEditor,
+    NestedRowsBulkToggle: BaseNestedRowsBulkToggle, ColumnResizeHandle: BaseColumnResizeHandle,
+    CellSelectPopover: BaseCellSelectPopover,
+  },
+  stores: { tablePreferences: { subscribe: () => () => {}, getSnapshot: () => neutralStoreSnapshot, getServerSnapshot: () => neutralStoreSnapshot } },
+  data: {
+    splitMultiValues: (value: string) => String(value ?? '').split(/[\n,]/u).map(item => item.trim()).filter(Boolean),
+    readDisplayText: (value: string) => String(value ?? ''), renderInlineText: (value: string) => String(value ?? ''),
+    buildMediaCommandContext: () => '', buildNestedCellMap: () => new Map(), renderRichCell: () => null,
+    useNestedRowCollapse: useBaseNestedRowCollapse,
+  },
+  helpers: {
+    defaultColumnWidthPx: 192,
+    readDefaultColumnWidth: (name: string) => {
+      const normalized = String(name ?? '').trim()
+      if (normalized === 'Line' || normalized === 'Indent') return 72
+      if (normalized === 'Type') return 112
+      if (normalized === 'Content') return 260
+      if (normalized === 'Key') return 220
+      if (['Summary', 'Output', 'Action', 'Reference Pack'].includes(normalized)) return 220
+      if (/Value$/u.test(normalized)) return 184
+      return 192
+    },
+    cellPreviewCharLimit: 96,
+    readCellDisplayText: (value: string, mode: string) => mode === 'flex' || value.length <= 96 ? value : `${value.slice(0, 95).trimEnd()}...`,
+    readCellPreviewText: (value: string) => value.length > 96 ? `${value.slice(0, 96).trimEnd()}...` : value,
+    coerceFieldLineMode: (value: unknown) => value === 'double' || value === 'flex' ? value : 'single',
+    coerceRowHeightPreset: (value: unknown) => value === 'compact' ? 'compact' : 'comfortable',
+    readFieldLineClassName: (mode: string) => mode === 'double' ? 'overflow-hidden whitespace-pre-wrap break-words line-clamp-2' : mode === 'flex' ? 'whitespace-pre-wrap break-words' : 'block truncate',
+    readHeaderPaddingClassName: (preset: string) => preset === 'compact' ? 'px-2 py-1.5' : 'px-3 py-2',
+    readTablePaddingClassName: (preset: string) => preset === 'compact' ? 'px-3 py-1.5' : 'px-3 py-2',
+  },
+}
+
+/** Product-neutral read-only capable host for the shared Table and Multi-dimensional Table. */
+export function createBaseTableHost(overrides: Partial<TableHostAdapter> = {}): TableHostAdapter {
+  const themeTokens: Record<string, unknown> = { ...baseHost.themeTokens }
+  for (const [section, value] of Object.entries(overrides.themeTokens ?? {})) {
+    const baseValue = themeTokens[section]
+    themeTokens[section] = baseValue && value && typeof baseValue === 'object' && typeof value === 'object'
+      ? { ...(baseValue as Record<string, unknown>), ...(value as Record<string, unknown>) }
+      : value
+  }
+  return {
+    ...baseHost, ...overrides,
+    themeTokens,
+    copy: { ...baseHost.copy, ...overrides.copy },
+    styles: { ...baseHost.styles, ...overrides.styles },
+    icons: { ...baseHost.icons, ...overrides.icons },
+    components: { ...baseHost.components, ...overrides.components },
+    stores: { ...baseHost.stores, ...overrides.stores },
+    data: { ...baseHost.data, ...overrides.data },
+    helpers: { ...baseHost.helpers, ...overrides.helpers },
+  }
+}
