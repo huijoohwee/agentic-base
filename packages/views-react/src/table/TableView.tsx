@@ -395,12 +395,13 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         <>
           {visibleNestedRowStates.map(({ row: r, depth: rowDepth, childCount }: { row: ViewModel['rows'][number]; depth: number; childCount: number }) => {
             const isNestedRowCollapsed = collapsedNestedRowIds.has(r.id)
+            const selected = props.selectedRowId === r.id
+            const selectionEnabled = props.selectedRowId !== undefined && Boolean(onActivateRow) && hasNestedRowHierarchy
+            const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
             return <tr
               key={r.id}
-              className={[`${themeTokens.table.rowHoverHighlight} transition-colors`, onActivateRow ? 'cursor-pointer' : '', props.selectedRowId === r.id ? 'bg-blue-50/80 outline outline-1 -outline-offset-1 outline-[var(--kg-primary)]' : ''].join(' ')}
-              aria-selected={props.selectedRowId === undefined ? undefined : props.selectedRowId === r.id}
-              tabIndex={onActivateRow ? 0 : undefined}
-              onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onActivateRow?.(r.id) } }}
+              className={[`${themeTokens.table.rowHoverHighlight} transition-colors`, onActivateRow ? 'cursor-pointer' : '', selected ? 'bg-blue-50/80 outline outline-1 -outline-offset-1 outline-[var(--kg-primary)]' : ''].join(' ')}
+              aria-selected={props.selectedRowId === undefined ? undefined : selected}
               data-kg-markdown-data-view-row-nested-depth={String(rowDepth)}
               onClick={
                 onActivateRow
@@ -413,7 +414,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
               }
             >
               {hasNestedRowHierarchy ? (
-                <HierarchyCell cellPaddingClassName={cellPaddingClassName} depth={rowDepth} childCount={childCount} collapsed={isNestedRowCollapsed} scope="row" onToggle={() => toggleNestedRow(r.id)} />
+                <HierarchyCell cellPaddingClassName={cellPaddingClassName} depth={rowDepth} childCount={childCount} collapsed={isNestedRowCollapsed} scope="row" onToggle={() => toggleNestedRow(r.id)} selectable={selectionEnabled} selected={selected} selectionLabel={rowLabel} onSelect={() => onActivateRow?.(r.id)} />
               ) : null}
               {visibleColumnMeta.map(({ col: c, index: colIndex }) => {
                 const value = String(r.cells[colIndex] ?? '')
@@ -543,7 +544,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                   className={[actionRowClass, 'gap-2 text-xs', themeTokens.text.tertiary, themeTokens.button.hoverBg, 'px-2 py-1 rounded'].join(' ')}
                   onClick={() => props.onNewRecord?.()}
                 >
-                  <Plus className={[compactGlyphClass, themeTokens.icon.color].join(' ')} aria-hidden="true" />
+                  <Plus aria-label="New record" className={[compactGlyphClass, themeTokens.icon.color].join(' ')} />
                   <span className={textTruncateClass}>{viewCopy.newRecordLabel}</span>
                 </button>
               </td>

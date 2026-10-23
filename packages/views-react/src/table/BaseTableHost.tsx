@@ -82,9 +82,9 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const Icon = props.Icon ?? Type
   return <div style={{ position: 'relative', minWidth: 0 }}>
     <button type="button" aria-label={props.ariaLabel} aria-expanded={open} onClick={() => setOpen(value => !value)} style={columnHeaderStyle}>
-      <Icon aria-hidden="true" size={14} />
+      <Icon size={14} aria-label={props.label} />
       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
-      <ChevronDown aria-hidden="true" size={13} color="#64748b" />
+      <ChevronDown size={13} color="#64748b" aria-label="Open column menu" />
     </button>
     {open ? <div role="dialog" aria-label={props.ariaLabel} style={popoverStyle}>
       {props.menu?.({ close })}
@@ -109,12 +109,12 @@ function BaseAddColumnMenu(props: AnyProps) {
 function BaseHierarchyCell(props: AnyProps) {
   const hasChildren = props.childCount > 0
   return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{ '--agentic-base-data-tree-depth': String(props.depth) } as React.CSSProperties}>
-    {!hasChildren ? <svg className="agentic-base-data-tree-guide" aria-hidden="true" focusable="false" viewBox="0 0 24 24" preserveAspectRatio="none">
-      <line className="agentic-base-data-tree-guide-line" x1="12" x2="12" y1="0" y2="24" />
-    </svg> : null}
     <span className="agentic-base-data-tree-control">
+      {props.selectable ? <label className="agentic-base-row-select-label">
+        <input type="checkbox" className="agentic-base-row-select" aria-label={`Select row: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onClick={event => event.stopPropagation()} onChange={() => props.onSelect?.()} />
+      </label> : null}
       {hasChildren ? <button type="button" aria-label={`${props.collapsed ? 'Expand' : 'Collapse'} nested row`} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: 'inherit', background: 'transparent', cursor: 'pointer' }}>
-        <ChevronRight size={12} aria-hidden="true" style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+        <ChevronRight size={12} aria-label={props.collapsed ? 'Expand nested row' : 'Collapse nested row'} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
       </button> : null}
     </span>
   </td>
@@ -122,7 +122,7 @@ function BaseHierarchyCell(props: AnyProps) {
 
 function BaseNestedRowsBulkToggle(props: { collapsed: boolean; onToggle: () => void }) {
   const Icon = props.collapsed ? ChevronsRight : ChevronsDown
-  return <button type="button" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}><Icon size={14} aria-hidden="true" /></button>
+  return <button type="button" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}><Icon size={14} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} /></button>
 }
 
 function BaseInlineTextCellEditor(props: AnyProps) {
@@ -181,7 +181,7 @@ function BaseCellSelectPopover(props: AnyProps) {
           if (next.has(value)) next.delete(value); else next.add(value)
           props.setDraft([...next].join(', '))
         }} style={{ ...buttonStyle, justifyContent: 'flex-start', background: selected ? '#eff6ff' : '#fff' }}>
-          {selected ? <CheckSquare size={14} aria-hidden="true" /> : null}{value}
+          {selected ? <CheckSquare size={14} aria-label="Selected" /> : null}{value}
         </button>
       })}
     </div> : <input aria-label={`${meta.column.name} value`} value={props.draft} onChange={event => props.setDraft(event.target.value)} />}
