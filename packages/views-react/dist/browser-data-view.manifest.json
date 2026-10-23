@@ -18,8 +18,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 5049,
-      "sha256": "2cc12ec8e5d5258a8651133a8daafccc7c80b3f2173d5b5008860a2518ceccc5"
+      "bytes": 4225,
+      "sha256": "ee6a45c167cac9525f2291e1acc5a7fa79e72df5d2bd0be4ba38641be317e78f"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -45,8 +45,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 5049,
-      "sha256": "2cc12ec8e5d5258a8651133a8daafccc7c80b3f2173d5b5008860a2518ceccc5"
+      "bytes": 4225,
+      "sha256": "ee6a45c167cac9525f2291e1acc5a7fa79e72df5d2bd0be4ba38641be317e78f"
     }
   ]
 }

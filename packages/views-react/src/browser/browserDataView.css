@@ -57,15 +57,7 @@
 }
 .agentic-base-data-tree-cell {
   --agentic-base-data-tree-cell-padding-inline: 0.75rem;
-  --agentic-base-data-tree-chevron-size: 0.75rem;
-  --agentic-base-data-tree-control-icon-center: calc(var(--agentic-base-data-tree-chevron-size) / 2);
-  --agentic-base-data-tree-parent-depth-offset: max(calc((var(--agentic-base-data-tree-depth, 0) - 1) * 0.375rem), 0rem);
-  --agentic-base-data-tree-parent-control-start: min(calc(var(--agentic-base-data-tree-parent-depth-offset) + var(--agentic-base-data-tree-cell-padding-inline)), 2rem);
-  --agentic-base-data-tree-guide-inset: calc(var(--agentic-base-data-tree-cell-padding-inline) + var(--agentic-base-data-tree-parent-control-start) + var(--agentic-base-data-tree-control-icon-center));
   color: var(--agentic-base-text-secondary, #4b5563);
-  isolation: isolate;
-  position: relative;
-  overflow: hidden;
   width: 4rem;
   min-width: 4rem;
   vertical-align: middle;
@@ -77,8 +69,6 @@
   gap: 0.375rem;
   margin-inline-start: min(calc(var(--agentic-base-data-tree-depth, 0) * 0.375rem + var(--agentic-base-data-tree-cell-padding-inline)), 2rem);
   color: inherit;
-  position: relative;
-  z-index: 2;
   vertical-align: middle;
 }
 .agentic-base-data-tree-control svg {
@@ -90,24 +80,24 @@
 .agentic-base-data-tree-cell:focus-within .agentic-base-data-tree-control {
   color: var(--agentic-base-text-primary, #111827);
 }
-.agentic-base-data-tree-guide {
-  position: absolute;
-  top: 50%;
-  inset-inline-start: var(--agentic-base-data-tree-guide-inset);
-  z-index: 1;
-  display: block;
-  width: var(--agentic-base-data-tree-chevron-size);
-  height: calc(var(--agentic-base-data-tree-chevron-size) * 1.75);
-  pointer-events: none;
-  color: inherit;
-  overflow: visible;
-  transform: translate(-50%, -50%);
+.agentic-base-row-select-label {
+  display: inline-flex;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.agentic-base-data-tree-guide-line {
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-opacity: 0.72;
-  stroke-width: 1px;
+.agentic-base-row-select {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--agentic-base-focus, #2563eb);
+  cursor: pointer;
+}
+.agentic-base-row-select:focus-visible {
+  outline: 2px solid var(--agentic-base-focus, #2563eb);
+  outline-offset: 1px;
 }
 .agentic-base-data-table thead th,
 .agentic-base-data-table tbody th {
