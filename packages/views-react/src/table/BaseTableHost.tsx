@@ -66,7 +66,16 @@ function useDismissableColumnHeaderMenu(args: {
           && event.clientX >= bounds.left && event.clientX <= bounds.right
           && event.clientY >= bounds.top && event.clientY <= bounds.bottom
       })
-      if (!isInsideOrOverlaid) args.onClose()
+      const triggerBounds = args.triggerRef.current?.getBoundingClientRect()
+      const dx = triggerBounds
+        ? Math.max(triggerBounds.left - event.clientX, 0, event.clientX - triggerBounds.right)
+        : Number.POSITIVE_INFINITY
+      const dy = triggerBounds
+        ? Math.max(triggerBounds.top - event.clientY, 0, event.clientY - triggerBounds.bottom)
+        : Number.POSITIVE_INFINITY
+      const isNearTrigger = Boolean(triggerBounds && triggerBounds.width > 0 && triggerBounds.height > 0
+        && Math.hypot(dx, dy) <= 16)
+      if (!isInsideOrOverlaid && !isNearTrigger) args.onClose()
     }
     const onEscape = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
