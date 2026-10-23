@@ -28,8 +28,8 @@
     },
     {
       "path": "packages/views-react/src/table/BaseTableHost.tsx",
-      "bytes": 22392,
-      "sha256": "25ee942063e1b76f0a7307ceff9d5ef7cd8416bec55df77d8f58e522ed6a8cc4"
+      "bytes": 26068,
+      "sha256": "4d82ce1f8bf029f7269a64e903f302fd565a94e863d84534f675409021fcfa91"
     },
     {
       "path": "packages/views-react/src/table/ColumnsTableView.tsx",
@@ -60,8 +60,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 194447,
-      "sha256": "79106e15bcc134e3bf3a6aed137218bc9f35483025fb735e372d2c59c16135e7"
+      "bytes": 196640,
+      "sha256": "27b11d969bd80dd7a113432ed6d8a811f3ac8de2f1704d36d302a47b0a8d012b"
     },
     {
       "path": "browser-data-view.css",

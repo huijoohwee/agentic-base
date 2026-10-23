@@ -33,6 +33,56 @@ const popoverStyle: React.CSSProperties = {
   background: '#fff', color: '#172033', boxShadow: '0 8px 24px #17203324',
 }
 
+function useDismissableColumnHeaderMenu(args: {
+  open: boolean
+  onClose: () => void
+  rootRef: React.RefObject<HTMLElement>
+  triggerRef: React.RefObject<HTMLElement>
+  surfaceRef: React.RefObject<HTMLElement>
+}) {
+  React.useEffect(() => {
+    if (!args.open) return
+    const ownerDocument = args.rootRef.current?.ownerDocument ?? args.triggerRef.current?.ownerDocument
+    const dismissalWindow = ownerDocument?.defaultView
+    if (!dismissalWindow) return
+    const onPointerDown = (event: PointerEvent) => {
+      const path = typeof event.composedPath === 'function' ? event.composedPath() : []
+      const isSelectionHit = (target: EventTarget | null) => {
+        if (!target || typeof target !== 'object' || !('nodeType' in target) || target.nodeType !== 1) return false
+        const element = target as Element
+        return typeof element.closest === 'function' && Boolean(element.closest('[data-kg-selection-target]'))
+      }
+      if (path.some(isSelectionHit) || isSelectionHit(event.target)) return
+      const protectedSurfaces = [args.rootRef.current, args.triggerRef.current, args.surfaceRef.current]
+      const isInsideOrOverlaid = protectedSurfaces.some(element => {
+        if (!element) return false
+        const pathHitsElement = path.some(target => target === element || (
+          target && typeof target === 'object' && 'nodeType' in target && element.contains(target as Node)
+        ))
+        const target = event.target
+        if (pathHitsElement || (target && typeof target === 'object' && 'nodeType' in target && element.contains(target as Node))) return true
+        const bounds = element.getBoundingClientRect()
+        return bounds.width > 0 && bounds.height > 0
+          && event.clientX >= bounds.left && event.clientX <= bounds.right
+          && event.clientY >= bounds.top && event.clientY <= bounds.bottom
+      })
+      if (!isInsideOrOverlaid) args.onClose()
+    }
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      args.onClose()
+      args.triggerRef.current?.focus()
+    }
+    dismissalWindow.addEventListener('pointerdown', onPointerDown, true)
+    dismissalWindow.addEventListener('keydown', onEscape)
+    return () => {
+      dismissalWindow.removeEventListener('pointerdown', onPointerDown, true)
+      dismissalWindow.removeEventListener('keydown', onEscape)
+    }
+  }, [args.open, args.onClose, args.rootRef, args.triggerRef, args.surfaceRef])
+}
+
 function BaseTagChip({ value }: { value: string }) {
   const palette = [
     ['#f3f4f6', '#d1d5db', '#4b5563'], ['#eff6ff', '#bfdbfe', '#1d4ed8'],
@@ -51,7 +101,7 @@ function BaseTagChip({ value }: { value: string }) {
 }
 
 function BaseColumnTypeMenu(props: AnyProps) {
-  return <select aria-label={props.ariaLabel} value={props.value} disabled={props.disabled} onChange={event => { props.onSelect?.(event.target.value); props.close?.() }}>
+  return <select aria-label={props.ariaLabel} data-kg-selection-target="column-type-option" value={props.value} disabled={props.disabled} onChange={event => { props.onSelect?.(event.target.value); props.close?.() }}>
     {VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}
   </select>
 }
@@ -59,36 +109,40 @@ function BaseColumnTypeMenu(props: AnyProps) {
 function BaseColumnHeaderMenu(props: AnyProps) {
   const [filterValue, setFilterValue] = React.useState('')
   const [filterOp, setFilterOp] = React.useState(props.filter?.defaultOp ?? 'contains')
-  return <section aria-label={props.ariaLabel} style={{ display: 'grid', gap: 8, fontSize: 13 }}>
-    <section aria-label="Column type" style={{ display: 'grid', gap: 4 }}>
+  return <section aria-label={props.ariaLabel} data-kg-selection-target="column-header-menu-content" style={{ display: 'grid', gap: 8, fontSize: 13 }}>
+    <section aria-label="Column type" data-kg-selection-target="column-type-summary" style={{ display: 'grid', gap: 4 }}>
       <span style={{ color: '#64748b' }}>{props.typeSummaryLabel}</span>
       <strong>{props.typeValueLabel}</strong>
       {props.renderTypeMenu?.()}
     </section>
-    {props.filter ? <form onSubmit={event => { event.preventDefault(); props.filter.onApply({ op: filterOp, value: filterValue }); props.closeMenu?.() }} style={{ display: 'grid', gap: 6 }}>
-      <select aria-label="Filter operation" value={filterOp} onChange={event => setFilterOp(event.target.value)}>{props.filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}</select>
-      <input aria-label="Filter value" value={filterValue} onChange={event => setFilterValue(event.target.value)} />
-      <button type="submit" style={buttonStyle}>Apply filter</button>
+    {props.filter ? <form data-kg-selection-target="column-filter-form" onSubmit={event => { event.preventDefault(); props.filter.onApply({ op: filterOp, value: filterValue }); props.closeMenu?.() }} style={{ display: 'grid', gap: 6 }}>
+      <select aria-label="Filter operation" data-kg-selection-target="column-filter-operation" value={filterOp} onChange={event => setFilterOp(event.target.value)}>{props.filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}</select>
+      <input aria-label="Filter value" data-kg-selection-target="column-filter-value" value={filterValue} onChange={event => setFilterValue(event.target.value)} />
+      <button type="submit" data-kg-selection-target="column-filter-apply" style={buttonStyle}>Apply filter</button>
     </form> : null}
-    {props.onSortAsc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortAsc(); props.closeMenu?.() }}>Sort ascending</button> : null}
-    {props.onSortDesc ? <button type="button" style={buttonStyle} onClick={() => { props.onSortDesc(); props.closeMenu?.() }}>Sort descending</button> : null}
-    {props.onHideInView ? <button type="button" style={buttonStyle} onClick={() => { props.onHideInView(); props.closeMenu?.() }}>Hide in view</button> : null}
+    {props.onSortAsc ? <button type="button" data-kg-selection-target="column-sort-ascending" style={buttonStyle} onClick={() => { props.onSortAsc(); props.closeMenu?.() }}>Sort ascending</button> : null}
+    {props.onSortDesc ? <button type="button" data-kg-selection-target="column-sort-descending" style={buttonStyle} onClick={() => { props.onSortDesc(); props.closeMenu?.() }}>Sort descending</button> : null}
+    {props.onHideInView ? <button type="button" data-kg-selection-target="column-hide-in-view" style={buttonStyle} onClick={() => { props.onHideInView(); props.closeMenu?.() }}>Hide in view</button> : null}
   </section>
 }
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
   const close = React.useCallback(() => setOpen(false), [])
+  const rootRef = React.useRef<HTMLElement>(null)
+  const triggerRef = React.useRef<HTMLElement>(null)
+  const surfaceRef = React.useRef<HTMLElement>(null)
+  useDismissableColumnHeaderMenu({ open, onClose: close, rootRef, triggerRef, surfaceRef })
   const Icon = props.Icon ?? Type
-  return <span role="group" aria-label={props.ariaLabel} style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
-    <button type="button" aria-label={props.ariaLabel} aria-expanded={open} onClick={() => setOpen(value => !value)} style={columnHeaderStyle}>
-      <Icon size={14} aria-label={props.label} />
-      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
-      <ChevronDown size={13} color="#64748b" aria-label="Open column menu" />
+  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
+    <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={() => setOpen(true)} style={columnHeaderStyle}>
+      <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
+      <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
+      <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
-    {open ? <section role="dialog" aria-label={props.ariaLabel} style={popoverStyle}>
+    {open ? <section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" style={popoverStyle}>
       {props.menu?.({ close })}
-      <button type="button" aria-label="Close column menu" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
+      <button type="button" aria-label="Close column menu" data-kg-selection-target="column-menu-close" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
     </section> : null}
   </span>
 }
