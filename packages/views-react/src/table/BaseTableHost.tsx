@@ -198,14 +198,15 @@ function readDepth(row: ViewRow, levelIndex?: number, indentIndex?: number): num
 function rowStates<Row extends ViewRow>(rows: readonly Row[], collapsedIds: ReadonlySet<string>, levelIndex?: number, indentIndex?: number): RowState<Row>[] {
   const states = rows.map(row => ({ row, depth: readDepth(row, levelIndex, indentIndex), childCount: 0, hidden: false }))
   const collapsedDepths: number[] = []
-  for (let index = 0; index < states.length; index += 1) {
-    const state = states[index]!
+  const ancestors: RowState<Row>[] = []
+  for (const state of states) {
     while (collapsedDepths.length && collapsedDepths[collapsedDepths.length - 1]! >= state.depth) collapsedDepths.pop()
     state.hidden = collapsedDepths.length > 0
     if (collapsedIds.has(state.row.id)) collapsedDepths.push(state.depth)
-    for (let next = index + 1; next < states.length && states[next]!.depth > state.depth; next += 1) {
-      if (states[next]!.depth === state.depth + 1) state.childCount += 1
-    }
+    while (ancestors.length && ancestors[ancestors.length - 1]!.depth >= state.depth) ancestors.pop()
+    const parent = ancestors[ancestors.length - 1]
+    if (parent && parent.depth + 1 === state.depth) parent.childCount += 1
+    ancestors.push(state)
   }
   return states
 }
