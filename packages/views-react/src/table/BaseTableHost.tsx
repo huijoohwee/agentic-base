@@ -8,6 +8,7 @@ import type { ComponentType } from 'react'
 import type { TableHostAdapter } from './TableHostContext'
 import type { ViewRow } from '../kanban/KanbanHostContext'
 import { VIEW_COLUMN_TYPE_OPTIONS } from './ViewColumnType'
+import { BaseColumnHeaderMenu, BaseColumnTypeMenu } from './BaseColumnHeaderMenu'
 
 type AnyProps = Record<string, any>
 type RowState<Row extends ViewRow> = { row: Row; depth: number; childCount: number; hidden: boolean }
@@ -34,8 +35,8 @@ const popoverStyle: React.CSSProperties = {
   background: '#fff', color: '#172033', boxShadow: '0 8px 24px #17203324',
 }
 const columnMenuSurfaceStyle: React.CSSProperties = {
-  ...popoverStyle, position: 'fixed', zIndex: 2147483647, top: 0, left: 0,
-  maxWidth: 'calc(100vw - 16px)', overflowY: 'auto',
+  position: 'fixed', zIndex: 2147483647, top: 0, left: 0,
+  maxWidth: 'calc(100vw - 16px)', maxHeight: 'calc(100vh - 16px)',
 }
 
 function useDismissableColumnHeaderMenu(args: {
@@ -125,36 +126,11 @@ function BaseTagChip({ value }: { value: string }) {
   </span>
 }
 
-function BaseColumnTypeMenu(props: AnyProps) {
-  return <select aria-label={props.ariaLabel} data-kg-selection-target="column-type-option" value={props.value} disabled={props.disabled} onChange={event => { props.onSelect?.(event.target.value); props.close?.() }}>
-    {VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}
-  </select>
-}
-
-function BaseColumnHeaderMenu(props: AnyProps) {
-  const [filterValue, setFilterValue] = React.useState('')
-  const [filterOp, setFilterOp] = React.useState(props.filter?.defaultOp ?? 'contains')
-  return <section aria-label={props.ariaLabel} data-kg-selection-target="column-header-menu-content" style={{ display: 'grid', gap: 8, fontSize: 13 }}>
-    <section aria-label="Column type" data-kg-selection-target="column-type-summary" style={{ display: 'grid', gap: 4 }}>
-      <span style={{ color: '#64748b' }}>{props.typeSummaryLabel}</span>
-      <strong>{props.typeValueLabel}</strong>
-      {props.renderTypeMenu?.()}
-    </section>
-    {props.filter ? <form data-kg-selection-target="column-filter-form" onSubmit={event => { event.preventDefault(); props.filter.onApply({ op: filterOp, value: filterValue }); props.closeMenu?.() }} style={{ display: 'grid', gap: 6 }}>
-      <select aria-label="Filter operation" data-kg-selection-target="column-filter-operation" value={filterOp} onChange={event => setFilterOp(event.target.value)}>{props.filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}</select>
-      <input aria-label="Filter value" data-kg-selection-target="column-filter-value" value={filterValue} onChange={event => setFilterValue(event.target.value)} />
-      <button type="submit" data-kg-selection-target="column-filter-apply" style={buttonStyle}>Apply filter</button>
-    </form> : null}
-    {props.onSortAsc ? <button type="button" data-kg-selection-target="column-sort-ascending" style={buttonStyle} onClick={() => { props.onSortAsc(); props.closeMenu?.() }}>Sort ascending</button> : null}
-    {props.onSortDesc ? <button type="button" data-kg-selection-target="column-sort-descending" style={buttonStyle} onClick={() => { props.onSortDesc(); props.closeMenu?.() }}>Sort descending</button> : null}
-    {props.onHideInView ? <button type="button" data-kg-selection-target="column-hide-in-view" style={buttonStyle} onClick={() => { props.onHideInView(); props.closeMenu?.() }}>Hide in view</button> : null}
-  </section>
-}
-
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
   const [menuContainer, setMenuContainer] = React.useState<HTMLElement | null>(null)
   const [menuPlacement, setMenuPlacement] = React.useState<{ left: number; top: number; maxHeight: number } | null>(null)
+  const [menuTheme, setMenuTheme] = React.useState<React.CSSProperties>({})
   const close = React.useCallback(() => setOpen(false), [])
   const rootRef = React.useRef<HTMLElement>(null)
   const triggerRef = React.useRef<HTMLElement>(null)
@@ -198,15 +174,37 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
     }
   }, [open])
   const Icon = props.Icon ?? Type
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const trigger = event.currentTarget
+    const ownerDocument = trigger.ownerDocument
+    const ownerWindow = ownerDocument.defaultView
+    const computed = ownerWindow?.getComputedStyle(trigger)
+    const readToken = (names: string[], fallback: string) => {
+      for (const name of names) {
+        const value = computed?.getPropertyValue(name).trim()
+        if (value) return value
+      }
+      return fallback
+    }
+    setMenuTheme({
+      '--agentic-base-menu-text': readToken(['--agentic-base-text', '--agentic-base-text-primary'], computed?.color || 'CanvasText'),
+      '--agentic-base-menu-muted': readToken(['--agentic-base-muted', '--agentic-base-text-secondary', '--agentic-base-text-tertiary'], 'color-mix(in srgb, CanvasText 68%, Canvas)'),
+      '--agentic-base-menu-surface': readToken(['--agentic-base-surface'], 'Canvas'),
+      '--agentic-base-menu-border': readToken(['--agentic-base-border'], 'color-mix(in srgb, CanvasText 18%, Canvas)'),
+      '--agentic-base-menu-hover': readToken(['--agentic-base-action-hover', '--agentic-base-selected'], 'color-mix(in srgb, CanvasText 7%, Canvas)'),
+      colorScheme: computed?.colorScheme || 'light dark',
+    } as React.CSSProperties)
+    setMenuContainer(ownerDocument.body)
+    setOpen(true)
+  }
   return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
-    <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={event => { setMenuContainer(event.currentTarget.ownerDocument.body); setOpen(true) }} style={columnHeaderStyle}>
+    <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={openMenu} style={columnHeaderStyle}>
       <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
       <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
-    {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" style={{ ...columnMenuSurfaceStyle, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
+    {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
       {props.menu?.({ close })}
-      <button type="button" aria-label="Close column menu" data-kg-selection-target="column-menu-close" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
     </section>, menuContainer) : null}
   </span>
 }
