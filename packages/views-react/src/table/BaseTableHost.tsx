@@ -1,4 +1,5 @@
 import React from 'react'
+import { createPortal } from 'react-dom'
 import {
   BarChart3, Calendar, CheckSquare, ChevronDown, ChevronRight, ChevronsDown, ChevronsRight,
   Clock, GripVertical, Hash, Link2, ListChecks, MapPin, Paperclip, Type, User, Users,
@@ -32,6 +33,10 @@ const popoverStyle: React.CSSProperties = {
   padding: 8, border: '1px solid #d5dae2', borderRadius: 6,
   background: '#fff', color: '#172033', boxShadow: '0 8px 24px #17203324',
 }
+const columnMenuSurfaceStyle: React.CSSProperties = {
+  ...popoverStyle, position: 'fixed', zIndex: 2147483647, top: 0, left: 0,
+  maxWidth: 'calc(100vw - 16px)', overflowY: 'auto',
+}
 
 function useDismissableColumnHeaderMenu(args: {
   open: boolean
@@ -52,7 +57,18 @@ function useDismissableColumnHeaderMenu(args: {
         const element = target as Element
         return typeof element.closest === 'function' && Boolean(element.closest('[data-kg-selection-target]'))
       }
-      if (path.some(isSelectionHit) || isSelectionHit(event.target)) return
+      const hitTargets = Number.isFinite(event.clientX) && Number.isFinite(event.clientY)
+        ? ownerDocument?.elementsFromPoint(event.clientX, event.clientY) ?? []
+        : []
+      const selectionTargets = ownerDocument?.querySelectorAll('[data-kg-selection-target]') ?? []
+      const hitsSelectionTarget = [...selectionTargets].some(element => {
+        const bounds = element.getBoundingClientRect()
+        return bounds.width > 0 && bounds.height > 0
+          && event.clientX >= bounds.left && event.clientX <= bounds.right
+          && event.clientY >= bounds.top && event.clientY <= bounds.bottom
+      })
+      if (path.some(isSelectionHit) || isSelectionHit(event.target)
+        || hitTargets.some(isSelectionHit) || hitsSelectionTarget) return
       const protectedSurfaces = [args.rootRef.current, args.triggerRef.current, args.surfaceRef.current]
       const isInsideOrOverlaid = protectedSurfaces.some(element => {
         if (!element) return false
@@ -137,22 +153,61 @@ function BaseColumnHeaderMenu(props: AnyProps) {
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
+  const [menuContainer, setMenuContainer] = React.useState<HTMLElement | null>(null)
+  const [menuPlacement, setMenuPlacement] = React.useState<{ left: number; top: number; maxHeight: number } | null>(null)
   const close = React.useCallback(() => setOpen(false), [])
   const rootRef = React.useRef<HTMLElement>(null)
   const triggerRef = React.useRef<HTMLElement>(null)
   const surfaceRef = React.useRef<HTMLElement>(null)
   useDismissableColumnHeaderMenu({ open, onClose: close, rootRef, triggerRef, surfaceRef })
+  React.useLayoutEffect(() => {
+    if (!open) return
+    const trigger = triggerRef.current
+    const surface = surfaceRef.current
+    const ownerDocument = trigger?.ownerDocument
+    const ownerWindow = ownerDocument?.defaultView
+    if (!trigger || !surface || !ownerDocument || !ownerWindow) return
+    const updatePlacement = () => {
+      const anchor = trigger.getBoundingClientRect()
+      const viewportWidth = Math.max(ownerDocument.documentElement.clientWidth, ownerWindow.innerWidth)
+      const viewportHeight = Math.max(ownerDocument.documentElement.clientHeight, ownerWindow.innerHeight)
+      const maxHeight = Math.max(80, viewportHeight - 16)
+      const surfaceWidth = Math.max(190, surface.getBoundingClientRect().width)
+      const surfaceHeight = Math.min(surface.scrollHeight, maxHeight)
+      const left = Math.max(8, Math.min(anchor.left, viewportWidth - surfaceWidth - 8))
+      const below = viewportHeight - anchor.bottom - 8
+      const above = anchor.top - 8
+      const top = surfaceHeight <= below || below >= above
+        ? Math.min(anchor.bottom, viewportHeight - surfaceHeight - 8)
+        : Math.max(8, anchor.top - surfaceHeight)
+      setMenuPlacement(previous => previous?.left === left && previous.top === top && previous.maxHeight === maxHeight
+        ? previous : { left, top, maxHeight })
+    }
+    updatePlacement()
+    ownerWindow.addEventListener('resize', updatePlacement)
+    ownerDocument.addEventListener('scroll', updatePlacement, true)
+    const resizeObserver = typeof ownerWindow.ResizeObserver === 'function'
+      ? new ownerWindow.ResizeObserver(updatePlacement)
+      : null
+    resizeObserver?.observe(trigger)
+    resizeObserver?.observe(surface)
+    return () => {
+      ownerWindow.removeEventListener('resize', updatePlacement)
+      ownerDocument.removeEventListener('scroll', updatePlacement, true)
+      resizeObserver?.disconnect()
+    }
+  }, [open])
   const Icon = props.Icon ?? Type
   return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
-    <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={() => setOpen(true)} style={columnHeaderStyle}>
+    <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={event => { setMenuContainer(event.currentTarget.ownerDocument.body); setOpen(true) }} style={columnHeaderStyle}>
       <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
       <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
-    {open ? <section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" style={popoverStyle}>
+    {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" style={{ ...columnMenuSurfaceStyle, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
       {props.menu?.({ close })}
       <button type="button" aria-label="Close column menu" data-kg-selection-target="column-menu-close" onClick={close} style={{ ...buttonStyle, marginTop: 8 }}>Close</button>
-    </section> : null}
+    </section>, menuContainer) : null}
   </span>
 }
 
