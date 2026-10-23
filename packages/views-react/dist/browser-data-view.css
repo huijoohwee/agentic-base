@@ -25,7 +25,7 @@
 .agentic-base-data-table th,
 .agentic-base-data-table td {
   box-sizing: border-box;
-  padding: 9px 12px;
+  padding: 8px 12px;
   overflow-wrap: anywhere;
   text-align: left;
   vertical-align: top;
@@ -35,8 +35,79 @@
   position: sticky;
   z-index: 1;
   top: 0;
-  color: var(--agentic-base-muted, #475569);
-  background: var(--agentic-base-header, #f7f8fa);
+  color: var(--agentic-base-text-secondary, #4b5563);
+  background: var(--agentic-base-table-header-bg, #f9fafb);
+}
+.agentic-base-data-table-sticky-header {
+  --agentic-base-data-table-sticky-header-bg: var(--agentic-base-table-header-bg, #f9fafb);
+  background-color: var(--agentic-base-data-table-sticky-header-bg);
+}
+.agentic-base-data-table-sticky-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--agentic-base-data-table-sticky-header-bg);
+  box-shadow: inset 0 -1px 0 var(--agentic-base-border, #e5e7eb);
+  pointer-events: none;
+}
+.agentic-base-data-table-sticky-header > tr > th {
+  background-color: var(--agentic-base-data-table-sticky-header-bg);
+  background-clip: padding-box;
+}
+.agentic-base-data-tree-cell {
+  --agentic-base-data-tree-cell-padding-inline: 0.75rem;
+  --agentic-base-data-tree-chevron-size: 0.75rem;
+  --agentic-base-data-tree-control-icon-center: calc(var(--agentic-base-data-tree-chevron-size) / 2);
+  --agentic-base-data-tree-parent-depth-offset: max(calc((var(--agentic-base-data-tree-depth, 0) - 1) * 0.375rem), 0rem);
+  --agentic-base-data-tree-parent-control-start: min(calc(var(--agentic-base-data-tree-parent-depth-offset) + var(--agentic-base-data-tree-cell-padding-inline)), 2rem);
+  --agentic-base-data-tree-guide-inset: calc(var(--agentic-base-data-tree-cell-padding-inline) + var(--agentic-base-data-tree-parent-control-start) + var(--agentic-base-data-tree-control-icon-center));
+  color: var(--agentic-base-text-secondary, #4b5563);
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  width: 4rem;
+  min-width: 4rem;
+  vertical-align: middle;
+}
+.agentic-base-data-tree-control {
+  display: inline-flex;
+  min-height: 1rem;
+  align-items: center;
+  gap: 0.375rem;
+  margin-inline-start: min(calc(var(--agentic-base-data-tree-depth, 0) * 0.375rem + var(--agentic-base-data-tree-cell-padding-inline)), 2rem);
+  color: inherit;
+  position: relative;
+  z-index: 2;
+  vertical-align: middle;
+}
+.agentic-base-data-tree-control svg {
+  color: inherit;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.agentic-base-data-tree-cell:hover .agentic-base-data-tree-control,
+.agentic-base-data-tree-cell:focus-within .agentic-base-data-tree-control {
+  color: var(--agentic-base-text-primary, #111827);
+}
+.agentic-base-data-tree-guide {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--agentic-base-data-tree-guide-inset);
+  z-index: 1;
+  display: block;
+  width: var(--agentic-base-data-tree-chevron-size);
+  height: calc(var(--agentic-base-data-tree-chevron-size) * 1.75);
+  pointer-events: none;
+  color: inherit;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+}
+.agentic-base-data-tree-guide-line {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-opacity: 0.72;
+  stroke-width: 1px;
 }
 .agentic-base-data-table thead th,
 .agentic-base-data-table tbody th {

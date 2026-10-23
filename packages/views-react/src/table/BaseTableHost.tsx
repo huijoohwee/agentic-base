@@ -45,7 +45,9 @@ function BaseTagChip({ value }: { value: string }) {
   let hash = 0
   for (let index = 0; index < key.length; index += 1) hash = (hash * 31 + key.charCodeAt(index)) >>> 0
   const tone = palette[fixedTone ?? hash % palette.length]!
-  return <span style={{ display: 'inline-flex', alignItems: 'center', minHeight: 25, padding: '4px 8px', border: `1px solid ${tone[1]}`, borderRadius: 4, background: tone[0], color: tone[2], whiteSpace: 'nowrap', fontSize: 12, lineHeight: '15px', fontWeight: 500 }}>{value}</span>
+  return <span title={value} style={{ display: 'inline-flex', alignItems: 'center', minWidth: 0, maxWidth: '100%', overflow: 'hidden', padding: '2px 8px', border: `1px solid ${tone[1]}`, borderRadius: 4, background: tone[0], color: tone[2], whiteSpace: 'nowrap', fontSize: 12, lineHeight: '15px', fontWeight: 500 }}>
+    <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</span>
+  </span>
 }
 
 function BaseColumnTypeMenu(props: AnyProps) {
@@ -106,11 +108,15 @@ function BaseAddColumnMenu(props: AnyProps) {
 
 function BaseHierarchyCell(props: AnyProps) {
   const hasChildren = props.childCount > 0
-  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} data-agentic-base-hierarchy-depth={props.depth} style={{ position: 'relative', width: 64, minWidth: 64, padding: '8px 6px', borderBottom: '1px solid #e5e7eb', verticalAlign: 'middle' }}>
-    <span aria-hidden="true" style={{ display: 'inline-block', width: Math.min(8, props.depth) * 6, height: 1, borderTop: props.depth ? '1px solid #cbd5e1' : 0 }} />
-    {hasChildren ? <button type="button" aria-label={`${props.collapsed ? 'Expand' : 'Collapse'} nested row`} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}>
-      <ChevronRight size={14} aria-hidden="true" style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
-    </button> : <span aria-hidden="true" style={{ display: 'inline-block', width: 24 }} />}
+  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{ '--agentic-base-data-tree-depth': String(props.depth) } as React.CSSProperties}>
+    {!hasChildren ? <svg className="agentic-base-data-tree-guide" aria-hidden="true" focusable="false" viewBox="0 0 24 24" preserveAspectRatio="none">
+      <line className="agentic-base-data-tree-guide-line" x1="12" x2="12" y1="0" y2="24" />
+    </svg> : null}
+    <span className="agentic-base-data-tree-control">
+      {hasChildren ? <button type="button" aria-label={`${props.collapsed ? 'Expand' : 'Collapse'} nested row`} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: 'inherit', background: 'transparent', cursor: 'pointer' }}>
+        <ChevronRight size={12} aria-hidden="true" style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+      </button> : null}
+    </span>
   </td>
 }
 
@@ -198,14 +204,15 @@ function readDepth(row: ViewRow, levelIndex?: number, indentIndex?: number): num
 function rowStates<Row extends ViewRow>(rows: readonly Row[], collapsedIds: ReadonlySet<string>, levelIndex?: number, indentIndex?: number): RowState<Row>[] {
   const states = rows.map(row => ({ row, depth: readDepth(row, levelIndex, indentIndex), childCount: 0, hidden: false }))
   const collapsedDepths: number[] = []
-  for (let index = 0; index < states.length; index += 1) {
-    const state = states[index]!
+  const ancestors: RowState<Row>[] = []
+  for (const state of states) {
     while (collapsedDepths.length && collapsedDepths[collapsedDepths.length - 1]! >= state.depth) collapsedDepths.pop()
     state.hidden = collapsedDepths.length > 0
     if (collapsedIds.has(state.row.id)) collapsedDepths.push(state.depth)
-    for (let next = index + 1; next < states.length && states[next]!.depth > state.depth; next += 1) {
-      if (states[next]!.depth === state.depth + 1) state.childCount += 1
-    }
+    while (ancestors.length && ancestors[ancestors.length - 1]!.depth >= state.depth) ancestors.pop()
+    const parent = ancestors[ancestors.length - 1]
+    if (parent && parent.depth + 1 === state.depth) parent.childCount += 1
+    ancestors.push(state)
   }
   return states
 }
@@ -287,8 +294,8 @@ const baseHost: TableHostAdapter = {
     coerceFieldLineMode: (value: unknown) => value === 'double' || value === 'flex' ? value : 'single',
     coerceRowHeightPreset: (value: unknown) => value === 'compact' ? 'compact' : 'comfortable',
     readFieldLineClassName: (mode: string) => mode === 'double' ? 'overflow-hidden whitespace-pre-wrap break-words line-clamp-2' : mode === 'flex' ? 'whitespace-pre-wrap break-words' : 'block truncate',
-    readHeaderPaddingClassName: (preset: string) => preset === 'compact' ? 'px-2 py-1.5' : 'px-3 py-2',
-    readTablePaddingClassName: (preset: string) => preset === 'compact' ? 'px-3 py-1.5' : 'px-3 py-2',
+    readHeaderPaddingClassName: (preset: string) => preset === 'compact' ? '!px-2 !py-1.5' : '!px-3 !py-2',
+    readTablePaddingClassName: (preset: string) => preset === 'compact' ? '!px-3 !py-1.5' : '!px-3 !py-2',
   },
 }
 
