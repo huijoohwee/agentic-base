@@ -196,7 +196,8 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
       '--agentic-base-menu-hover': readToken(['--agentic-base-action-hover', '--agentic-base-selected'], 'color-mix(in srgb, CanvasText 7%, Canvas)'),
       colorScheme: computed?.colorScheme || 'light dark',
     } as React.CSSProperties)
-    setMenuContainer(ownerDocument.body)
+    const modalDialog = trigger.closest('dialog[open]') as HTMLElement | null
+    setMenuContainer(modalDialog ?? ownerDocument.body)
     setOpen(true)
   }
   return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
