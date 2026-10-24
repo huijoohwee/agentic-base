@@ -27,6 +27,51 @@
       "sha256": "38310e61f58a6cbec4ddc354e6bcda4319602df70886980226e86c456c8effa6"
     },
     {
+      "path": "packages/views-react/src/node_modules/react-dom/cjs/react-dom.production.min.js",
+      "bytes": 131685,
+      "sha256": "cbf7fe6b9726ee65f8bcd5715289cc5161c8dacf74d0b8aaa0d29412516f5f47"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react-dom/client.js",
+      "bytes": 619,
+      "sha256": "a510041dfc40d69b3aa574e5e111864186c711fbeb3db41aa2f27196b27c429f"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react-dom/index.js",
+      "bytes": 1363,
+      "sha256": "f26fcb81b5d1dc32c6edea34645c75b60d259916293d3208c8be48ac33e882e4"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react-dom/node_modules/scheduler/cjs/scheduler.production.min.js",
+      "bytes": 4235,
+      "sha256": "f6cb8cf42696980c702f6b879417ab8bd489660485eb012b46f67e92e18a78ee"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react-dom/node_modules/scheduler/index.js",
+      "bytes": 198,
+      "sha256": "b413b3aac7bd209fd82cbe2241fda1467558daaef830744f45ed8396fac9185e"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react/cjs/react-jsx-runtime.production.min.js",
+      "bytes": 859,
+      "sha256": "76e3364c46895ed2c4a8d5cc332e5e4ef31d6f732d35b1e56826dc5895245452"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react/cjs/react.production.min.js",
+      "bytes": 6930,
+      "sha256": "4b35e378f469c4f492c7514bb106b5833746dbbae80496bd4aa9acc6e9ac4b42"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react/index.js",
+      "bytes": 190,
+      "sha256": "a216c390bf956cbb906c66d29fdb2e2ad6999464a5ca83e476533a6f25ad0ef3"
+    },
+    {
+      "path": "packages/views-react/src/node_modules/react/jsx-runtime.js",
+      "bytes": 214,
+      "sha256": "28170e60f2ff0bc045bc7d175f5849e86f68dd02d76d7255369420718b30295a"
+    },
+    {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
       "bytes": 9772,
       "sha256": "e881fa7864e1405591ec16808b451c44f94cc01a6c8d4a0f830d637718dd62f9"
@@ -75,8 +120,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 246941,
-      "sha256": "630ace5758fe3ff7bb2890b38fd0159b01f4b54006ed34b2f1c098660e31c1a8"
+      "bytes": 219012,
+      "sha256": "25d9941debcc9f5ef04632a2386bd639b746d7a78b5aa2f7a438d571233ca524"
     },
     {
       "path": "browser-data-view.css",
