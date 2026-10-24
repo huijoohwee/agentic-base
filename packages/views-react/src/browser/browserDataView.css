@@ -237,7 +237,7 @@
 }
 .agentic-base-row-drag-handle {
   position: absolute;
-  inset-inline-start: 4px;
+  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + 16px);
   top: 50%;
   transform: translateY(-50%);
   width: 1rem;
