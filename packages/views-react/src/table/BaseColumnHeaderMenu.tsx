@@ -59,7 +59,7 @@ export function BaseColumnTypeMenu(props: AnyProps) {
       <span className="agentic-base-column-menu-value" data-kg-selection-target="column-type-current-value">{currentLabel}</span>
       <ChevronDown className="agentic-base-column-menu-chevron" size={14} strokeWidth={1.7} role="img" aria-label="Expand choices" data-kg-selection-target="column-type-expand" />
     </summary>
-    <menu role="menu" aria-label={`Column type: ${props.ariaLabel ?? currentLabel}`} className="agentic-base-column-type-options">
+    <menu role="menu" aria-label={props.ariaLabel ?? `Column type: ${currentLabel}`} className="agentic-base-column-type-options">
       {VIEW_COLUMN_TYPE_OPTIONS.map(option => {
         const Icon = typeIconByKey[option.key] ?? Columns2
         const selected = option.key === props.value
