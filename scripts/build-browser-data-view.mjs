@@ -19,7 +19,10 @@ const built = await build({
   platform: 'browser',
   target: 'es2022',
   jsx: 'automatic',
-  minify: true,
+  // Keep symbol names stable across platform-specific esbuild binaries. The
+  // checked-in bundle is verified on both developer machines and Linux CI.
+  minifyWhitespace: true,
+  minifySyntax: true,
   legalComments: 'inline',
   treeShaking: true,
   define: { 'process.env.NODE_ENV': '"production"' },
