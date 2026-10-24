@@ -10,6 +10,7 @@ import type { ViewRow } from '../kanban/KanbanHostContext'
 import { VIEW_COLUMN_TYPE_OPTIONS } from './ViewColumnType'
 import { BaseColumnHeaderMenu, BaseColumnTypeMenu } from './BaseColumnHeaderMenu'
 import { readNestedRowDepth } from './rowSelection'
+import { readBaseDataViewCellPaddingClassName, readBaseDataViewHeaderPaddingClassName } from './dataViewDensity'
 
 type AnyProps = Record<string, any>
 type RowState<Row extends ViewRow> = { row: Row; depth: number; childCount: number; hidden: boolean }
@@ -431,8 +432,8 @@ const baseHost: TableHostAdapter = {
     coerceFieldLineMode: (value: unknown) => value === 'double' || value === 'flex' ? value : 'single',
     coerceRowHeightPreset: (value: unknown) => value === 'compact' ? 'compact' : 'comfortable',
     readFieldLineClassName: (mode: string) => mode === 'double' ? 'overflow-hidden whitespace-pre-wrap break-words line-clamp-2' : mode === 'flex' ? 'whitespace-pre-wrap break-words' : 'block truncate',
-    readHeaderPaddingClassName: (preset: string) => preset === 'compact' ? '!px-2 !py-1.5' : '!px-3 !py-2',
-    readTablePaddingClassName: (preset: string) => preset === 'compact' ? '!px-3 !py-1.5' : '!px-3 !py-2',
+    readHeaderPaddingClassName: (preset: string) => readBaseDataViewHeaderPaddingClassName(preset === 'compact' ? 'compact' : 'comfortable'),
+    readTablePaddingClassName: (preset: string) => readBaseDataViewCellPaddingClassName(preset === 'compact' ? 'compact' : 'comfortable'),
   },
 }
 

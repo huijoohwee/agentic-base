@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { TableHostProvider } from '../table/TableHostContext'
 import { TableView } from '../table/TableView'
 import { createBaseTableHost } from '../table/BaseTableHost'
+import { readBaseDataViewCellPaddingClassName, readBaseDataViewHeaderPaddingClassName } from '../table/dataViewDensity'
 import type { ViewColumnKind, ViewModel } from '../kanban/KanbanHostContext'
 
 export const DATA_VIEW_BROWSER_LIMITS = Object.freeze({
@@ -109,8 +110,8 @@ const browserTableHost = createBaseTableHost({
     textTruncateClass: 'agentic-base-text-truncate', toolbarRowScrollClass: 'agentic-base-toolbar-row-scroll', stickyHeaderClass: 'agentic-base-data-table-sticky-header',
   },
   helpers: {
-    readHeaderPaddingClassName: () => 'agentic-base-data-header-cell',
-    readTablePaddingClassName: () => 'agentic-base-data-cell',
+    readHeaderPaddingClassName: () => readBaseDataViewHeaderPaddingClassName('comfortable'),
+    readTablePaddingClassName: () => readBaseDataViewCellPaddingClassName('comfortable'),
     readFieldLineClassName: () => 'agentic-base-data-field-text',
   },
 })

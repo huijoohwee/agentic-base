@@ -7,6 +7,14 @@ import { TableCore } from './TableCore'
 import { ColumnsTableView } from './ColumnsTableView'
 import { buildRowSelectionHierarchy, readRowSelectionStates, readRowSelectionState, toggleHierarchicalRowSelection } from './rowSelection'
 import { Plus, Type } from 'lucide-react'
+export {
+  AGENTIC_BASE_DATA_VIEW_ROW_HEIGHT_PX,
+  readBaseDataViewCellPaddingClassName,
+  readBaseDataViewDensityClassName,
+  readBaseDataViewHeaderPaddingClassName,
+  readBaseDataViewRowHeightPx,
+  type DataViewDensityPreset,
+} from './dataViewDensity'
 export type TableViewProps = {
   view: ViewModel
   visibleColumnIds?: string[] | null

@@ -178,6 +178,16 @@
   border-right: 1px solid var(--agentic-base-border, #d9dee8);
   border-bottom: 1px solid var(--agentic-base-border, #d9dee8);
 }
+.agentic-base-data-table .agentic-base-data-density-compact {
+  height: 38px !important;
+  padding-block: 6px !important;
+  vertical-align: middle;
+}
+.agentic-base-data-table .agentic-base-data-density-comfortable {
+  height: 44px !important;
+  padding-block: 8px !important;
+  vertical-align: middle;
+}
 .agentic-base-data-table th:last-child,
 .agentic-base-data-table td:last-child { border-right: 0; }
 .agentic-base-data-table thead {
