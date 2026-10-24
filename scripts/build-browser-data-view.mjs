@@ -20,7 +20,10 @@ const built = await build({
   target: 'es2022',
   jsx: 'automatic',
   minify: true,
-  preserveSymlinks: true,
+  alias: {
+    react: path.join(root, 'node_modules/react'),
+    'react-dom': path.join(root, 'node_modules/react-dom'),
+  },
   legalComments: 'inline',
   treeShaking: true,
   define: { 'process.env.NODE_ENV': '"production"' },
