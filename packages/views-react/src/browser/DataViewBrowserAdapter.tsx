@@ -18,8 +18,10 @@ export type DataViewBrowserState = {
   columns: readonly { id: string; name: string; kind?: ViewColumnKind }[]
   rows: readonly { id: string; cells: readonly string[]; depth?: number }[]
   selectedRowId?: string | null
+  selectedRowIds?: readonly string[]
   onActivateRow?: (rowId: string) => void
   onDeselectRow?: (rowId: string) => void
+  onSelectionChange?: (selectedRowIds: string[]) => void
   orientation?: 'rows' | 'columns'
   ariaLabel?: string
 }
@@ -73,11 +75,23 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   const ariaLabel = string(input.ariaLabel ?? 'Table view', limits.labelChars, 'label', true)
   const selectedRowId = input.selectedRowId == null ? input.selectedRowId : string(input.selectedRowId, limits.idChars, 'selection', true)
   if (selectedRowId != null && !recordIds.has(selectedRowId)) throw new TypeError('Selected data view record does not exist.')
+  if ((input.selectedRowIds === undefined) !== (input.onSelectionChange === undefined)) throw new TypeError('Row selection IDs and callback must be provided together.')
+  if (input.onSelectionChange !== undefined && typeof input.onSelectionChange !== 'function') throw new TypeError('Invalid data view selection callback.')
+  if (input.selectedRowIds !== undefined && !Array.isArray(input.selectedRowIds)) throw new TypeError('Row selection IDs must be an array.')
+  const selectedRowIds = input.selectedRowIds?.map(rowId => string(rowId, limits.idChars, 'selection', true))
+  if (selectedRowIds) {
+    const selectedIds = new Set<string>()
+    for (const rowId of selectedRowIds) {
+      if (!recordIds.has(rowId)) throw new TypeError('Selected data view record does not exist.')
+      if (selectedIds.has(rowId)) throw new TypeError('Duplicate selected data view record.')
+      selectedIds.add(rowId)
+    }
+  }
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
-  const state = { columns, rows, orientation, ariaLabel, selectedRowId }
+  const state = { columns, rows, orientation, ariaLabel, selectedRowId, selectedRowIds }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
-  return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow }
+  return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange }
 }
 
 const browserTableHost = createBaseTableHost({
@@ -123,8 +137,10 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
       ariaLabel={state.ariaLabel}
       onUpdateCell={() => { throw new Error('The offline browser table is read-only.') }}
       selectedRowId={state.selectedRowId}
+      selectedRowIds={state.selectedRowIds}
       onActivateRow={state.onActivateRow}
       onDeselectRow={state.onDeselectRow}
+      onSelectionChange={state.onSelectionChange}
       renderAllRows
       orientation={state.orientation ?? 'rows'}
       tableFit="container"

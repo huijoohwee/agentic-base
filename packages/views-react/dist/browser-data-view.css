@@ -271,18 +271,47 @@
 .agentic-base-row-expand:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: 1px; }
 .agentic-base-row-select-label {
   position: absolute;
-  inset-inline-start: 27px;
+  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem) + 27px);
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
+  width: 1.5rem;
   min-width: 1.5rem;
+  height: 1.5rem;
   min-height: 1.5rem;
   align-items: center;
   justify-content: center;
   vertical-align: middle;
   cursor: pointer;
 }
-.agentic-base-row-select-label-group { inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem) + 27px); }
+.agentic-base-row-select-label-header {
+  position: relative;
+  inset: auto;
+  transform: none;
+  flex: 0 0 1.5rem;
+}
+.agentic-base-data-tree-header-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.agentic-base-nested-rows-bulk-toggle {
+  display: inline-flex;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  min-height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--agentic-base-text-tertiary, #6b7280);
+  background: transparent;
+  cursor: pointer;
+}
+.agentic-base-nested-rows-bulk-toggle:hover { background: var(--agentic-base-button-hover, #f3f4f6); }
+.agentic-base-nested-rows-bulk-toggle:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: 1px; }
 .agentic-base-row-index {
   display: inline-flex;
   width: 1.5rem;
@@ -303,7 +332,7 @@
   border-radius: 2px;
   cursor: pointer;
   opacity: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 .agentic-base-data-row:hover .agentic-base-row-select,
 .agentic-base-data-row:focus-within .agentic-base-row-select,
@@ -319,6 +348,7 @@
   opacity: 1;
   pointer-events: auto;
 }
+.agentic-base-row-select-all { opacity: 1; }
 .agentic-base-row-select:focus-visible {
   outline: 2px solid var(--agentic-base-focus, #2563eb);
   outline-offset: 1px;

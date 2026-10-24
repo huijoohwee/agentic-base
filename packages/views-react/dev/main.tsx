@@ -381,6 +381,7 @@ function Preview() {
   const [rows, setRows] = React.useState(initialRows)
   const [selected, setSelected] = React.useState('No record selected')
   const [selectedRowId, setSelectedRowId] = React.useState<string | null>(null)
+  const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([])
   const [activeView, setActiveView] = React.useState<'kanban' | 'table' | 'multiDimensional' | 'calendar' | 'dashboard' | 'workflow' | 'viewSettings' | 'floatingPanel'>('multiDimensional')
   const [savedViews, setSavedViews] = React.useState<SavedViewOption[]>([
     { id: 'table', name: 'Table View', layout: 'table' },
@@ -398,10 +399,12 @@ function Preview() {
   const view: ViewModel = React.useMemo(() => ({ columns, rows, titleColumnId: 'title', groupByColumnId: 'status' }), [rows])
   const activateRow = React.useCallback((rowId: string) => {
     setSelectedRowId(rowId)
+    setSelectedRowIds([rowId])
     setSelected(rows.find(row => row.id === rowId)?.cells[0] || rowId)
   }, [rows])
   const deselectRow = React.useCallback((rowId: string) => {
     setSelectedRowId(current => current === rowId ? null : current)
+    setSelectedRowIds(current => current.filter(id => id !== rowId))
     setSelected(current => current === (rows.find(row => row.id === rowId)?.cells[0] || rowId) ? 'No record selected' : current)
   }, [rows])
   const onUpdateCell = React.useCallback(({ rowId, columnId, nextValue }: { rowId: string; columnId: string; nextValue: string }) => {
@@ -480,7 +483,7 @@ function Preview() {
       <p className="mb-2 text-xs text-[color:var(--kg-text-secondary)]">Select a lane control to edit status, drag a card, or use its menu. No data leaves this browser tab.</p>
       <KanbanHostProvider value={graphHost}><KanbanView view={view} canMutate onUpdateCell={onUpdateCell} onNewRecord={onNewRecord} onReorderRows={onReorderRows} onActivateRow={activateRow} /></KanbanHostProvider>
     </> : <React.Suspense fallback={<p role="status">Loading Table view…</p>}>
-      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} onActivateRow={activateRow} onDeselectRow={deselectRow} />
+      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} selectedRowIds={selectedRowIds} onSelectionChange={setSelectedRowIds} onActivateRow={activateRow} onDeselectRow={deselectRow} />
     </React.Suspense>}
     <output className="mt-4 block border-t border-[color:var(--kg-border)] pt-3 text-xs text-[color:var(--kg-text-secondary)]" aria-live="polite">{selected}</output>
   </main>

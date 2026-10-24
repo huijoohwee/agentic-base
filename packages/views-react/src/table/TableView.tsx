@@ -16,6 +16,9 @@ export type TableViewProps = {
   onActivateRow?: (rowId: string) => void
   onDeselectRow?: (rowId: string) => void
   selectedRowId?: string | null
+  /** Controlled checkbox selection. Supply both props to enable row and select-all checkboxes. */
+  selectedRowIds?: readonly string[]
+  onSelectionChange?: (selectedRowIds: string[]) => void
   ariaLabel?: string
   onNewRecord?: () => void
   onAddColumn?: (args: { name: string; columnType: ViewColumnType }) => void
@@ -77,6 +80,9 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     readHeaderPaddingClassName, readTablePaddingClassName,
   } = helpers
   const { view, visibleColumnIds, columnTypesById, canMutate, onUpdateCell, onActivateRow } = props
+  const selectedRowIds = props.selectedRowIds ?? []
+  const selectedRowIdSet = new Set(props.selectedRowIds ?? (props.selectedRowId ? [props.selectedRowId] : []))
+  const multiRowSelectionEnabled = props.selectedRowIds !== undefined && Boolean(props.onSelectionChange)
   const canConfigure = props.canConfigure ?? canMutate
   const orientation = props.orientation === 'columns' ? 'columns' : 'rows'
   const rowHeightPreset = coerceRowHeightPreset(props.rowHeightPreset)
@@ -169,6 +175,19 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     [contentColumnIndex, indentColumnIndex, levelColumnIndex, lineColumnIndex, renderedRows],
   )
   const { areAllNestedRowsCollapsed, collapsedNestedRowIds, hasNestedRowHierarchy, toggleAllNestedRows, toggleNestedRow, visibleNestedRowStates } = useNestedRowCollapse({ rows: renderedRows, levelColumnIndex, indentColumnIndex })
+  const selectableRowIds = view.rows.map(row => row.id)
+  const selectableRowIdSet = new Set(selectableRowIds)
+  const selectedVisibleRowCount = selectableRowIds.reduce((count, rowId) => count + Number(selectedRowIdSet.has(rowId)), 0)
+  const allRowsSelected = selectableRowIds.length > 0 && selectedVisibleRowCount === selectableRowIds.length
+  const someRowsSelected = selectedVisibleRowCount > 0 && !allRowsSelected
+  const rowSelectionEnabled = hasNestedRowHierarchy && (multiRowSelectionEnabled || (props.selectedRowId !== undefined && Boolean(onActivateRow)))
+  const toggleAllRows = () => {
+    if (!multiRowSelectionEnabled) return
+    const next = allRowsSelected
+      ? selectedRowIds.filter(rowId => !selectableRowIdSet.has(rowId))
+      : Array.from(new Set([...selectedRowIds, ...selectableRowIds]))
+    props.onSelectionChange?.(next)
+  }
   const minimumVisibleRowDepth = visibleNestedRowStates.reduce((minimum: number, state: { depth: number }) => Math.min(minimum, state.depth), Number.POSITIVE_INFINITY)
   const maximumVisibleRowIndent = visibleNestedRowStates.reduce((maximum: number, state: { depth: number }) => Math.max(maximum, state.depth - minimumVisibleRowDepth), 0)
   const rowNumberById = new Map<string, number>()
@@ -252,12 +271,12 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     const index = view.columns.findIndex(column => column.id === view.titleColumnId)
     return index >= 0 ? index : 0
   }, [view.columns, view.titleColumnId])
-  const baseHierarchyColumnWidthPx = props.selectedRowId !== undefined && Boolean(onActivateRow)
+  const baseHierarchyColumnWidthPx = rowSelectionEnabled
     ? TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX
     : TABLE_HIERARCHY_COLUMN_WIDTH_PX
   const hierarchyColumnWidthPx = Math.max(
     baseHierarchyColumnWidthPx,
-    maximumVisibleRowIndent * 24 + TABLE_HIERARCHY_CONTROL_INSET_PX + (props.selectedRowId !== undefined && Boolean(onActivateRow)
+    maximumVisibleRowIndent * 24 + TABLE_HIERARCHY_CONTROL_INSET_PX + (rowSelectionEnabled
       ? TABLE_HIERARCHY_GROUP_SELECTION_OFFSET_PX + TABLE_HIERARCHY_CONTROL_SIZE_PX
       : TABLE_HIERARCHY_CONTROL_SIZE_PX),
   )
@@ -323,8 +342,12 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       header={(
         <tr>
             {hasNestedRowHierarchy ? (
-              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`} style={{ width: hierarchyColumnWidthPx }}>
-                <NestedRowsBulkToggle collapsed={areAllNestedRowsCollapsed} onToggle={toggleAllNestedRows} />
+              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] border-b text-left ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`} style={{ width: hierarchyColumnWidthPx }}>
+                <NestedRowsBulkToggle
+                  collapsed={areAllNestedRowsCollapsed}
+                  onToggle={toggleAllNestedRows}
+                  selection={multiRowSelectionEnabled ? { checked: allRowsSelected, mixed: someRowsSelected, onChange: toggleAllRows } : undefined}
+                />
               </th>
             ) : null}
             {visibleColumnMeta.map(({ col: c }) => {
@@ -421,8 +444,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         <>
           {visibleNestedRowStates.map(({ row: r, depth: rowDepth, childCount }: { row: ViewModel['rows'][number]; depth: number; childCount: number }) => {
             const isNestedRowCollapsed = collapsedNestedRowIds.has(r.id)
-            const selected = props.selectedRowId === r.id
-            const selectionEnabled = props.selectedRowId !== undefined && Boolean(onActivateRow) && hasNestedRowHierarchy
+            const selected = selectedRowIdSet.has(r.id)
+            const selectionEnabled = rowSelectionEnabled
             const rowIndentLevel = Math.max(0, rowDepth - minimumVisibleRowDepth)
             const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
             return <tr
@@ -433,7 +456,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                 onActivateRow ? 'agentic-base-data-row-activatable' : '',
                 selected ? themeTokens.table.rowSelected : '',
               ].filter(Boolean).join(' ')}
-              aria-selected={props.selectedRowId === undefined ? undefined : selected}
+              aria-selected={props.selectedRowIds !== undefined || props.selectedRowId !== undefined ? selected : undefined}
               data-agentic-base-row-depth={String(rowDepth)}
               data-agentic-base-row-parent={childCount > 0 ? 'true' : undefined}
               data-agentic-base-row-hierarchy={hasNestedRowHierarchy ? 'true' : undefined}
@@ -451,7 +474,27 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
               }
             >
               {hasNestedRowHierarchy ? (
-                <HierarchyCell cellPaddingClassName={cellPaddingClassName} depth={rowIndentLevel} childCount={childCount} collapsed={isNestedRowCollapsed} scope="row" onToggle={() => toggleNestedRow(r.id)} selectable={selectionEnabled} selected={selected} selectionLabel={rowLabel} rowNumber={rowNumberById.get(r.id)} onSelect={() => selected ? props.onDeselectRow?.(r.id) : onActivateRow?.(r.id)} />
+                <HierarchyCell
+                  cellPaddingClassName={cellPaddingClassName}
+                  depth={rowIndentLevel}
+                  childCount={childCount}
+                  collapsed={isNestedRowCollapsed}
+                  scope="row"
+                  onToggle={() => toggleNestedRow(r.id)}
+                  selectable={selectionEnabled}
+                  selected={selected}
+                  selectionLabel={rowLabel}
+                  rowNumber={rowNumberById.get(r.id)}
+                  onSelect={() => {
+                    if (multiRowSelectionEnabled) {
+                      props.onSelectionChange?.(selected ? selectedRowIds.filter(rowId => rowId !== r.id) : [...selectedRowIds, r.id])
+                    } else if (selected) {
+                      props.onDeselectRow?.(r.id)
+                    } else {
+                      onActivateRow?.(r.id)
+                    }
+                  }}
+                />
               ) : null}
               {visibleColumnMeta.map(({ col: c, index: colIndex }) => {
                 const value = String(r.cells[colIndex] ?? '')

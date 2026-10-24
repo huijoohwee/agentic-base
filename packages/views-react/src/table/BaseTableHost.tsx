@@ -230,11 +230,12 @@ function BaseHierarchyCell(props: AnyProps) {
   return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{
     '--agentic-base-data-tree-depth': String(props.depth),
     '--agentic-base-data-tree-indent': `${Math.max(0, Number(props.depth)) * 24}px`,
+    '--agentic-base-data-tree-selection-indent': `${Math.max(0, Number(props.depth) - Number(!hasChildren)) * 24}px`,
   } as React.CSSProperties}>
     <span className="agentic-base-data-tree-control">
       {selectionEnabled && !hasChildren ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
-      {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`}>
-        <input type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onClick={event => event.stopPropagation()} onChange={() => props.onSelect?.()} />
+      {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`} onClick={event => event.stopPropagation()}>
+        <input type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onChange={() => props.onSelect?.()} />
         {Number(props.rowNumber) > 0 ? <span className="agentic-base-row-index">{props.rowNumber}</span> : null}
       </label> : null}
       {hasChildren ? <button type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }}>
@@ -244,9 +245,24 @@ function BaseHierarchyCell(props: AnyProps) {
   </td>
 }
 
-function BaseNestedRowsBulkToggle(props: { collapsed: boolean; onToggle: () => void }) {
+function BaseNestedRowsBulkToggle(props: {
+  collapsed: boolean
+  onToggle: () => void
+  selection?: { checked: boolean; mixed: boolean; onChange: () => void }
+}) {
   const Icon = props.collapsed ? ChevronsRight : ChevronsDown
-  return <button type="button" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle} style={{ minWidth: 24, minHeight: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 3, border: 0, borderRadius: 4, color: '#6b7280', background: 'transparent', cursor: 'pointer' }}><Icon size={14} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} /></button>
+  const selectAllRef = React.useRef<HTMLInputElement>(null)
+  React.useEffect(() => {
+    if (selectAllRef.current) selectAllRef.current.indeterminate = Boolean(props.selection?.mixed)
+  }, [props.selection?.mixed])
+  return <span className="agentic-base-data-tree-header-controls">
+    <button type="button" className="agentic-base-nested-rows-bulk-toggle" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle}>
+      <Icon size={14} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} />
+    </button>
+    {props.selection ? <label className="agentic-base-row-select-label agentic-base-row-select-label-header">
+      <input ref={selectAllRef} type="checkbox" className="agentic-base-row-select agentic-base-row-select-all" aria-label="Select all rows" checked={props.selection.checked} onChange={props.selection.onChange} />
+    </label> : null}
+  </span>
 }
 
 function BaseInlineTextCellEditor(props: AnyProps) {
