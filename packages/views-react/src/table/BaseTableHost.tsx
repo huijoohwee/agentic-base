@@ -232,7 +232,7 @@ function BaseHierarchyCell(props: AnyProps) {
   React.useEffect(() => {
     if (selectionRef.current) selectionRef.current.indeterminate = Boolean(props.mixed)
   }, [props.mixed])
-  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{
+  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className={['agentic-base-data-tree-cell', props.cellPaddingClassName].filter(Boolean).join(' ')} data-agentic-base-hierarchy-depth={props.depth} style={{
     '--agentic-base-data-tree-depth': String(props.depth),
     '--agentic-base-data-tree-indent': `${Math.max(0, Number(props.depth)) * 24}px`,
     '--agentic-base-data-tree-selection-indent': `${Math.max(0, Number(props.depth) - Number(!hasChildren)) * 24}px`,

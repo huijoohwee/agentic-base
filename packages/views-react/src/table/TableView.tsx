@@ -464,6 +464,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
             const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
             return <tr
               key={r.id}
+              role="row"
+              aria-label={`Data row: ${rowLabel}`}
               className={[
                 'agentic-base-data-row',
                 `${themeTokens.table.rowHoverHighlight} transition-colors`,

@@ -204,8 +204,6 @@
   background-color: var(--agentic-base-data-table-sticky-header-bg);
   background-clip: padding-box;
 }
-.agentic-base-data-table-sticky-header > tr > th { height: 42px; }
-.agentic-base-data-table tbody > tr > td { height: 40px; }
 .agentic-base-data-tree-cell {
   --agentic-base-data-tree-cell-padding-inline: 0.75rem;
   color: var(--agentic-base-text-secondary, #4b5563);
@@ -220,7 +218,7 @@
   position: relative;
   display: inline-flex;
   width: 100%;
-  min-height: 1.5rem;
+  min-height: 18px;
   align-items: center;
   margin: 0;
   color: inherit;
@@ -294,6 +292,10 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
+}
+.agentic-base-data-table thead th details > summary.kg-menu-icon-action {
+  height: 24px !important;
+  min-height: 24px !important;
 }
 .agentic-base-nested-rows-bulk-toggle {
   display: inline-flex;
