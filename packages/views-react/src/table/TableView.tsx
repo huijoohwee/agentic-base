@@ -5,6 +5,7 @@ import { columnTypeToBaseKind, defaultColumnTypeForInferredKind, labelForViewCol
 import { useTableHost, type DataViewFieldLineMode, type DataViewRowHeightPreset } from './TableHostContext'
 import { TableCore } from './TableCore'
 import { ColumnsTableView } from './ColumnsTableView'
+import { buildRowSelectionHierarchy, readRowSelectionStates, readRowSelectionState, toggleHierarchicalRowSelection } from './rowSelection'
 import { Plus, Type } from 'lucide-react'
 export type TableViewProps = {
   view: ViewModel
@@ -81,7 +82,10 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
   } = helpers
   const { view, visibleColumnIds, columnTypesById, canMutate, onUpdateCell, onActivateRow } = props
   const selectedRowIds = props.selectedRowIds ?? []
-  const selectedRowIdSet = new Set(props.selectedRowIds ?? (props.selectedRowId ? [props.selectedRowId] : []))
+  const selectedRowIdSet = React.useMemo(
+    () => new Set(props.selectedRowIds ?? (props.selectedRowId ? [props.selectedRowId] : [])),
+    [props.selectedRowId, props.selectedRowIds],
+  )
   const multiRowSelectionEnabled = props.selectedRowIds !== undefined && Boolean(props.onSelectionChange)
   const canConfigure = props.canConfigure ?? canMutate
   const orientation = props.orientation === 'columns' ? 'columns' : 'rows'
@@ -175,11 +179,20 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     [contentColumnIndex, indentColumnIndex, levelColumnIndex, lineColumnIndex, renderedRows],
   )
   const { areAllNestedRowsCollapsed, collapsedNestedRowIds, hasNestedRowHierarchy, toggleAllNestedRows, toggleNestedRow, visibleNestedRowStates } = useNestedRowCollapse({ rows: renderedRows, levelColumnIndex, indentColumnIndex })
-  const selectableRowIds = view.rows.map(row => row.id)
+  const selectionHierarchy = React.useMemo(
+    () => buildRowSelectionHierarchy(view.rows, levelColumnIndex, indentColumnIndex),
+    [indentColumnIndex, levelColumnIndex, view.rows],
+  )
+  const selectionStates = React.useMemo(
+    () => readRowSelectionStates(selectedRowIdSet, selectionHierarchy),
+    [selectedRowIdSet, selectionHierarchy],
+  )
+  const selectableRowIds = selectionHierarchy.rowIds
   const selectableRowIdSet = new Set(selectableRowIds)
-  const selectedVisibleRowCount = selectableRowIds.reduce((count, rowId) => count + Number(selectedRowIdSet.has(rowId)), 0)
+  const selectedVisibleRowCount = selectableRowIds.reduce((count, rowId) => count + Number(selectionStates.get(rowId)?.checked), 0)
+  const partiallySelectedRowCount = selectableRowIds.reduce((count, rowId) => count + Number(selectionStates.get(rowId)?.mixed), 0)
   const allRowsSelected = selectableRowIds.length > 0 && selectedVisibleRowCount === selectableRowIds.length
-  const someRowsSelected = selectedVisibleRowCount > 0 && !allRowsSelected
+  const someRowsSelected = (selectedVisibleRowCount > 0 || partiallySelectedRowCount > 0) && !allRowsSelected
   const rowSelectionEnabled = hasNestedRowHierarchy && (multiRowSelectionEnabled || (props.selectedRowId !== undefined && Boolean(onActivateRow)))
   const toggleAllRows = () => {
     if (!multiRowSelectionEnabled) return
@@ -444,7 +457,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         <>
           {visibleNestedRowStates.map(({ row: r, depth: rowDepth, childCount }: { row: ViewModel['rows'][number]; depth: number; childCount: number }) => {
             const isNestedRowCollapsed = collapsedNestedRowIds.has(r.id)
-            const selected = selectedRowIdSet.has(r.id)
+            const selectionState = selectionStates.get(r.id) ?? { checked: false, mixed: false }
+            const selected = selectionState.checked
             const selectionEnabled = rowSelectionEnabled
             const rowIndentLevel = Math.max(0, rowDepth - minimumVisibleRowDepth)
             const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
@@ -483,11 +497,12 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                   onToggle={() => toggleNestedRow(r.id)}
                   selectable={selectionEnabled}
                   selected={selected}
+                  mixed={selectionState.mixed}
                   selectionLabel={rowLabel}
                   rowNumber={rowNumberById.get(r.id)}
                   onSelect={() => {
                     if (multiRowSelectionEnabled) {
-                      props.onSelectionChange?.(selected ? selectedRowIds.filter(rowId => rowId !== r.id) : [...selectedRowIds, r.id])
+                      props.onSelectionChange?.(toggleHierarchicalRowSelection(r.id, selectedRowIds, selectionHierarchy))
                     } else if (selected) {
                       props.onDeselectRow?.(r.id)
                     } else {

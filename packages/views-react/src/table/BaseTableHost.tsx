@@ -9,6 +9,7 @@ import type { TableHostAdapter } from './TableHostContext'
 import type { ViewRow } from '../kanban/KanbanHostContext'
 import { VIEW_COLUMN_TYPE_OPTIONS } from './ViewColumnType'
 import { BaseColumnHeaderMenu, BaseColumnTypeMenu } from './BaseColumnHeaderMenu'
+import { readNestedRowDepth } from './rowSelection'
 
 type AnyProps = Record<string, any>
 type RowState<Row extends ViewRow> = { row: Row; depth: number; childCount: number; hidden: boolean }
@@ -226,7 +227,11 @@ function BaseHierarchyCell(props: AnyProps) {
   const hasChildren = props.childCount > 0
   const isRecordRow = props.scope === 'row'
   const selectionEnabled = Boolean(props.selectable && isRecordRow)
+  const selectionRef = React.useRef<HTMLInputElement>(null)
   const expandableLabel = `${props.collapsed ? 'Expand' : 'Collapse'} nested group${props.selectionLabel ? `: ${props.selectionLabel}` : ''}`
+  React.useEffect(() => {
+    if (selectionRef.current) selectionRef.current.indeterminate = Boolean(props.mixed)
+  }, [props.mixed])
   return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className="agentic-base-data-tree-cell" data-agentic-base-hierarchy-depth={props.depth} style={{
     '--agentic-base-data-tree-depth': String(props.depth),
     '--agentic-base-data-tree-indent': `${Math.max(0, Number(props.depth)) * 24}px`,
@@ -235,7 +240,7 @@ function BaseHierarchyCell(props: AnyProps) {
     <span className="agentic-base-data-tree-control">
       {selectionEnabled && !hasChildren ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
       {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`} onClick={event => event.stopPropagation()}>
-        <input type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} checked={Boolean(props.selected)} onChange={() => props.onSelect?.()} />
+        <input ref={selectionRef} type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} aria-checked={props.mixed ? 'mixed' : undefined} checked={Boolean(props.selected)} onChange={() => props.onSelect?.()} />
         {Number(props.rowNumber) > 0 ? <span className="agentic-base-row-index">{props.rowNumber}</span> : null}
       </label> : null}
       {hasChildren ? <button type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }}>
@@ -332,17 +337,8 @@ function BaseCellSelectPopover(props: AnyProps) {
   </section>
 }
 
-function readDepth(row: ViewRow, levelIndex?: number, indentIndex?: number): number {
-  const level = levelIndex == null || levelIndex < 0 ? '' : String(row.cells[levelIndex] ?? '').trim()
-  const levelMatch = /^L(\d+)$/i.exec(level)
-  const explicitLevel = levelMatch ? Number.parseInt(levelMatch[1], 10) : 0
-  if (explicitLevel > 0) return Math.min(8, explicitLevel)
-  const indent = indentIndex == null || indentIndex < 0 ? 0 : Number.parseInt(String(row.cells[indentIndex] ?? '').trim(), 10)
-  return Number.isFinite(indent) && indent > 0 ? Math.min(8, Math.floor(indent / 2)) : 0
-}
-
 function rowStates<Row extends ViewRow>(rows: readonly Row[], collapsedIds: ReadonlySet<string>, levelIndex?: number, indentIndex?: number): RowState<Row>[] {
-  const states = rows.map(row => ({ row, depth: readDepth(row, levelIndex, indentIndex), childCount: 0, hidden: false }))
+  const states = rows.map(row => ({ row, depth: readNestedRowDepth(row, levelIndex, indentIndex), childCount: 0, hidden: false }))
   const collapsedDepths: number[] = []
   const ancestors: RowState<Row>[] = []
   for (const state of states) {
