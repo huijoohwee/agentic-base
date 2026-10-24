@@ -68,7 +68,12 @@ if (!check && !process.argv.includes('--write')) throw new Error('Use --write or
 if (check) {
   for (const [name, expected] of files) {
     const target = path.join(outputRoot, name)
-    if (!fs.existsSync(target) || !fs.readFileSync(target).equals(expected)) throw new Error(`${name} is stale; run npm run build:browser-data-view.`)
+    const actual = fs.existsSync(target) ? fs.readFileSync(target) : Buffer.alloc(0)
+    if (!actual.equals(expected)) {
+      let offset = 0
+      while (offset < actual.length && offset < expected.length && actual[offset] === expected[offset]) offset += 1
+      throw new Error(`${name} is stale at byte ${offset}; tracked sha256=${digest(actual)}; generated sha256=${digest(expected)}; run npm run build:browser-data-view.`)
+    }
   }
 } else {
   fs.mkdirSync(outputRoot, { recursive: true })
