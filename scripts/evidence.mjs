@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,7 +13,8 @@ const digest = createHash('sha256');
 for (const file of files) {
   digest.update(file);
   digest.update('\0');
-  digest.update(readFileSync(resolve(root, file)));
+  const absolutePath = resolve(root, file);
+  digest.update(existsSync(absolutePath) ? readFileSync(absolutePath) : '<deleted>');
   digest.update('\0');
 }
 const receipt = {

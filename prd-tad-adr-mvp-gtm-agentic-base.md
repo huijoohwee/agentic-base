@@ -1,18 +1,18 @@
 ---
 title: "agentic-base: Headless Data and Views"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.41"
-revision: "0.9.41"
+version: "0.9.44"
+revision: "0.9.44"
 date: "2026-10-23"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "headless-data-base"
-prd_revision: "0.9.41"
-tad_revision: "0.9.41"
-adr_revision: "0.9.41"
-mvp_revision: "0.9.41"
-gtm_revision: "0.9.41"
+prd_revision: "0.9.44"
+tad_revision: "0.9.44"
+adr_revision: "0.9.44"
+mvp_revision: "0.9.44"
+gtm_revision: "0.9.44"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -415,7 +415,7 @@ This specification grants no deployment, public package publication, or producti
 
 **Status:** Accepted · **Date:** 2026-10-17
 
-**Context:** The existing visual implementations are in Graph and are now source-mapped into the private Base lane: Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, saved-view settings, reusable MainPanel settings, and Workflow Manager field presentation. The local package has no portable distribution path while its private-source/public-repository gate remains unresolved. The prior independent React starter has been removed from the active lane to avoid a competing implementation.
+**Context:** The existing visual implementations are in Graph and are now source-mapped into the canonical Base lane: Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, saved-view settings, reusable MainPanel settings, and Workflow Manager field presentation. The Base-owned source is MIT-licensed and the repository is public; npm publication remains disabled by the package's private flag. The prior independent React starter has been removed from the active lane to avoid a competing implementation.
 
 **Decision:** Make agentic-base the sole home for base/table/field contracts, opt-in persistence, record operations, four projections, and the reusable view package. Move the existing Table, Multi-dimensional Table, Kanban, Calendar, generic Dashboard layout/cards, saved-view/field settings, Workflow Manager list/detail presentation, View-panel content, and source-neutral projection mappings as one dependency-closed migration. Graph keeps Markdown/frontmatter decoding, graph-specific widgets and field sources, Workflow Manager field models/actions, data adapters, and outer panel shells. Do not create another repository, starter, or parallel package.
 
@@ -491,18 +491,20 @@ This specification grants no deployment, public package publication, or producti
 
 ## MVP — smallest dependency-closed slice
 
-**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, MIT-licensed React package, bounded offline browser artifact, and one evidence workflow · ADR-1–7 at headless-data-base@0.9.41. R11/R12 and any remote host remain gated.
+**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, MIT-licensed React package, bounded offline browser artifact, and one evidence workflow · ADR-1–7 at headless-data-base@0.9.44. R11/R12 and any remote host remain gated.
 
 | Must slice | VCC | Evidence reference | Local / delivered rung |
 |---|---|---|---|
 | Versioned schema, bounded record operations, stable IDs, and typed errors | V1/V2/V5 | `npm run check`: 13/13 tests; schema, CRUD, limits, conflicts pass | dev-proven / undocumented |
 | Atomic IndexedDB persistence and offline reopen | V3 | Browser: IDs survived reload/offline reload; `test-browser/idb-atomicity.html` injected an uncloneable record and confirmed abort retained the old revision with no partial record | dev-proven / undocumented |
-| Four deterministic projections and reusable view controls | V4/V9 | Headless fixtures pass; the MIT-licensed package maps 58 Graph-derived modules, exports shared React views/settings, and uses one grid for Table and Multi-dimensional Table. The generated browser artifact is 148,590-byte JS plus 1,883-byte CSS. Graph pins Base `529f1d8`; PRs #1719–#1721 and their protected checks are integrated. Shoply PR #136 pins Base `093d259` and passes Integration Gate run `39082863655`. The mobile Base fixture and Graph empty-state consumer were live-checked; Shoply production UI was not independently live-checked. Full parity and accessibility review remain open. | core, Graph UI, and Shoply Table artifact are dev/protected-check proven / full parity open |
+| Four deterministic projections and reusable view controls | V4/V9 | Headless checks pass; the MIT-licensed package maps 58 Graph-derived modules, exports shared React views/settings, and uses one grid for Table and Multi-dimensional Table. The generated browser artifact is 194,346-byte JS plus 9,736-byte CSS. Local previews align group labels with child record labels, center the 16px drag affordance in its adjacent 24px slot against the row-number text, and advance hierarchy controls by 24px per nesting level. Optional row deselection is consumer-owned; row reordering is still consumer-owned and not implemented here. Graph or Shoply pins are unchanged. Full parity and accessibility review remain open. | core, Graph UI, and Shoply Table artifact are dev/protected-check proven / full parity open |
 | Scoped authorization and no partial mutation | V5/V6 | `npm run check`: denied read, invalid-schema, stale-revision, and concurrency fixtures pass | dev-proven / undocumented |
 | One CI evidence path | V10 | `.github/workflows/ci.yml` runs `npm run check`; Base PR #5 has successful GitHub-hosted Integration Gate checks | dev-proven / undocumented |
 **Prior evidence record · 2026-10-16:** The earlier 44-file staging snapshot verified Dashboard responsive layout, resize keyboard/touch behavior, Table-to-Kanban shared-fixture edits, Workflow Manager search/selection, offline failure atomicity, and zero network requests. Those results remain local fixture evidence only; they do not prove consumer data parity or release readiness. The earlier source-map count and “remaining Calendar/Multi-dimensional Table” status are superseded by the current update below.
 
 **Current update · 2026-10-23:** Base main is `becd35bdfef0c65510ba9b47ecc481b63313163d`; PR #9 adds MIT licensing for Base-owned material. The repository is public, `main` is protected with required context `check` and strictness off, and provider readback plus Base `npm run doctor` pass. PR #9's two Integration Gate `check` runs (#39904784385, #39904830805) and candidate `npm run check` passed. The 58-entry migration manifest retains source-path/digest provenance. Graph main `b8d18db618d596f5138dbb03020cf04be7d839fa` imports the Base Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, settings, and shared panel modules at exact Base pin `529f1d866974453327977595a457d5065a8dbc45`; PRs #1719–#1721 and protected checks are integrated. Commerce main `b6867b2a79fd609eb4c43df7eeda7fb9f704d616` embeds the bounded Base Table artifact from exact Base pin `093d2592449d19892170eac928606cd5d5da58b8`; PR #136's Integration Gate run `39082863655` passed. A mobile Base preview showed the shared view layouts, Dashboard, and settings; Graph live verification reached its shared Multi-dimensional Table controls and empty-data state, then restored the original Storyboard renderer. The authorized Graph Dev attempt in run #39095055299 failed the root 404 gate; Production and mirror publication were skipped. Shoply's production UI was not independently live-checked. FloatingPanel lifecycle, full parity/accessibility, shared data storage/sync, and production delivery remain open. No customer data moved, package publication occurred, or deployment was authorized.
+
+**Local UI follow-up · 2026-10-23:** The shared hierarchy cell aligns group labels with record labels, keeps drag handles and row-number selection in adjacent fixed 24px slots, sizes the 16px labeled grip against the row-number text and centers it in its slot, advances expand controls by 24px per visible nesting level, and grows the gutter only when visible depth requires it. The offline adapter exposes optional `onDeselectRow` separately from row activation so consumers can clear selection without changing existing activation semantics. Base and design-system previews verified hover, checked/unchecked checkbox state, and collapse/expand restoration. Row ordering remains a consumer-owned policy; the grip is a labeled visual affordance. Graph remains pinned to its prior Base commit; no Graph/Shoply pin, data, release, or deployment changed.
 
 **Demo skeleton and domain-object rubric:** consumers create and reopen an authorized base/table/record offline, inspect four projections of stable IDs, invoke one existing command adapter, and verify revision, authorization, recovery, and zero network calls within 180 seconds after setup; validate the same contract with a second independent consumer after source and data gates.
 
@@ -569,7 +571,7 @@ This specification grants no deployment, public package publication, or producti
 | C14 ADLC execution | covered | Deploy Boundary Register | `check` is the declared required context; public visibility and provider policy readback are separate release effects. This source-only change has no DEPLOY receipt | Delivery function | Read back main's `check` policy after visibility change; no production claim |
 | C15 Audience projections | deferred | Coverage record | No deck, business plan, or financial model evidence | Product function | Create only for a named audience |
 | C16 Learning and next increment | covered | GTM | Successor Context and stop conditions defined | Product function | Review after two consumer observations |
-**Coverage:** headless-data-base@0.9.41 · 2026-10-23; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
+**Coverage:** headless-data-base@0.9.44 · 2026-10-23; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
 
 ## Planning record
 
