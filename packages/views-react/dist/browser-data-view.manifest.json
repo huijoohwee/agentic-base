@@ -75,8 +75,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 212134,
-      "sha256": "7b569e34c6fbae59067c094e45cd69490520c36ca0b619702f3423c6d7ab7aee"
+      "bytes": 219012,
+      "sha256": "25d9941debcc9f5ef04632a2386bd639b746d7a78b5aa2f7a438d571233ca524"
     },
     {
       "path": "browser-data-view.css",
