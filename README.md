@@ -20,6 +20,10 @@ Record writes require both an expected base revision and, for update/delete, an 
 
 ## Scope and status
 
+This public repository remains canonical. `agentic-base-private-archive` is a private,
+frozen history copy, not a package, build, or release source. Follow the [shared private
+archive policy](https://github.com/huijoohwee/agentic-os/blob/main/guides/PRIVATE-ARCHIVE-POLICY.md).
+
 The demo is a projection harness, not a second product UI. This repository is the canonical Git source for the shared views; exact commit pins are consumed through Git access. Table and Multi-dimensional Table share one Base grid; the optional graph overlay remains a host callback. Dashboard visuals, saved-view settings, reusable MainPanel settings, FloatingPanel shell/close visuals, and Workflow Manager field presentation also use neutral host contracts. `packages/views-react/migration-source.json` pins 54 source/candidate pairs to canonical `agentic-graph` main with SHA-256 digests. Graph imports Base React views from an exact commit pin, and Shoply consumes the bounded browser Table artifact from an exact Base commit pin. Graph-specific schemas, controls, data formatting, drag policy, field actions, outer panels, and Mission content remain host supplied. Both consumers retain their data and product lifecycle. FloatingPanel placement/lifecycle and complete interaction parity remain open. No competing renderer is retained.
 
 This implementation does not provide file storage, remote sync, an edge database, MCP/WebMCP servers, or production deployment. The repository's original materials are licensed under MIT; see [LICENSE](LICENSE). Third-party components retain their own licenses and notices. `package.json` remains private to prevent registry publication; GitHub source visibility does not publish a package. No consumer data or credentials belong in this repository.
