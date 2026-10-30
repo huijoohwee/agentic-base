@@ -19,6 +19,7 @@
     "check"
   ],
   "capabilities": [
+    "protected-integration:pull-request",
     "retain-all-cleanup"
   ],
   "authority": {
@@ -33,5 +34,5 @@
     "worktreeProjection": "retain",
     "worktreeRegistration": "retain"
   },
-  "profileDigest": "40d0751348bd63154629b069de9eaaa3f43b73e1b0cd612f25d9c2458a5c2be9"
+  "profileDigest": "f739629821cd7ebd068093bb6457fa0077bad843246f24c852c263f9188d8511"
 }
