@@ -312,6 +312,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         columnTypesById={columnTypesById}
         canConfigure={canConfigure}
         canMutate={canMutate}
+        tableFit={tableFit}
         editing={editing}
         cellPaddingClassName={cellPaddingClassName}
         headerPaddingClassName={headerPaddingClassName}
