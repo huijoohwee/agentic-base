@@ -42,6 +42,11 @@
 .agentic-base-data-view .agentic-base-text-tertiary { color: var(--agentic-base-text-tertiary, #6b7280); }
 .agentic-base-data-view .agentic-base-menu-panel { color: var(--agentic-base-text-primary, #111827); background: #fff; border: 1px solid var(--agentic-base-border, #e5e7eb); border-radius: 6px; box-shadow: 0 8px 24px #17203324; }
 .agentic-base-data-view .agentic-base-button-hover:hover { background: var(--agentic-base-action-hover, #f3f4f6); }
+.base-multi-dimensional-table { box-sizing: border-box; min-width: 0; }
+.base-multi-dimensional-table-toolbar { display: flex; justify-content: flex-end; min-width: 0; margin-bottom: 0.5rem; }
+.base-multi-dimensional-table-pivot { box-sizing: border-box; min-height: 44px; padding: 0.55rem 0.8rem; border: 1px solid var(--agentic-base-border, #d1d5db); border-radius: 0.65rem; color: var(--agentic-base-text-primary, #111827); background: var(--agentic-base-surface, #fff); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.base-multi-dimensional-table-pivot:hover { background: var(--agentic-base-action-hover, #f3f4f6); }
+.base-multi-dimensional-table-pivot:focus-visible { outline: 3px solid var(--agentic-base-focus, #2563eb); outline-offset: 2px; }
 
 /* Column menus stay in their host tree so isolated hosts retain these styles. */
 .agentic-base-column-menu-surface {
@@ -224,19 +229,21 @@
 .agentic-base-data-tree-cell {
   --agentic-base-data-tree-cell-padding-inline: 0.75rem;
   color: var(--agentic-base-text-secondary, #4b5563);
-  width: 4rem;
-  min-width: 4rem;
+  width: var(--agentic-base-data-tree-cell-width, 5.5rem);
+  min-width: var(--agentic-base-data-tree-cell-width, 5.5rem);
   text-align: center;
   vertical-align: middle;
 }
 .agentic-base-data-table tbody .agentic-base-data-tree-cell { padding-inline-start: 0; text-align: left; }
 .agentic-base-data-table thead .agentic-base-data-tree-cell { padding-inline: 0; text-align: center; }
 .agentic-base-data-tree-control {
-  position: relative;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 1.75rem 1.5rem 1.5rem;
+  box-sizing: border-box;
   width: 100%;
-  min-height: 18px;
+  min-height: 1.5rem;
   align-items: center;
+  padding-inline-start: 0.75rem;
   margin: 0;
   color: inherit;
   vertical-align: middle;
@@ -251,10 +258,8 @@
   color: var(--agentic-base-text-primary, #111827);
 }
 .agentic-base-row-drag-handle {
-  position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + 16px);
-  top: 50%;
-  transform: translateY(-50%);
+  grid-column: 1;
+  justify-self: start;
   width: 1rem;
   height: 1rem;
   color: var(--agentic-base-text-tertiary, #6b7280);
@@ -264,10 +269,8 @@
 .agentic-base-data-row:focus-within .agentic-base-row-drag-handle,
 .agentic-base-data-row[aria-selected="true"] .agentic-base-row-drag-handle { opacity: 1; }
 .agentic-base-row-expand {
-  position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem));
-  top: 50%;
-  transform: translateY(-50%);
+  grid-column: 2;
+  justify-self: center;
   display: inline-flex;
   width: 1.5rem;
   min-width: 1.5rem;
@@ -285,10 +288,9 @@
 .agentic-base-row-expand:hover { background: var(--agentic-base-button-hover, #f3f4f6); }
 .agentic-base-row-expand:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: 1px; }
 .agentic-base-row-select-label {
-  position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem) + 27px);
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  grid-column: 3;
+  justify-self: center;
   display: inline-flex;
   width: 1.5rem;
   min-width: 1.5rem;
@@ -301,15 +303,20 @@
 }
 .agentic-base-row-select-label-header {
   position: relative;
-  inset: auto;
-  transform: none;
   flex: 0 0 1.5rem;
 }
 .agentic-base-data-tree-header-controls {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 1.75rem 1.5rem 1.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 5.5rem;
+  height: 1.5rem;
   align-items: center;
-  gap: 3px;
+  padding-inline-start: 0;
+  margin-inline-start: 0;
 }
+.agentic-base-data-tree-header-controls > .agentic-base-nested-rows-bulk-toggle { grid-column: 2; justify-self: center; }
 .agentic-base-data-table thead th details > summary.kg-menu-icon-action {
   height: 24px !important;
   min-height: 24px !important;
@@ -379,6 +386,10 @@
 .agentic-base-data-table thead th,
 .agentic-base-data-table tbody th {
   font-weight: 600;
+}
+.agentic-base-data-table thead th {
+  position: relative;
+  z-index: 31;
 }
 .agentic-base-data-row[aria-selected="true"] { background: var(--agentic-base-selected, #edf4ff); }
 .agentic-base-data-row-activatable { cursor: pointer; }

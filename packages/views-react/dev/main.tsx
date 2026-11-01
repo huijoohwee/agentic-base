@@ -141,34 +141,75 @@ const initialRows: ViewRow[] = [
 const multiDimensionalColumns = [
   { id: 'level', name: 'Level', kind: 'text' as const },
   { id: 'indent', name: 'Indent', kind: 'text' as const },
-  { id: 'key', name: 'Key', kind: 'text' as const },
+  { id: 'field', name: 'Field', kind: 'text' as const },
   { id: 'type', name: 'Type', kind: 'select' as const, options: ['map', 'scalar'] },
-  { id: 'scalar-value', name: 'Scalar Value', kind: 'select' as const, options: ['Accessibility', 'Brand profile', 'Component'] },
-  { id: 'list-value', name: 'List Value', kind: 'multi-select' as const },
-  { id: 'summary', name: 'Summary', kind: 'text' as const },
-  { id: 'output', name: 'Output', kind: 'select' as const, options: ['PENDING', 'KEEP', 'REMOVE'] },
+  { id: 'value', name: 'Value', kind: 'text' as const },
+  { id: 'options', name: 'Options', kind: 'multi-select' as const },
+  { id: 'description', name: 'Description', kind: 'text' as const },
+  { id: 'state', name: 'State', kind: 'select' as const, options: ['EXAMPLE', 'GUARDED', 'BLOCKED'] },
 ]
 
+// Synthetic, product-neutral examples of local runtime and guarded workflow features.
 const multiDimensionalRows: ViewRow[] = [
-  { id: 'group-accessibility', cells: ['', '0', 'Accessibility', 'map', '', '', '5 items', ''] },
-  { id: 'narrow-overflow', cells: ['L1', '2', 'Narrow viewport overflow', 'scalar', 'Accessibility', 'mobile, touch', 'Review guidance; not conformance evidence', 'PENDING'] },
-  { id: 'reading-order', cells: ['L1', '2', 'Reading order and text hierarchy', 'scalar', 'Accessibility', 'keyboard, screen reader', 'Review guidance; not conformance evidence', 'PENDING'] },
-  { id: 'reduced-motion', cells: ['L1', '2', 'Reduced motion and rendered contrast', 'scalar', 'Accessibility', 'motion, contrast', 'Review guidance; not conformance evidence', 'PENDING'] },
-  { id: 'group-brand', cells: ['', '0', 'Brand profile', 'map', '', '', '3 items', ''] },
-  { id: 'graph-mark', cells: ['L1', '2', 'Agentic Graph mark', 'scalar', 'Brand profile', 'SVG, favicon', 'Brand asset reference', 'PENDING'] },
-  { id: 'airvio-favicon', cells: ['L1', '2', 'Airvio favicon asset', 'scalar', 'Brand profile', 'SVG, PNG', 'Brand asset reference', 'PENDING'] },
-  { id: 'group-components', cells: ['', '0', 'Components', 'map', '', '', '3 items', ''] },
-  { id: 'table-core', cells: ['L1', '2', 'TableCore', 'scalar', 'Component', 'React, table grid', 'Shared table runtime', 'PENDING'] },
-  { id: 'multi-dimensional-table', cells: ['L1', '2', 'MultiDimTableView', 'scalar', 'Component', 'React, workspace view', 'Shared multi-dimensional table entry point', 'PENDING'] },
-  { id: 'browser-adapter', cells: ['L1', '2', '@agentic-base/views-react · offline browser DataViewAdapter', 'scalar', 'Component', 'offline, browser', 'Browser table adapter; source-local review only', 'PENDING'] },
+  { id: 'runtime', cells: ['', '0', 'Runtime', 'map', '', '', '5 settings', ''] },
+  { id: 'runtime-mode', cells: ['L1', '2', 'executionMode', 'scalar', 'local-first', '', 'Works across browser, device, and local environments', 'EXAMPLE'] },
+  { id: 'runtime-offline', cells: ['L1', '2', 'offlineSupport', 'scalar', 'available', '', 'Local workflows can continue without a remote service', 'EXAMPLE'] },
+  { id: 'runtime-devices', cells: ['L1', '2', 'deviceModel', 'scalar', 'multi-device', '', 'Device identity is separate from authorization', 'EXAMPLE'] },
+  { id: 'runtime-grammar', cells: ['L1', '2', 'invocationGrammar', 'scalar', 'prefix-based', '/, #, @', 'Separate command, mutation meaning, and scoped argument', 'EXAMPLE'] },
+  { id: 'runtime-interfaces', cells: ['L1', '2', 'toolInterfaces', 'map', '', '', '2 options', ''] },
+  { id: 'runtime-mcp', cells: ['L2', '4', 'protocols', 'scalar', '', 'MCP, WebMCP', 'Use an available host adapter', 'EXAMPLE'] },
+  { id: 'runtime-discovery', cells: ['L2', '4', 'discovery', 'scalar', 'lazy', '', 'Load tools when requested', 'EXAMPLE'] },
+  { id: 'work-scope', cells: ['', '0', 'Work scope', 'map', '', '', '4 settings', ''] },
+  { id: 'scope-plan', cells: ['L1', '2', 'planRevision', 'scalar', 'exact revision', '', 'Bind work to a current planning document', 'EXAMPLE'] },
+  { id: 'scope-paths', cells: ['L1', '2', 'writeSet', 'scalar', 'named paths', '', 'Keep changes within the declared scope', 'EXAMPLE'] },
+  { id: 'scope-budget', cells: ['L1', '2', 'workBudget', 'scalar', 'time and bytes', '', 'Use lean, bounded work units', 'EXAMPLE'] },
+  { id: 'scope-cost', cells: ['L1', '2', 'spendPolicy', 'scalar', 'USD 0', '', 'Use free and open source dependencies; avoid paid add-ons', 'EXAMPLE'] },
+  { id: 'governance', cells: ['', '0', 'Governance', 'map', '', '', '5 settings', ''] },
+  { id: 'governance-authority', cells: ['L1', '2', 'effectAuthority', 'scalar', 'explicit and current', '', 'Never infer permission from a passing check', 'GUARDED'] },
+  { id: 'governance-checks', cells: ['L1', '2', 'checkMode', 'scalar', 'read-only observation', '', 'Owner checks are observed, not launched implicitly', 'GUARDED'] },
+  { id: 'governance-failure', cells: ['L1', '2', 'uncertainState', 'scalar', 'fail closed', '', 'Unproven transitions remain blocked', 'GUARDED'] },
+  { id: 'governance-evidence', cells: ['L1', '2', 'evidence', 'scalar', '', 'source, check, receipt', 'Keep proof bound to the exact candidate', 'GUARDED'] },
+  { id: 'governance-external', cells: ['L1', '2', 'externalEffect', 'scalar', 'unverified', '', 'Stop until current evidence and authority are available', 'BLOCKED'] },
+  { id: 'delivery', cells: ['', '0', 'Delivery', 'map', '', '', '3 settings', ''] },
+  { id: 'delivery-source', cells: ['L1', '2', 'sourceIntegration', 'scalar', 'separate effect', '', 'Integration requires its own proof', 'GUARDED'] },
+  { id: 'delivery-deploy', cells: ['L1', '2', 'deployment', 'scalar', 'separate authority', '', 'Promotion and rollback are separately authorized', 'GUARDED'] },
+  { id: 'delivery-runtime', cells: ['L1', '2', 'runtimeReadback', 'scalar', 'required', '', 'Verify the deployed state after an authorized change', 'GUARDED'] },
 ]
 
 const multiDimensionalView: ViewModel = {
   columns: multiDimensionalColumns,
   rows: multiDimensionalRows,
-  titleColumnId: 'key',
-  groupByColumnId: 'scalar-value',
+  titleColumnId: 'field',
+  groupByColumnId: 'value',
 }
+
+const multiDimensionalBodyView: ViewModel = {
+  ...multiDimensionalView,
+  rows: [
+    { id: 'body-request', cells: ['', '0', 'Work request', 'map', '', '', '4 fields', ''] },
+    { id: 'body-objective', cells: ['L1', '2', 'objective', 'scalar', 'complete one bounded task', '', 'Name the intended outcome', 'EXAMPLE'] },
+    { id: 'body-plan', cells: ['L1', '2', 'plan', 'scalar', 'approved revision', '', 'Use a current scope and acceptance source', 'EXAMPLE'] },
+    { id: 'body-write-set', cells: ['L1', '2', 'writeSet', 'scalar', 'specific paths', '', 'Avoid unrelated changes', 'EXAMPLE'] },
+    { id: 'body-budget', cells: ['L1', '2', 'budget', 'scalar', 'small, time-bound', '', 'Set limits before execution', 'EXAMPLE'] },
+    { id: 'body-preflight', cells: ['', '0', 'Preflight', 'map', '', '', '3 checks', ''] },
+    { id: 'body-current-workflow', cells: ['L1', '2', 'workflow', 'scalar', 'current', '', 'Read the workflow for this repository', 'GUARDED'] },
+    { id: 'body-current-grant', cells: ['L1', '2', 'authority', 'scalar', 'verified for effect', '', 'Reuse covered grants; request no inferred authority', 'GUARDED'] },
+    { id: 'body-plan-drift', cells: ['L1', '2', 'planDrift', 'scalar', 'refresh before work', '', 'Rebind when the plan or source changes', 'GUARDED'] },
+    { id: 'body-execution', cells: ['', '0', 'Execution', 'map', '', '', '3 controls', ''] },
+    { id: 'body-tools', cells: ['L1', '2', 'toolDiscovery', 'scalar', 'on demand', '', 'Keep optional tools outside the always-load path', 'EXAMPLE'] },
+    { id: 'body-limits', cells: ['L1', '2', 'resourceLimits', 'scalar', 'input, output, time', '', 'Stop at the declared run budget', 'GUARDED'] },
+    { id: 'body-offline', cells: ['L1', '2', 'localEvidence', 'scalar', 'available offline', '', 'Retain usable local proof when a provider is unavailable', 'EXAMPLE'] },
+    { id: 'body-handoff', cells: ['', '0', 'Handoff', 'map', '', '', '3 records', ''] },
+    { id: 'body-source-receipt', cells: ['L1', '2', 'sourceProof', 'scalar', 'exact candidate', '', 'Record source integration evidence separately', 'GUARDED'] },
+    { id: 'body-deploy-receipt', cells: ['L1', '2', 'deploymentProof', 'scalar', 'separate receipt', '', 'Bind the authorized target and verification', 'GUARDED'] },
+    { id: 'body-next-owner', cells: ['L1', '2', 'nextAction', 'scalar', 'explicit owner', '', 'Report blockers and the next responsible action', 'EXAMPLE'] },
+  ],
+}
+
+const multiDimensionalSourceTabs = [
+  { id: 'frontmatter', label: 'Runtime profile', view: multiDimensionalView },
+  { id: 'body', label: 'Workflow example', view: multiDimensionalBodyView },
+]
 
 function DashboardPreview() {
   const [showNotes, setShowNotes] = React.useState(true)
@@ -345,7 +386,7 @@ function WorkflowManagerPreview() {
   const groups = [...new Set(visible.map(field => field.group))]
   return <SettingsPanelShell ariaLabel="Main panel Workflow Manager" title={<strong>Workflow Manager</strong>} summary="Fields · host-owned schema and actions">
     <FieldWorkbench ariaLabel="Workflow Manager fields" toolbar={<><FieldWorkbenchSearch value={search} onChange={setSearch} placeholder="Search fields…" /><button type="button" className={actionClass}>Field shortcuts…</button></>}
-      listLabel="Graph Fields" listSummary={`Visible ${visible.length} · Total ${fields.length}`}
+      listLabel="Workspace Fields" listSummary={`Visible ${visible.length} · Total ${fields.length}`}
       listContent={<>{groups.map(group => <FieldWorkbenchGroup key={group} title={group} count={visible.filter(field => field.group === group).length}>
         {visible.filter(field => field.group === group).map(field => <FieldWorkbenchItem key={field.label} label={field.label} type={field.type} selected={selected === field.label} onSelect={() => setSelected(field.label)} />)}
       </FieldWorkbenchGroup>)}</>}
@@ -453,7 +494,7 @@ function Preview() {
   return <main className="mx-auto min-h-screen max-w-screen-2xl p-4 sm:p-6">
     <header className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-[color:var(--kg-border)] pb-3">
       <div><p className="m-0 text-xs uppercase tracking-wide text-[color:var(--kg-text-tertiary)]">Unpublished package preview · existing host adapter</p><h1 className="m-0 text-xl font-semibold text-[color:var(--kg-text-primary)]">Shared data views</h1></div>
-      <span className="text-sm text-[color:var(--kg-text-secondary)]">Same Base component · host-supplied Graph tokens and controls</span>
+      <span className="text-sm text-[color:var(--kg-text-secondary)]">Shared Base components · host-supplied theme and controls</span>
     </header>
     <nav className="mb-3 flex min-w-0 flex-wrap gap-2" aria-label="Data view layout">
       <button type="button" aria-pressed={activeView === 'kanban'} onClick={() => setActiveView('kanban')}>Kanban</button>
@@ -483,7 +524,7 @@ function Preview() {
       <p className="mb-2 text-xs text-[color:var(--kg-text-secondary)]">Select a lane control to edit status, drag a card, or use its menu. No data leaves this browser tab.</p>
       <KanbanHostProvider value={graphHost}><KanbanView view={view} canMutate onUpdateCell={onUpdateCell} onNewRecord={onNewRecord} onReorderRows={onReorderRows} onActivateRow={activateRow} /></KanbanHostProvider>
     </> : <React.Suspense fallback={<p role="status">Loading Table view…</p>}>
-      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} selectedRowIds={selectedRowIds} onSelectionChange={setSelectedRowIds} onActivateRow={activateRow} onDeselectRow={deselectRow} />
+      <LazyTablePreview view={activeView === 'multiDimensional' ? multiDimensionalView : view} sourceTabs={activeView === 'multiDimensional' ? multiDimensionalSourceTabs : undefined} multiDimensional={activeView === 'multiDimensional'} canMutate={activeView !== 'multiDimensional'} onUpdateCell={onUpdateCell} onNewRecord={activeView === 'multiDimensional' ? undefined : onNewRecord} selectedRowId={selectedRowId} selectedRowIds={selectedRowIds} onSelectionChange={setSelectedRowIds} onActivateRow={activateRow} onDeselectRow={deselectRow} />
     </React.Suspense>}
     <output className="mt-4 block border-t border-[color:var(--kg-border)] pt-3 text-xs text-[color:var(--kg-text-secondary)]" aria-live="polite">{selected}</output>
   </main>
