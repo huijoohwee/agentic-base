@@ -73,7 +73,7 @@ export function ColumnsTableView(props: {
       frameClassName={styles.dataViewTableFrameClass}
       headerClassName={`${styles.stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
       bodyClassName={themeTokens.table.text}
-      tableClassName="min-w-max w-max"
+      tableClassName="min-w-max w-max agentic-base-data-table"
       tableStyle={{ width: tableWidth }}
       ariaLabel="Table view"
       header={(
