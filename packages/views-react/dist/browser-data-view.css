@@ -380,6 +380,10 @@
 .agentic-base-data-table tbody th {
   font-weight: 600;
 }
+.agentic-base-data-table thead th {
+  position: relative;
+  z-index: 31;
+}
 .agentic-base-data-row[aria-selected="true"] { background: var(--agentic-base-selected, #edf4ff); }
 .agentic-base-data-row-activatable { cursor: pointer; }
 .agentic-base-data-row-activatable:hover { background: var(--agentic-base-row-hover, #fffbeb); }

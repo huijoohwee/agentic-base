@@ -74,7 +74,7 @@ export function ColumnsTableView(props: {
       frameClassName={styles.dataViewTableFrameClass}
       headerClassName={`${styles.stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
       bodyClassName={themeTokens.table.text}
-      tableClassName={props.tableFit === 'container' ? 'min-w-full w-full' : 'min-w-max w-max'}
+      tableClassName={props.tableFit === 'container' ? 'min-w-full w-full agentic-base-data-table' : 'min-w-max w-max agentic-base-data-table'}
       tableStyle={props.tableFit === 'container' ? { minWidth: tableWidth, width: '100%' } : { width: tableWidth }}
       ariaLabel="Table view"
       header={(

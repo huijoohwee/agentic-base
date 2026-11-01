@@ -28,7 +28,7 @@ const buttonStyle: React.CSSProperties = {
 }
 const columnHeaderStyle: React.CSSProperties = {
   minHeight: 24, display: 'inline-flex', alignItems: 'center', gap: 6,
-  minWidth: 0, maxWidth: '100%', padding: 0, border: 0, borderRadius: 0,
+  minWidth: 0, maxWidth: '100%', padding: 0, border: 0, borderRadius: 0, textAlign: 'left',
   color: '#172033', background: 'transparent', font: 'inherit', cursor: 'pointer',
 }
 const popoverStyle: React.CSSProperties = {
@@ -200,10 +200,10 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
     setMenuContainer(modalDialog ?? ownerDocument.body)
     setOpen(true)
   }
-  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
+  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'block', width: '100%', minWidth: 0 }}>
     <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={openMenu} style={columnHeaderStyle}>
       <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
-      <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
+      <span data-kg-selection-target="column-type-label" style={{ flex: '0 1 auto', minWidth: 0, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
     {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
