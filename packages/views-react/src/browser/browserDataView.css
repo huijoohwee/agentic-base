@@ -169,9 +169,11 @@
   font-size: 13px;
   line-height: 1.4;
 }
-.agentic-base-data-table th,
-.agentic-base-data-table td {
+.agentic-base-data-view .agentic-base-data-table th,
+.agentic-base-data-view .agentic-base-data-table td {
   box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.45;
   padding: 8px 12px;
   overflow-wrap: anywhere;
   text-align: left;
