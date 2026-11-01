@@ -13,7 +13,7 @@ export const MultiDimTableView = React.memo(function MultiDimTableView(props: Mu
   const overlay = graphEnabled ? renderGraphOverlay?.(props.view) : null
   return <section className="base-multi-dimensional-table min-w-0">
     {overlay ? <section className="base-multi-dimensional-table-overlay" aria-label="Table overlay">{overlay}</section> : null}
-    <TableView {...tableProps} />
+    <TableView {...tableProps} tableFit={tableProps.tableFit ?? 'container'} />
   </section>
 })
 

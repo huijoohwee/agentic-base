@@ -217,8 +217,8 @@
 .agentic-base-data-tree-cell {
   --agentic-base-data-tree-cell-padding-inline: 0.75rem;
   color: var(--agentic-base-text-secondary, #4b5563);
-  width: 4rem;
-  min-width: 4rem;
+  width: var(--agentic-base-data-tree-cell-width, 5.5rem);
+  min-width: var(--agentic-base-data-tree-cell-width, 5.5rem);
   text-align: center;
   vertical-align: middle;
 }
@@ -245,7 +245,7 @@
 }
 .agentic-base-row-drag-handle {
   position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + 16px);
+  inset-inline-start: 12px;
   top: 50%;
   transform: translateY(-50%);
   width: 1rem;
@@ -258,7 +258,7 @@
 .agentic-base-data-row[aria-selected="true"] .agentic-base-row-drag-handle { opacity: 1; }
 .agentic-base-row-expand {
   position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem));
+  inset-inline-start: 40px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -279,7 +279,7 @@
 .agentic-base-row-expand:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: 1px; }
 .agentic-base-row-select-label {
   position: absolute;
-  inset-inline-start: calc(var(--agentic-base-data-tree-selection-indent, 0px) + var(--agentic-base-data-tree-cell-padding-inline, 0.75rem) + 27px);
+  inset-inline-start: 64px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -293,16 +293,21 @@
   cursor: pointer;
 }
 .agentic-base-row-select-label-header {
-  position: relative;
-  inset: auto;
+  position: absolute;
+  inset-inline-start: 52px;
+  top: 0;
   transform: none;
   flex: 0 0 1.5rem;
 }
 .agentic-base-data-tree-header-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+  position: relative;
+  display: block;
+  width: 4.6875rem;
+  min-width: 4.6875rem;
+  height: 1.5rem;
+  margin-inline-start: 0;
 }
+.agentic-base-data-tree-header-controls > .agentic-base-nested-rows-bulk-toggle { position: absolute; inset-inline-start: 28px; top: 0; }
 .agentic-base-data-table thead th details > summary.kg-menu-icon-action {
   height: 24px !important;
   min-height: 24px !important;

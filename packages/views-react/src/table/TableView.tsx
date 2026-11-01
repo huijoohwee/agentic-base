@@ -54,11 +54,7 @@ const safeLinkHref = (raw: string): string | null => {
 }
 export const TABLE_INITIAL_RENDER_ROW_LIMIT = 32
 export const TABLE_RENDER_ROW_INCREMENT = 32
-const TABLE_HIERARCHY_COLUMN_WIDTH_PX = 64
-const TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX = 80
-const TABLE_HIERARCHY_CONTROL_INSET_PX = 12
-const TABLE_HIERARCHY_CONTROL_SIZE_PX = 24
-const TABLE_HIERARCHY_GROUP_SELECTION_OFFSET_PX = 27
+const TABLE_HIERARCHY_COLUMN_WIDTH_PX = 93
 export const TABLE_FIELD_COLUMN_ID = '__field'
 export const TableView = React.memo(function TableView(props: TableViewProps) {
   const {
@@ -209,8 +205,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       : Array.from(new Set([...selectedRowIds, ...selectableRowIds]))
     props.onSelectionChange?.(next)
   }
-  const minimumVisibleRowDepth = visibleNestedRowStates.reduce((minimum: number, state: { depth: number }) => Math.min(minimum, state.depth), Number.POSITIVE_INFINITY)
-  const maximumVisibleRowIndent = visibleNestedRowStates.reduce((maximum: number, state: { depth: number }) => Math.max(maximum, state.depth - minimumVisibleRowDepth), 0)
   const rowNumberById = new Map<string, number>()
   const siblingRowCounts = new Map<number, number>()
   for (const state of visibleNestedRowStates) {
@@ -292,15 +286,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     const index = view.columns.findIndex(column => column.id === view.titleColumnId)
     return index >= 0 ? index : 0
   }, [view.columns, view.titleColumnId])
-  const baseHierarchyColumnWidthPx = rowSelectionEnabled
-    ? TABLE_SELECTABLE_HIERARCHY_COLUMN_WIDTH_PX
-    : TABLE_HIERARCHY_COLUMN_WIDTH_PX
-  const hierarchyColumnWidthPx = Math.max(
-    baseHierarchyColumnWidthPx,
-    maximumVisibleRowIndent * 24 + TABLE_HIERARCHY_CONTROL_INSET_PX + (rowSelectionEnabled
-      ? TABLE_HIERARCHY_GROUP_SELECTION_OFFSET_PX + TABLE_HIERARCHY_CONTROL_SIZE_PX
-      : TABLE_HIERARCHY_CONTROL_SIZE_PX),
-  )
+  const hierarchyColumnWidthPx = TABLE_HIERARCHY_COLUMN_WIDTH_PX
   const rowRecordTableWidth = (hasNestedRowHierarchy ? hierarchyColumnWidthPx : 0)
     + visibleColumnMeta.reduce((sum, { col }) => sum + readColumnWidth(col.id, readDefaultColumnWidth(col.name)), 0)
     + (canMutate && props.onAddColumn ? 52 : 0)
@@ -309,8 +295,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     ? 'min-w-full w-full agentic-base-data-table'
     : 'min-w-max w-max agentic-base-data-table'
   const tableStyle: React.CSSProperties = tableFit === 'container'
-    ? { minWidth: rowRecordTableWidth, width: '100%' }
-    : { width: rowRecordTableWidth }
+    ? { minWidth: rowRecordTableWidth, width: '100%', '--agentic-base-data-tree-cell-width': `${TABLE_HIERARCHY_COLUMN_WIDTH_PX}px` } as React.CSSProperties
+    : { width: rowRecordTableWidth, '--agentic-base-data-tree-cell-width': `${TABLE_HIERARCHY_COLUMN_WIDTH_PX}px` } as React.CSSProperties
   if (orientation === 'columns') {
     return (
       <ColumnsTableView
@@ -468,7 +454,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
             const selectionState = selectionStates.get(r.id) ?? { checked: false, mixed: false }
             const selected = selectionState.checked
             const selectionEnabled = rowSelectionEnabled
-            const rowIndentLevel = Math.max(0, rowDepth - minimumVisibleRowDepth)
             const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
             return <tr
               key={r.id}
@@ -485,9 +470,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
               data-agentic-base-row-depth={String(rowDepth)}
               data-agentic-base-row-parent={childCount > 0 ? 'true' : undefined}
               data-agentic-base-row-hierarchy={hasNestedRowHierarchy ? 'true' : undefined}
-              style={hasNestedRowHierarchy
-                ? { '--agentic-base-row-label-offset': `${rowIndentLevel * 24}px` } as React.CSSProperties
-                : undefined}
               onClick={
                 onActivateRow
                   ? (e) => {
@@ -501,7 +483,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
               {hasNestedRowHierarchy ? (
                 <HierarchyCell
                   cellPaddingClassName={cellPaddingClassName}
-                  depth={rowIndentLevel}
+                  depth={rowDepth}
                   childCount={childCount}
                   collapsed={isNestedRowCollapsed}
                   scope="row"
@@ -693,3 +675,4 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
 export { TableHostProvider } from './TableHostContext'
 export type { TableHostAdapter } from './TableHostContext'
 export { createBaseTableHost } from './BaseTableHost'
+export { BaseHierarchyCell, BaseNestedRowsBulkToggle } from './BaseTableHost'
