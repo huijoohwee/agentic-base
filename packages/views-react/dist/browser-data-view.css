@@ -216,6 +216,8 @@
   pointer-events: none;
 }
 .agentic-base-data-table-sticky-header > tr > th {
+  position: relative;
+  z-index: 1;
   background-color: var(--agentic-base-data-table-sticky-header-bg);
   background-clip: padding-box;
 }
