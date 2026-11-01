@@ -2,6 +2,8 @@
   box-sizing: border-box;
   isolation: isolate;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   height: 100%;
   overflow: auto;
   --agentic-base-table-header-bg: #f9fafb;
@@ -17,6 +19,7 @@
   -webkit-overflow-scrolling: touch;
 }
 .agentic-base-data-view .flex { display: flex; }
+.base-multi-dimensional-table { min-width: 0; }
 .agentic-base-data-view .inline-flex { display: inline-flex; }
 .agentic-base-data-view .min-w-0 { min-width: 0; }
 .agentic-base-data-view .items-center { align-items: center; }
@@ -40,7 +43,7 @@
 .agentic-base-data-view .agentic-base-menu-panel { color: var(--agentic-base-text-primary, #111827); background: #fff; border: 1px solid var(--agentic-base-border, #e5e7eb); border-radius: 6px; box-shadow: 0 8px 24px #17203324; }
 .agentic-base-data-view .agentic-base-button-hover:hover { background: var(--agentic-base-action-hover, #f3f4f6); }
 
-/* Column menus are portaled to the document so they can escape table clipping. */
+/* Column menus stay in their host tree so isolated hosts retain these styles. */
 .agentic-base-column-menu-surface {
   box-sizing: border-box;
   width: min(296px, calc(100vw - 16px));
@@ -168,9 +171,11 @@
   font-size: 13px;
   line-height: 1.4;
 }
-.agentic-base-data-table th,
-.agentic-base-data-table td {
+.agentic-base-data-view .agentic-base-data-table th,
+.agentic-base-data-view .agentic-base-data-table td {
   box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.45;
   padding: 8px 12px;
   overflow-wrap: anywhere;
   text-align: left;
@@ -211,6 +216,8 @@
   pointer-events: none;
 }
 .agentic-base-data-table-sticky-header > tr > th {
+  position: relative;
+  z-index: 1;
   background-color: var(--agentic-base-data-table-sticky-header-bg);
   background-clip: padding-box;
 }
@@ -385,6 +392,7 @@
 .agentic-base-data-row[data-agentic-base-row-parent="true"][aria-selected="true"]:hover { background: var(--agentic-base-selected, #edf4ff); }
 .agentic-base-data-row-activatable:focus-visible,
 .agentic-base-data-more:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: -2px; }
+.agentic-base-data-view [role=separator] { right: 0 !important; }
 .agentic-base-data-table td > span { white-space: pre-wrap; }
 .agentic-base-data-table th > section { min-width: 0; }
 .agentic-base-data-table th button { max-width: 100%; }

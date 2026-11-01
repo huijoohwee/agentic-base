@@ -2,6 +2,7 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { TableHostProvider } from '../table/TableHostContext'
 import { TableView } from '../table/TableView'
+import { MultiDimTableView } from '../table/MultiDimTableView'
 import { createBaseTableHost } from '../table/BaseTableHost'
 import { readBaseDataViewCellPaddingClassName, readBaseDataViewHeaderPaddingClassName } from '../table/dataViewDensity'
 import type { ViewColumnKind, ViewModel } from '../kanban/KanbanHostContext'
@@ -23,6 +24,7 @@ export type DataViewBrowserState = {
   onActivateRow?: (rowId: string) => void
   onDeselectRow?: (rowId: string) => void
   onSelectionChange?: (selectedRowIds: string[]) => void
+  layout?: 'table' | 'multiDimensional'
   orientation?: 'rows' | 'columns'
   ariaLabel?: string
 }
@@ -73,6 +75,8 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   if (rowDepths.length && fieldIds.has('__agentic_base_level')) throw new TypeError('Data view column ID is reserved for hierarchy state.')
   const orientation = input.orientation ?? 'rows'
   if (orientation !== 'rows' && orientation !== 'columns') throw new TypeError('Invalid data view orientation.')
+  const layout = input.layout ?? 'table'
+  if (layout !== 'table' && layout !== 'multiDimensional') throw new TypeError('Invalid data view layout.')
   const ariaLabel = string(input.ariaLabel ?? 'Table view', limits.labelChars, 'label', true)
   const selectedRowId = input.selectedRowId == null ? input.selectedRowId : string(input.selectedRowId, limits.idChars, 'selection', true)
   if (selectedRowId != null && !recordIds.has(selectedRowId)) throw new TypeError('Selected data view record does not exist.')
@@ -90,7 +94,7 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   }
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
-  const state = { columns, rows, orientation, ariaLabel, selectedRowId, selectedRowIds }
+  const state = { columns, rows, layout, orientation, ariaLabel, selectedRowId, selectedRowIds }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
   return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange }
 }
@@ -129,8 +133,9 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
     titleColumnId: columns[0]!.id,
     groupByColumnId: null,
   }
+  const View = state.layout === 'multiDimensional' ? MultiDimTableView : TableView
   return <TableHostProvider value={browserTableHost}>
-    <TableView
+    <View
       view={view}
       visibleColumnIds={state.columns.map(column => column.id)}
       canMutate={false}
@@ -160,7 +165,7 @@ export function mountDataView(target: HTMLElement, initial: DataViewBrowserState
   const root = createRoot(target)
   mountedTargets.add(target)
   let destroyed = false
-  const render = (next: DataViewBrowserState) => root.render(<BrowserDataView key={`${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} />)
+  const render = (next: DataViewBrowserState) => root.render(<BrowserDataView key={`${next.layout ?? 'table'}:${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} />)
   render(state)
   return {
     update(next) {

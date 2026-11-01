@@ -130,7 +130,7 @@ function BaseTagChip({ value }: { value: string }) {
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
-  const [menuContainer, setMenuContainer] = React.useState<HTMLElement | null>(null)
+  const [menuContainer, setMenuContainer] = React.useState<Element | DocumentFragment | null>(null)
   const [menuPlacement, setMenuPlacement] = React.useState<{ left: number; top: number; maxHeight: number } | null>(null)
   const [menuTheme, setMenuTheme] = React.useState<React.CSSProperties>({})
   const close = React.useCallback(() => setOpen(false), [])
@@ -197,13 +197,15 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
       colorScheme: computed?.colorScheme || 'light dark',
     } as React.CSSProperties)
     const modalDialog = trigger.closest('dialog[open]') as HTMLElement | null
-    setMenuContainer(modalDialog ?? ownerDocument.body)
+    const root = trigger.getRootNode()
+    const hostRoot = ownerWindow && root instanceof ownerWindow.ShadowRoot ? root : ownerDocument.body
+    setMenuContainer(modalDialog ?? hostRoot)
     setOpen(true)
   }
-  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
+  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
     <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={openMenu} style={columnHeaderStyle}>
       <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
-      <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
+      <span data-kg-selection-target="column-type-label" style={{ flex: '1 1 auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
     {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>

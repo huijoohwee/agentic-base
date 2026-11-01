@@ -482,6 +482,13 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                 selected ? themeTokens.table.rowSelected : '',
               ].filter(Boolean).join(' ')}
               aria-selected={props.selectedRowIds !== undefined || props.selectedRowId !== undefined ? selected : undefined}
+              tabIndex={onActivateRow ? 0 : undefined}
+              onKeyDown={event => {
+                if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault()
+                  onActivateRow?.(r.id)
+                }
+              }}
               data-agentic-base-row-depth={String(rowDepth)}
               data-agentic-base-row-parent={childCount > 0 ? 'true' : undefined}
               data-agentic-base-row-hierarchy={hasNestedRowHierarchy ? 'true' : undefined}
