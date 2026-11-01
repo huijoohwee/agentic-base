@@ -17,6 +17,7 @@
   -webkit-overflow-scrolling: touch;
 }
 .agentic-base-data-view .flex { display: flex; }
+.base-multi-dimensional-table { min-width: 0; }
 .agentic-base-data-view .inline-flex { display: inline-flex; }
 .agentic-base-data-view .min-w-0 { min-width: 0; }
 .agentic-base-data-view .items-center { align-items: center; }
