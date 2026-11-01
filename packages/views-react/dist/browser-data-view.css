@@ -281,6 +281,7 @@
 .agentic-base-row-expand:hover { background: var(--agentic-base-button-hover, #f3f4f6); }
 .agentic-base-row-expand:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: 1px; }
 .agentic-base-row-select-label {
+  position: relative;
   grid-column: 3;
   justify-self: center;
   display: inline-flex;
@@ -294,7 +295,7 @@
   cursor: pointer;
 }
 .agentic-base-row-select-label-header {
-  position: static;
+  position: relative;
   flex: 0 0 1.5rem;
 }
 .agentic-base-data-tree-header-controls {
