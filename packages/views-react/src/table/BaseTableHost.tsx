@@ -130,7 +130,7 @@ function BaseTagChip({ value }: { value: string }) {
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
-  const [menuContainer, setMenuContainer] = React.useState<HTMLElement | null>(null)
+  const [menuContainer, setMenuContainer] = React.useState<Element | DocumentFragment | null>(null)
   const [menuPlacement, setMenuPlacement] = React.useState<{ left: number; top: number; maxHeight: number } | null>(null)
   const [menuTheme, setMenuTheme] = React.useState<React.CSSProperties>({})
   const close = React.useCallback(() => setOpen(false), [])
@@ -197,7 +197,9 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
       colorScheme: computed?.colorScheme || 'light dark',
     } as React.CSSProperties)
     const modalDialog = trigger.closest('dialog[open]') as HTMLElement | null
-    setMenuContainer(modalDialog ?? ownerDocument.body)
+    const root = trigger.getRootNode()
+    const hostRoot = ownerWindow && root instanceof ownerWindow.ShadowRoot ? root : ownerDocument.body
+    setMenuContainer(modalDialog ?? hostRoot)
     setOpen(true)
   }
   return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0, maxWidth: '100%', overflow: 'hidden' }}>
