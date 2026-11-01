@@ -390,7 +390,7 @@
 .agentic-base-data-row[data-agentic-base-row-parent="true"][aria-selected="true"]:hover { background: var(--agentic-base-selected, #edf4ff); }
 .agentic-base-data-row-activatable:focus-visible,
 .agentic-base-data-more:focus-visible { outline: 2px solid var(--agentic-base-focus, #2563eb); outline-offset: -2px; }
-.agentic-base-data-table [role=separator] { right: 0 !important; }
+.agentic-base-data-view [role=separator] { right: 0 !important; }
 .agentic-base-data-table td > span { white-space: pre-wrap; }
 .agentic-base-data-table th > section { min-width: 0; }
 .agentic-base-data-table th button { max-width: 100%; }

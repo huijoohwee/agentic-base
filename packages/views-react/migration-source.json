@@ -120,7 +120,7 @@
   "src/table/TableView.tsx": {"sourceSha256":"46023cbcb2d9bcb94e13aab9f2c1e2b67f85985b6abcf115b717387b111cb8cc","candidateSha256":"186001e3a92fe8a5298150c650170d996a0c3ebb8783f225c7903618abbec754","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"},
   "src/table/ViewColumnType.ts": {"sourceSha256":"ad8823aba11a5edfdb0a3ca30d6a09b77b6ad969c04b409561a80592e4f7e784","candidateSha256":"3971e7e50ddf1fc5c3cbcdfe752e04b8421901d4394851f1fbe3cf1334e0e463","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"},
   "src/browser/DataViewBrowserAdapter.tsx": {"sourceSha256":"f0bae0a847ce805f2a66d6c9036da2adc52aff99ddab95e1fbd56e9a6c90c12a","candidateSha256":"a0d76bfc6ea092ffaed7865431abd73cb8a38289f2b726564bb31cf2c8cb7ad1","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"},
-  "src/browser/browserDataView.css": {"sourceSha256":"75a026836d9387935213f5bfa7c51abc1ccb6fda19c02ca25e391e16303cab6d","candidateSha256":"fd3a4b8b7b48396ea74418be49d15a967423eeaeeb2cf48fca465201dc21c6e6","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"},
+  "src/browser/browserDataView.css": {"sourceSha256":"75a026836d9387935213f5bfa7c51abc1ccb6fda19c02ca25e391e16303cab6d","candidateSha256":"c640c9359bd32357d6249b079863b5ae311211d4f37f5b876f094a800a67f199","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"},
   "src/browser/index.ts": {"sourceSha256":"f0bae0a847ce805f2a66d6c9036da2adc52aff99ddab95e1fbd56e9a6c90c12a","candidateSha256":"38310e61f58a6cbec4ddc354e6bcda4319602df70886980226e86c456c8effa6","sourceCommit":"0775c87540cb45d6f19156c4090e851b70c71f07"}
 },
   "pendingSourceNotes": {
