@@ -39,6 +39,11 @@
 .agentic-base-data-view .agentic-base-text-tertiary { color: var(--agentic-base-text-tertiary, #6b7280); }
 .agentic-base-data-view .agentic-base-menu-panel { color: var(--agentic-base-text-primary, #111827); background: #fff; border: 1px solid var(--agentic-base-border, #e5e7eb); border-radius: 6px; box-shadow: 0 8px 24px #17203324; }
 .agentic-base-data-view .agentic-base-button-hover:hover { background: var(--agentic-base-action-hover, #f3f4f6); }
+.base-multi-dimensional-table { box-sizing: border-box; min-width: 0; }
+.base-multi-dimensional-table-toolbar { display: flex; justify-content: flex-end; min-width: 0; margin-bottom: 0.5rem; }
+.base-multi-dimensional-table-pivot { box-sizing: border-box; min-height: 44px; padding: 0.55rem 0.8rem; border: 1px solid var(--agentic-base-border, #d1d5db); border-radius: 0.65rem; color: var(--agentic-base-text-primary, #111827); background: var(--agentic-base-surface, #fff); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.base-multi-dimensional-table-pivot:hover { background: var(--agentic-base-action-hover, #f3f4f6); }
+.base-multi-dimensional-table-pivot:focus-visible { outline: 3px solid var(--agentic-base-focus, #2563eb); outline-offset: 2px; }
 
 /* Column menus are portaled to the document so they can escape table clipping. */
 .agentic-base-column-menu-surface {

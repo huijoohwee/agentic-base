@@ -106,6 +106,10 @@ export default function TablePreview(props: TableViewProps & { multiDimensional?
       <span>Host-owned {settingsPanel} settings are supplied by the consuming application.</span>
       <button type="button" className="rounded border border-[color:var(--kg-border)] px-2 py-1" onClick={() => setSettingsPanel(null)}>Close</button>
     </aside> : null}
-    <TableHostProvider value={multiDimensional ? baseTableHost : previewTableHost}><View {...tableProps} view={previewView} visibleColumnIds={visibleColumnIds} orientation={viewConfig.orientation} /></TableHostProvider>
+    <TableHostProvider value={multiDimensional ? baseTableHost : previewTableHost}>
+      {multiDimensional
+        ? <MultiDimTableView {...tableProps} view={previewView} visibleColumnIds={visibleColumnIds} orientation={viewConfig.orientation} showPivotControl onOrientationChange={orientation => setViewConfig(current => ({ ...current, orientation }))} />
+        : <TableView {...tableProps} view={previewView} visibleColumnIds={visibleColumnIds} />}
+    </TableHostProvider>
   </section>
 }
