@@ -28,7 +28,7 @@ const buttonStyle: React.CSSProperties = {
 }
 const columnHeaderStyle: React.CSSProperties = {
   minHeight: 24, display: 'inline-flex', alignItems: 'center', gap: 6,
-  minWidth: 0, maxWidth: '100%', padding: 0, border: 0, borderRadius: 0,
+  minWidth: 0, maxWidth: '100%', padding: 0, border: 0, borderRadius: 0, textAlign: 'left',
   color: '#172033', background: 'transparent', font: 'inherit', cursor: 'pointer',
 }
 const popoverStyle: React.CSSProperties = {
@@ -130,7 +130,7 @@ function BaseTagChip({ value }: { value: string }) {
 
 function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
   const [open, setOpen] = React.useState(false)
-  const [menuContainer, setMenuContainer] = React.useState<HTMLElement | null>(null)
+  const [menuContainer, setMenuContainer] = React.useState<Element | DocumentFragment | null>(null)
   const [menuPlacement, setMenuPlacement] = React.useState<{ left: number; top: number; maxHeight: number } | null>(null)
   const [menuTheme, setMenuTheme] = React.useState<React.CSSProperties>({})
   const close = React.useCallback(() => setOpen(false), [])
@@ -197,13 +197,15 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
       colorScheme: computed?.colorScheme || 'light dark',
     } as React.CSSProperties)
     const modalDialog = trigger.closest('dialog[open]') as HTMLElement | null
-    setMenuContainer(modalDialog ?? ownerDocument.body)
+    const root = trigger.getRootNode()
+    const hostRoot = ownerWindow && root instanceof ownerWindow.ShadowRoot ? root : ownerDocument.body
+    setMenuContainer(modalDialog ?? hostRoot)
     setOpen(true)
   }
-  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'inline-block', minWidth: 0 }}>
+  return <span ref={rootRef} role="group" aria-label={props.ariaLabel} data-kg-selection-target="column-type-control" style={{ position: 'relative', display: 'block', width: '100%', minWidth: 0 }}>
     <button ref={triggerRef as React.RefObject<HTMLButtonElement>} type="button" aria-label={props.ariaLabel} aria-haspopup="dialog" aria-expanded={open} data-kg-selection-target="column-menu-trigger" onClick={openMenu} style={columnHeaderStyle}>
       <Icon size={14} role="img" aria-label={`${props.label} column type`} data-kg-selection-target="column-type-icon" />
-      <span data-kg-selection-target="column-type-label" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
+      <span data-kg-selection-target="column-type-label" style={{ flex: '0 1 auto', minWidth: 0, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
     {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
@@ -225,37 +227,36 @@ function BaseAddColumnMenu(props: AnyProps) {
   </details>
 }
 
-function BaseHierarchyCell(props: AnyProps) {
+export function BaseHierarchyCell(props: AnyProps) {
   const hasChildren = props.childCount > 0
   const isRecordRow = props.scope === 'row'
   const selectionEnabled = Boolean(props.selectable && isRecordRow)
   const selectionRef = React.useRef<HTMLInputElement>(null)
+  const cellAttributes = props.cellAttributes ?? {}
+  const { className: cellClassName, style: cellStyle, ...remainingCellAttributes } = cellAttributes
   const expandableLabel = `${props.collapsed ? 'Expand' : 'Collapse'} nested group${props.selectionLabel ? `: ${props.selectionLabel}` : ''}`
   React.useEffect(() => {
     if (selectionRef.current) selectionRef.current.indeterminate = Boolean(props.mixed)
   }, [props.mixed])
-  return <td aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className={['agentic-base-data-tree-cell', props.cellPaddingClassName].filter(Boolean).join(' ')} data-agentic-base-hierarchy-depth={props.depth} style={{
-    '--agentic-base-data-tree-depth': String(props.depth),
-    '--agentic-base-data-tree-indent': `${Math.max(0, Number(props.depth)) * 24}px`,
-    '--agentic-base-data-tree-selection-indent': `${Math.max(0, Number(props.depth) - Number(!hasChildren)) * 24}px`,
-  } as React.CSSProperties}>
+  return <td {...remainingCellAttributes} aria-label={props.scope === 'row' ? 'Row hierarchy' : 'Column record hierarchy'} className={['agentic-base-data-tree-cell', props.cellPaddingClassName, cellClassName].filter(Boolean).join(' ')} data-agentic-base-hierarchy-depth={props.depth} style={cellStyle}>
     <span className="agentic-base-data-tree-control">
-      {selectionEnabled && !hasChildren ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
+      {selectionEnabled ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
+      {hasChildren ? <button {...props.expandButtonDataAttributes} type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
+        <ChevronRight size={12} aria-label={expandableLabel} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+      </button> : null}
       {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`} onClick={event => event.stopPropagation()}>
         <input ref={selectionRef} type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} aria-checked={props.mixed ? 'mixed' : undefined} checked={Boolean(props.selected)} onChange={() => props.onSelect?.()} />
         {Number(props.rowNumber) > 0 ? <span className="agentic-base-row-index">{props.rowNumber}</span> : null}
       </label> : null}
-      {hasChildren ? <button type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.stopPropagation(); props.onToggle() }}>
-        <ChevronRight size={12} aria-label={expandableLabel} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
-      </button> : null}
     </span>
   </td>
 }
 
-function BaseNestedRowsBulkToggle(props: {
+export function BaseNestedRowsBulkToggle(props: {
   collapsed: boolean
   onToggle: () => void
   selection?: { checked: boolean; mixed: boolean; onChange: () => void }
+  buttonDataAttributes?: Record<string, string>
 }) {
   const Icon = props.collapsed ? ChevronsRight : ChevronsDown
   const selectAllRef = React.useRef<HTMLInputElement>(null)
@@ -263,7 +264,7 @@ function BaseNestedRowsBulkToggle(props: {
     if (selectAllRef.current) selectAllRef.current.indeterminate = Boolean(props.selection?.mixed)
   }, [props.selection?.mixed])
   return <span className="agentic-base-data-tree-header-controls">
-    <button type="button" className="agentic-base-nested-rows-bulk-toggle" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={props.onToggle}>
+    <button {...props.buttonDataAttributes} type="button" className="agentic-base-nested-rows-bulk-toggle" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
       <Icon size={14} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} />
     </button>
     {props.selection ? <label className="agentic-base-row-select-label agentic-base-row-select-label-header">
