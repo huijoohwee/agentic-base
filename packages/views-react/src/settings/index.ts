@@ -1,3 +1,5 @@
 export * from './SettingsPrimitives'
+export { SettingsHostProvider } from './SettingsHostContext'
+export type { SettingsHostAdapter } from './SettingsHostContext'
 export { ViewSettingsPanel } from './ViewSettingsPanel'
 export type { SavedViewOption, ViewLayout, ViewSettingsPanelProps } from './ViewSettingsPanel'
