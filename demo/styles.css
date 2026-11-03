@@ -31,6 +31,9 @@ p { line-height: 1.5; }
 .primary { border: 1px solid var(--accent); background: var(--accent); color: #fff; font-weight: 700; }
 .secondary { border: 1px solid var(--border); background: #fff; color: var(--ink); }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.title-with-icon { display: flex; align-items: center; gap: 0.45rem; }
+.ui-icon { width: 1rem; height: 1rem; min-width: 1rem; min-height: 1rem; flex: none; }
+.view-picker-label { display: flex; align-items: center; gap: 0.4rem; }
 .muted { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.9rem; }
 .task-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 0.8rem; margin-top: 1rem; }
 .task-form label, .month-picker, .view-picker { display: grid; gap: 0.35rem; color: var(--muted); font-size: 0.85rem; font-weight: 650; }

@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#17324d">
     <meta name="description" content="A local-first demo of one structured-data base and one shared interactive table view.">
     <link rel="manifest" href="/demo/manifest.webmanifest">
-    <link rel="stylesheet" href="/demo/styles.css?v=9">
-    <link rel="stylesheet" href="/demo/browser-data-view.css?v=9">
+    <link rel="stylesheet" href="/demo/styles.css?v=10">
+    <link rel="stylesheet" href="/demo/browser-data-view.css?v=10">
     <title>agentic-base local demo</title>
   </head>
   <body>
@@ -53,10 +53,17 @@
         <section class="panel" aria-labelledby="views-title">
           <div class="section-heading">
             <div>
-              <h2 id="views-title">Views</h2>
+              <h2 id="views-title" class="title-with-icon">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M9 9h12"/></svg>
+                <span>Views</span>
+              </h2>
               <p id="view-caption" class="muted">Inspect a projection through the shared table view.</p>
             </div>
-            <label class="view-picker">Projection
+            <label class="view-picker">
+              <span class="view-picker-label">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+                Projection
+              </span>
               <select id="view-kind">
                 <option value="table">Table</option>
                 <option value="matrix">Grouped matrix</option>
@@ -64,13 +71,23 @@
                 <option value="calendar">Calendar</option>
               </select>
             </label>
-            <label class="view-picker">Shared table layout
+            <label class="view-picker">
+              <span class="view-picker-label">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>
+                Shared table layout
+              </span>
               <select id="view-layout">
                 <option value="table">Table</option>
                 <option value="multiDimensional">Multi-dimensional Table</option>
               </select>
             </label>
-            <label id="month-picker" class="month-picker" hidden>Month <input id="month" type="month"></label>
+            <label id="month-picker" class="month-picker" hidden>
+              <span class="view-picker-label">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                Month
+              </span>
+              <input id="month" type="month">
+            </label>
           </div>
           <p id="message" class="message" role="status" aria-live="polite"></p>
           <div id="table-host" class="table-host" role="region" aria-label="Shared interactive table"></div>
@@ -83,6 +100,6 @@
         <span>No account · No sync · No server store</span>
       </footer>
     </main>
-    <script type="module" src="/demo/app.mjs?v=9"></script>
+    <script type="module" src="/demo/app.mjs?v=10"></script>
   </body>
 </html>
