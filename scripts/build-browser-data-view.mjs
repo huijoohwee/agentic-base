@@ -9,6 +9,21 @@ const sourceRoot = 'packages/views-react/src'
 const outputRoot = path.join(root, 'packages/views-react/dist')
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const digest = value => createHash('sha256').update(value).digest('hex')
+const sharedUiCssPath = `${sourceRoot}/browser/shared-ui-profile.css`
+const sharedUiPinPath = `${sourceRoot}/browser/shared-ui-profile.pin.json`
+const sharedUiCss = fs.readFileSync(path.join(root, sharedUiCssPath))
+const sharedUiPin = JSON.parse(fs.readFileSync(path.join(root, sharedUiPinPath), 'utf8'))
+if (sharedUiPin.schema !== 'agentic-design-system/consumer-pin/v1'
+  || sharedUiPin.profile?.id !== 'shared-ui'
+  || !/^[a-f0-9]{40}$/.test(sharedUiPin.profile?.sourceRevision ?? '')
+  || !/^[a-f0-9]{40}$/.test(sharedUiPin.profile?.registryRevision ?? '')
+  || !/^sha256:[a-f0-9]{64}$/.test(sharedUiPin.profile?.sourceSha256 ?? '')
+  || !/^sha256:[a-f0-9]{64}$/.test(sharedUiPin.profile?.projectionSha256 ?? '')
+  || digest(sharedUiCss) !== sharedUiPin.profile.projectionSha256.slice('sha256:'.length)
+  || !sharedUiCss.toString('utf8').includes(`agentic-design-system@${sharedUiPin.profile.sourceRevision}`)
+  || !sharedUiCss.toString('utf8').includes(sharedUiPin.profile.sourceSha256.slice('sha256:'.length))) {
+  throw new Error('Shared UI icon-size projection does not match its immutable Design System pin.')
+}
 const built = await build({
   absWorkingDir: root,
   entryPoints: [`${sourceRoot}/browser/index.ts`],
@@ -34,7 +49,7 @@ const outputMetadata = Object.values(built.metafile.outputs).find(output => outp
 if (!outputMetadata || outputMetadata.imports.length) throw new Error('Browser artifact must contain no external imports.')
 const inputRows = Object.keys(built.metafile.inputs)
   .filter(relative => relative.startsWith(`${sourceRoot}/`))
-  .concat(`${sourceRoot}/browser/browserDataView.css`)
+  .concat(`${sourceRoot}/browser/browserDataView.css`, sharedUiCssPath, sharedUiPinPath)
   .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
   .sort()
   .map(relative => {
@@ -43,7 +58,11 @@ const inputRows = Object.keys(built.metafile.inputs)
   })
 const files = new Map([
   ['browser-data-view.js', built.outputFiles[0].contents],
-  ['browser-data-view.css', fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`))],
+  ['browser-data-view.css', Buffer.concat([
+    sharedUiCss,
+    Buffer.from('\n'),
+    fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`)),
+  ])],
 ])
 for (const [name, bytes] of files) {
   if (!bytes.length || bytes.length >= 500000) throw new Error(`${name} exceeds the 500 kB artifact cap.`)
