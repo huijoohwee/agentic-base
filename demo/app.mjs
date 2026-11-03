@@ -1,5 +1,5 @@
 import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
-import { mountDataView } from './browser-data-view.js?v=9';
+import { mountDataView } from './browser-data-view.js?v=10';
 
 const BASE_ID = 'demo_base_v1';
 const ACTOR_ID = 'local_demo_operator';
@@ -19,7 +19,7 @@ const dom = Object.fromEntries(['setup', 'workspace', 'create-sample', 'reload',
   'table-host', 'month-picker', 'month', 'connection', 'offline-state', 'view-caption', 'view-kind', 'view-layout']
   .map(id => [id, document.getElementById(id)]));
 const state = { tableId: 'demo_tasks_v1', baseRevision: null, view: 'table', layout: 'table', orientation: 'rows',
-  total: 0, showing: 0, refreshTicket: 0, viewData: null, tableHandle: null };
+  total: 0, showing: 0, refreshTicket: 0, viewData: null, tableHandle: null, selectedRowIds: [] };
 const projectionLabels = { table: 'Table', matrix: 'Grouped matrix', kanban: 'Kanban', calendar: 'Calendar' };
 const layoutLabels = { table: 'Table', multiDimensional: 'Multi-dimensional Table' };
 
@@ -111,10 +111,36 @@ function tableColumns(fields) {
 }
 
 function sharedTableData(projection) {
-  if (projection.kind === 'table') return {
-    columns: tableColumns(projection.fields),
-    rows: projection.rows.map(row => ({ id: row.id, cells: row.cells.map(cellText) })),
-  };
+  if (projection.kind === 'table') {
+    const columns = tableColumns(projection.fields);
+    const regionIndex = projection.fields.findIndex(field => field.id === 'region');
+    const records = projection.rows.map(row => ({ id: row.id, cells: row.cells.map(cellText) }));
+    if (regionIndex < 0) return { columns, rows: records };
+
+    const groups = new Map();
+    for (const record of records) {
+      const region = record.cells[regionIndex] || 'Unassigned';
+      if (!groups.has(region)) groups.set(region, []);
+      groups.get(region).push(record);
+    }
+    const usedIds = new Set(records.map(record => record.id));
+    let groupIndex = 0;
+    const nextGroupId = () => {
+      let id;
+      do { id = `__agentic_base_region_group_${groupIndex++}`; } while (usedIds.has(id));
+      usedIds.add(id);
+      return id;
+    };
+    const rows = [];
+    for (const [region, children] of groups) {
+      const cells = Array(columns.length).fill('');
+      cells[0] = `Region: ${region}`;
+      cells[regionIndex] = region;
+      rows.push({ id: nextGroupId(), cells, depth: 1 });
+      rows.push(...children.map(record => ({ ...record, depth: 2 })));
+    }
+    return { columns, rows };
+  }
   if (projection.kind === 'matrix') {
     const cells = new Map(projection.cells.map(cell => [JSON.stringify([cell.rowKey, cell.columnKey]), cell]));
     const columns = [{ id: 'row-dimension', name: projection.rowField.name },
@@ -155,7 +181,7 @@ function sharedTableData(projection) {
 
 function updateViewCaption() {
   const subject = state.view === 'matrix' ? 'groups' : state.view === 'kanban' ? 'cards' : state.view === 'calendar' ? 'items' : 'records';
-  const count = state.viewData?.rows.length ?? 0;
+  const count = state.view === 'table' ? state.showing : state.viewData?.rows.length ?? 0;
   const coverage = state.view === 'table' ? `${count} of ${state.total} records`
     : `${count} ${subject} from ${state.showing} selected records (${state.total} total)`;
   dom['view-caption'].textContent = `${coverage} · ${projectionLabels[state.view]} through ${layoutLabels[state.layout]}.`;
@@ -168,6 +194,12 @@ function renderSharedTable() {
     layout: state.layout,
     orientation: state.layout === 'multiDimensional' ? state.orientation : 'rows',
     ariaLabel: `${projectionLabels[state.view]} projection in the shared table view`,
+  };
+  const visibleRowIds = new Set(view.rows.map(row => row.id));
+  view.selectedRowIds = state.selectedRowIds.filter(id => visibleRowIds.has(id));
+  view.onSelectionChange = selectedRowIds => {
+    state.selectedRowIds = selectedRowIds.filter(id => view.rows.some(row => row.id === id && row.depth !== undefined));
+    renderSharedTable();
   };
   if (state.layout === 'multiDimensional') {
     view.onOrientationChange = orientation => {
@@ -192,6 +224,7 @@ async function refresh() {
   if (ticket !== state.refreshTicket) return;
   state.total = result.total;
   state.showing = Math.min(result.total, 250);
+  state.selectedRowIds = [];
   setRevision(result.revision);
   state.viewData = sharedTableData(result.projection);
   renderSharedTable();
