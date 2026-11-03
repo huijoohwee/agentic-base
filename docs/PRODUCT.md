@@ -8,7 +8,7 @@ The MVP provides:
 - Base, table, field, and record contracts with optimistic revisions.
 - Atomic IndexedDB writes and a memory adapter for deterministic checks.
 - Table, two-dimension matrix, Kanban, and date-only Calendar projections over the same record IDs.
-- A local projection demo for product checks only; it is not the reusable consumer UI.
+- The local demo renders all four deterministic projection outputs through the same Base browser Table/Multi-dimensional Table adapter. The view is read-only; the local form remains its record-write control. There is no raw-JSON fallback or second table renderer.
 - One canonical, unpublished view package that source-maps the existing Graph Table, Multi-dimensional Table, Kanban, Calendar, Dashboard, and shared settings visuals behind neutral host contracts. One offline browser artifact serves vanilla-JS consumers from the same Base table source. The development fixture proves shared in-memory records and host composition, not full consumer parity. Graph and Shoply must pin exact commits; retain their schema, data, and actions in consumer adapters. No separate starter or conflicting implementation.
 - Caller-supplied authorization before each read or write.
 - A mobile-width browser demo with an origin-local offline app shell.
