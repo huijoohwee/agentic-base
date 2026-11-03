@@ -36,9 +36,8 @@ p { line-height: 1.5; }
 .task-form label, .month-picker, .view-picker { display: grid; gap: 0.35rem; color: var(--muted); font-size: 0.85rem; font-weight: 650; }
 .task-form input, .task-form select, .month-picker input, .view-picker select { width: 100%; min-height: 44px; padding: 0.5rem 0.65rem; border: 1px solid #bdcad7; border-radius: 0.5rem; background: #fff; color: var(--ink); }
 .submit { align-self: end; }
-.projection { overflow: auto; max-width: 100%; min-height: 10rem; border: 1px solid var(--border); border-radius: 0.65rem; }
-.projection-json { min-width: max-content; margin: 0; padding: 1rem; font: 0.8rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
-.projection:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #4c99ce; outline-offset: 2px; }
+.table-host { width: 100%; height: min(65vh, 48rem); min-height: 16rem; overflow: hidden; border: 1px solid var(--border); border-radius: 0.65rem; background: #fff; }
+.table-host:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #4c99ce; outline-offset: 2px; }
 .message { min-height: 1.5rem; margin: 0.5rem 0; color: var(--muted); }
 .message.error { color: #a12828; }
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; padding: 0.5rem 0.2rem; color: var(--muted); font-size: 0.8rem; }
@@ -49,4 +48,5 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.
   .connection { display: inline-block; margin-top: 0.8rem; }
   .section-heading { align-items: flex-start; flex-wrap: wrap; }
   .view-picker, .month-picker { width: 100%; }
+  .table-host { height: min(62vh, 40rem); min-height: 13rem; }
 }

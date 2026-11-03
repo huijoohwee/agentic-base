@@ -1,4 +1,5 @@
 import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
+import { mountDataView } from './browser-data-view.js?v=9';
 
 const BASE_ID = 'demo_base_v1';
 const ACTOR_ID = 'local_demo_operator';
@@ -15,9 +16,12 @@ const engine = createBaseEngine({
 });
 
 const dom = Object.fromEntries(['setup', 'workspace', 'create-sample', 'reload', 'task-form', 'revision', 'message',
-  'projection', 'month-picker', 'month', 'connection', 'offline-state', 'view-caption', 'view-kind']
+  'table-host', 'month-picker', 'month', 'connection', 'offline-state', 'view-caption', 'view-kind', 'view-layout']
   .map(id => [id, document.getElementById(id)]));
-const state = { tableId: 'demo_tasks_v1', baseRevision: null, view: 'table', total: 0, showing: 0 };
+const state = { tableId: 'demo_tasks_v1', baseRevision: null, view: 'table', layout: 'table', orientation: 'rows',
+  total: 0, showing: 0, refreshTicket: 0, viewData: null, tableHandle: null };
+const projectionLabels = { table: 'Table', matrix: 'Grouped matrix', kanban: 'Kanban', calendar: 'Calendar' };
+const layoutLabels = { table: 'Table', multiDimensional: 'Multi-dimensional Table' };
 
 function message(text, error = false) {
   dom.message.textContent = text;
@@ -95,16 +99,88 @@ async function createSample() {
   }
 }
 
-function renderProjection(projection) {
-  const output = document.createElement('pre');
-  output.className = 'projection-json';
-  output.textContent = JSON.stringify(projection, null, 2);
-  dom.projection.replaceChildren(output);
+function cellText(value) {
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) return value.map(cellText).filter(Boolean).join(', ');
+  return String(value);
+}
+
+function tableColumns(fields) {
+  return fields.map(field => ({ id: field.id, name: field.name,
+    kind: field.type === 'select' || field.type === 'multi-select' ? field.type : 'text' }));
+}
+
+function sharedTableData(projection) {
+  if (projection.kind === 'table') return {
+    columns: tableColumns(projection.fields),
+    rows: projection.rows.map(row => ({ id: row.id, cells: row.cells.map(cellText) })),
+  };
+  if (projection.kind === 'matrix') {
+    const cells = new Map(projection.cells.map(cell => [JSON.stringify([cell.rowKey, cell.columnKey]), cell]));
+    const columns = [{ id: 'row-dimension', name: projection.rowField.name },
+      ...projection.columns.map((column, index) => ({ id: `matrix-column-${index}`, name: cellText(column.value) || 'Unknown' }))];
+    return {
+      columns,
+      rows: projection.rows.map((row, index) => ({
+        id: `matrix-row-${index}`,
+        cells: [cellText(row.value) || 'Unknown', ...projection.columns.map(column => {
+          const cell = cells.get(JSON.stringify([row.key, column.key]));
+          return cell ? `${cell.count} record${cell.count === 1 ? '' : 's'}` : '—';
+        })],
+      })),
+    };
+  }
+  if (projection.kind === 'kanban') {
+    const fields = projection.groupField ? FIELDS.filter(field => field.id !== projection.groupField.id) : FIELDS;
+    return {
+      columns: [{ id: 'kanban-lane', name: projection.groupField.name }, ...tableColumns(fields)],
+      rows: projection.lanes.flatMap(lane => lane.cards.map(card => ({
+        id: card.id, cells: [lane.label, ...fields.map(field => cellText(card.values[field.id]))],
+      }))),
+    };
+  }
+  if (projection.kind === 'calendar') {
+    const rows = [];
+    const add = (label, record) => rows.push({
+      id: record.id, cells: [label, ...FIELDS.map(field => cellText(record.values[field.id]))],
+    });
+    for (const day of projection.days) for (const record of day.records) add(day.date, record);
+    for (const record of projection.unscheduled) add('Unscheduled', record);
+    for (const record of projection.invalid) add(`Invalid date: ${cellText(record.value)}`, record);
+    for (const record of projection.outsideMonth) add(`Outside ${projection.month}: ${cellText(record.values[projection.dateField.id])}`, record);
+    return { columns: [{ id: 'calendar-schedule', name: 'Schedule' }, ...tableColumns(FIELDS)], rows };
+  }
+  throw new TypeError(`Unsupported shared table projection: ${String(projection.kind)}`);
+}
+
+function updateViewCaption() {
+  const subject = state.view === 'matrix' ? 'groups' : state.view === 'kanban' ? 'cards' : state.view === 'calendar' ? 'items' : 'records';
+  const count = state.viewData?.rows.length ?? 0;
+  const coverage = state.view === 'table' ? `${count} of ${state.total} records`
+    : `${count} ${subject} from ${state.showing} selected records (${state.total} total)`;
+  dom['view-caption'].textContent = `${coverage} · ${projectionLabels[state.view]} through ${layoutLabels[state.layout]}.`;
+}
+
+function renderSharedTable() {
+  if (!state.viewData) return;
+  const view = {
+    ...state.viewData,
+    layout: state.layout,
+    orientation: state.layout === 'multiDimensional' ? state.orientation : 'rows',
+    ariaLabel: `${projectionLabels[state.view]} projection in the shared table view`,
+  };
+  if (state.layout === 'multiDimensional') {
+    view.onOrientationChange = orientation => {
+      state.orientation = orientation;
+      renderSharedTable();
+    };
+  }
+  if (state.tableHandle) state.tableHandle.update(view);
+  else state.tableHandle = mountDataView(dom['table-host'], view);
 }
 
 async function refresh() {
-  const base = await execute('base.get', { baseId: BASE_ID });
-  state.baseRevision = base.revision;
+  const ticket = ++state.refreshTicket;
   const table = await execute('table.list', { baseId: BASE_ID });
   if (!table.some(item => item.id === state.tableId)) throw new Error('The local demo table is missing');
   const query = { limit: 250, sort: [{ fieldId: 'title', direction: 'asc' }] };
@@ -113,12 +189,14 @@ async function refresh() {
       : state.view === 'kanban' ? { kind: 'kanban', groupFieldId: 'status', lanes: ['Todo', 'Doing', 'Done'].map(value => ({ value, label: value })) }
         : { kind: 'calendar', dateFieldId: 'due', month: dom.month.value || currentMonth() };
   const result = await execute('view.project', { baseId: BASE_ID, tableId: state.tableId, query, view });
+  if (ticket !== state.refreshTicket) return;
   state.total = result.total;
   state.showing = Math.min(result.total, 250);
   setRevision(result.revision);
-  renderProjection(result.projection);
-  dom['view-caption'].textContent = `${state.showing} of ${state.total} records; raw ${state.view} projection (page limit 250).`;
-  message('Projection read from the current browser origin; view UI belongs to consumers.');
+  state.viewData = sharedTableData(result.projection);
+  renderSharedTable();
+  updateViewCaption();
+  message(state.total ? 'Local projection rendered by the shared Base table.' : 'No records yet. Add a task above to populate this shared table.');
 }
 
 async function addTask(event) {
@@ -172,6 +250,11 @@ dom['view-kind'].addEventListener('change', () => {
   state.view = dom['view-kind'].value;
   dom['month-picker'].hidden = state.view !== 'calendar';
   refresh().catch(error => message(error.message, true));
+});
+dom['view-layout'].addEventListener('change', () => {
+  state.layout = dom['view-layout'].value;
+  renderSharedTable();
+  updateViewCaption();
 });
 window.addEventListener('online', setConnection);
 window.addEventListener('offline', setConnection);

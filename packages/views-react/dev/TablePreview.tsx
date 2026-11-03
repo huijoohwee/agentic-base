@@ -4,7 +4,6 @@ import { MARKDOWN_TEXT_EDIT_SURFACE_MIN_LINE_HEIGHT_CLASS } from '@/features/mar
 import { TableHostProvider } from '../src/table/TableHostContext'
 import { TableView, type TableViewProps } from '../src/table/TableView'
 import { createBaseTableHost, MultiDimTableView } from '../src/table/MultiDimTableView'
-import { graphTableHost } from './GraphTableHost'
 import { WorkspaceModeSelect } from '@/features/markdown-workspace/WorkspaceModeSelect'
 import { WorkspaceDataViewHeader, type WorkspaceDataViewHeaderState } from '@/features/markdown-workspace/main/viewer/WorkspaceDataViewHeader'
 import type { WorkspaceDataViewConfig } from '@/features/markdown-workspace/main/viewer/workspaceDataViewConfig'
@@ -40,14 +39,7 @@ const PreviewInlineTextCellEditor = (props: {
   />
 }
 
-const previewTableHost = {
-  ...graphTableHost,
-  components: {
-    ...graphTableHost.components,
-    InlineTextCellEditor: PreviewInlineTextCellEditor,
-  },
-}
-const baseTableHost = createBaseTableHost({
+const sharedTableHost = createBaseTableHost({
   components: { InlineTextCellEditor: PreviewInlineTextCellEditor },
 })
 
@@ -106,7 +98,7 @@ export default function TablePreview(props: TableViewProps & { multiDimensional?
       <span>Host-owned {settingsPanel} settings are supplied by the consuming application.</span>
       <button type="button" className="rounded border border-[color:var(--kg-border)] px-2 py-1" onClick={() => setSettingsPanel(null)}>Close</button>
     </aside> : null}
-    <TableHostProvider value={multiDimensional ? baseTableHost : previewTableHost}>
+    <TableHostProvider value={sharedTableHost}>
       {multiDimensional
         ? <MultiDimTableView {...tableProps} view={previewView} visibleColumnIds={visibleColumnIds} orientation={viewConfig.orientation} showPivotControl onOrientationChange={orientation => setViewConfig(current => ({ ...current, orientation }))} />
         : <TableView {...tableProps} view={previewView} visibleColumnIds={visibleColumnIds} />}
