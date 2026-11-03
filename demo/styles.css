@@ -32,11 +32,12 @@ p { line-height: 1.5; }
 .secondary { border: 1px solid var(--border); background: #fff; color: var(--ink); }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .title-with-icon { display: flex; align-items: center; gap: 0.45rem; }
-.ui-icon { width: 1rem; height: 1rem; min-width: 1rem; min-height: 1rem; flex: none; }
+.ui-icon { width: var(--agentic-icon-size-default, 1rem); height: var(--agentic-icon-size-default, 1rem); min-width: var(--agentic-icon-size-default, 1rem); min-height: var(--agentic-icon-size-default, 1rem); flex: none; }
 .view-picker-label { display: flex; align-items: center; gap: 0.4rem; }
 .muted { margin: 0.3rem 0 0; color: var(--muted); font-size: 0.9rem; }
 .task-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 0.8rem; margin-top: 1rem; }
 .task-form label, .month-picker, .view-picker { display: grid; gap: 0.35rem; color: var(--muted); font-size: 0.85rem; font-weight: 650; }
+.month-picker[hidden] { display: none; }
 .task-form input, .task-form select, .month-picker input, .view-picker select { width: 100%; min-height: 44px; padding: 0.5rem 0.65rem; border: 1px solid #bdcad7; border-radius: 0.5rem; background: #fff; color: var(--ink); }
 .submit { align-self: end; }
 .table-host { width: 100%; height: min(65vh, 48rem); min-height: 16rem; overflow: hidden; border: 1px solid var(--border); border-radius: 0.65rem; background: #fff; }
