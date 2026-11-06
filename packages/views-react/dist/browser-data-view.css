@@ -32,7 +32,8 @@
   flex: 0 0 auto;
 }
 .agentic-base-data-view .flex { display: flex; }
-.base-multi-dimensional-table { min-width: 0; }
+.base-multi-dimensional-table { display: flex; flex-direction: column; height: 100%; min-width: 0; min-height: 0; }
+.base-multi-dimensional-table > .agentic-base-data-view { flex: 1; min-height: 0; }
 .agentic-base-data-view .inline-flex { display: inline-flex; }
 .agentic-base-data-view .min-w-0 { min-width: 0; }
 .agentic-base-data-view .items-center { align-items: center; }

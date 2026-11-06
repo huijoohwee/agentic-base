@@ -18,8 +18,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 17799,
-      "sha256": "2a35e1118437cca60310ff6e2f2274c635f8f9f1f46f1e0a04a1645ba1f65a39"
+      "bytes": 17951,
+      "sha256": "cb2df0735128de9d06a7670c82a2f7c23a4669ee2fdad0b1ec55fae6924b64f0"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -93,20 +93,20 @@
     },
     {
       "path": "packages/views-react/src/table/stickyHierarchy.ts",
-      "bytes": 4909,
-      "sha256": "1fb10191e3758e6c50a89caf4a747985745ac15cbb5ad8acb3d353c5ad1b70c4"
+      "bytes": 4921,
+      "sha256": "9f0632a072a56e964afe22112346a25739292c4bb4cb5deb3efc8901927edc24"
     }
   ],
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 217194,
-      "sha256": "41b74ce7f6de0de0a7023f3b14571621a5b507637bcef493dda2ae526392a703"
+      "bytes": 217196,
+      "sha256": "a196ab9cc0a727f2ffdb2d7c48b19095e949c7f5b3cb03423c9b41b5774ab188"
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 18073,
-      "sha256": "d26f2617ea042b0dd22dbf12ac58ad91c06877ccd4543cfdd0daa5f15d4925ee"
+      "bytes": 18225,
+      "sha256": "f926dd7135a29fff1afab868b161b20014ae09309f03852de2b6e03615990f7d"
     }
   ]
 }

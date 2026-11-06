@@ -83,7 +83,7 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
     for (const row of Array.from(body.rows)) resizeObserver?.observe(row)
     schedule()
   }
-  const mutations = new MutationObserver(observeRows)
+  const mutations = new ownerWindow.MutationObserver(observeRows)
   mutations.observe(body, { childList: true, subtree: true, characterData: true,
     attributes: true, attributeFilter: ['data-agentic-base-row-depth', 'data-agentic-base-row-parent', 'class'] })
   frame.addEventListener('scroll', schedule, { passive: true })
