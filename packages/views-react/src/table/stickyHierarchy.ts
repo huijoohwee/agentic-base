@@ -61,14 +61,12 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
       const row = rows[index]!
       if (!moved.has(row)) {
         moved.set(row, { shift: 0, transform: row.style.transform, position: row.style.position, zIndex: row.style.zIndex })
-        const rowBackground = ownerWindow.getComputedStyle(row).backgroundColor
-        const background = rowBackground !== 'rgba(0, 0, 0, 0)' && rowBackground !== 'transparent'
-          ? rowBackground : headerBackground
-        for (const cell of Array.from(row.cells)) {
-          backgrounds.set(cell, cell.style.backgroundColor)
-          cell.style.backgroundColor = background
-        }
+        for (const cell of Array.from(row.cells)) backgrounds.set(cell, cell.style.backgroundColor)
       }
+      const rowBackground = ownerWindow.getComputedStyle(row).backgroundColor
+      const background = rowBackground !== 'rgba(0, 0, 0, 0)' && rowBackground !== 'transparent'
+        ? rowBackground : headerBackground
+      for (const cell of Array.from(row.cells)) cell.style.backgroundColor = background
       moved.get(row)!.shift = shift
       Object.assign(row.style, { position: 'relative', transform: `translateY(${shift}px)`, zIndex: String(20 - geometry[index]!.depth) })
       row.dataset.agenticBaseStickyAncestor = 'true'

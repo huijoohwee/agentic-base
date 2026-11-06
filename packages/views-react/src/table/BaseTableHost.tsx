@@ -242,7 +242,7 @@ export function BaseHierarchyCell(props: AnyProps) {
     <span className="agentic-base-data-tree-control">
       {selectionEnabled ? <GripVertical className="agentic-base-row-drag-handle" size={16} role="img" aria-label={`Row drag handle: ${props.selectionLabel || 'unnamed row'}`} /> : null}
       {hasChildren ? <button {...props.expandButtonDataAttributes} type="button" className="agentic-base-row-expand" aria-label={expandableLabel} aria-expanded={!props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
-        <ChevronRight size={12} aria-label={expandableLabel} style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
+        <ChevronRight size={12} aria-hidden="true" style={{ transform: props.collapsed ? undefined : 'rotate(90deg)' }} />
       </button> : null}
       {selectionEnabled ? <label className={`agentic-base-row-select-label${hasChildren ? ' agentic-base-row-select-label-group' : ''}`} onClick={event => event.stopPropagation()}>
         <input ref={selectionRef} type="checkbox" className="agentic-base-row-select" aria-label={`${hasChildren ? 'Select group' : 'Select row'}: ${props.selectionLabel || 'unnamed row'}`} aria-checked={props.mixed ? 'mixed' : undefined} checked={Boolean(props.selected)} onChange={() => props.onSelect?.()} />
@@ -264,7 +264,7 @@ export function BaseNestedRowsBulkToggle(props: {
     if (selectAllRef.current) selectAllRef.current.indeterminate = Boolean(props.selection?.mixed)
   }, [props.selection?.mixed])
   return <span className="agentic-base-data-tree-header-controls">
-    <button {...props.buttonDataAttributes} type="button" className="agentic-base-nested-rows-bulk-toggle" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
+    <button {...props.buttonDataAttributes} type="button" className="agentic-base-nested-rows-bulk-toggle" title={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
       <Icon size={14} aria-hidden="true" />
     </button>
     {props.selection ? <label className="agentic-base-row-select-label agentic-base-row-select-label-header">
