@@ -1,12 +1,13 @@
 import React from 'react'
 import type { ViewModel } from '../kanban/KanbanHostContext'
 import type { ViewColumnType } from './ViewColumnType'
-import { columnTypeToBaseKind, defaultColumnTypeForInferredKind, labelForViewColumnType } from './ViewColumnType'
+import { columnTypeToBaseKind, defaultColumnTypeForInferredKind } from './ViewColumnType'
 import { useTableHost, type DataViewFieldLineMode, type DataViewRowHeightPreset } from './TableHostContext'
 import { TableCore } from './TableCore'
 import { ColumnsTableView } from './ColumnsTableView'
 import { buildRowSelectionHierarchy, readRowSelectionStates, readRowSelectionState, toggleHierarchicalRowSelection } from './rowSelection'
-import { Plus, Type } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { TableViewHeader } from './TableViewHeader'
 export {
   AGENTIC_BASE_DATA_VIEW_ROW_HEIGHT_PX,
   readBaseDataViewCellPaddingClassName,
@@ -58,21 +59,18 @@ const TABLE_HIERARCHY_COLUMN_WIDTH_PX = 93
 export const TABLE_FIELD_COLUMN_ID = '__field'
 export const TableView = React.memo(function TableView(props: TableViewProps) {
   const {
-    themeTokens, copy: viewCopy, styles, icons, components, stores, data, helpers,
+    themeTokens, copy: viewCopy, styles, components, stores, data, helpers,
   } = useTableHost()
   const {
-    actionRowClass, compactGlyphClass, dataViewMenuPanelClass, dataViewTableFrameClass,
+    actionRowClass, compactGlyphClass, dataViewTableFrameClass,
     dataViewTableProgressClass, dataViewTableValueClass, elementRowClass,
-    inlineElementRowClass, menuIconActionClass, textTruncateClass, toolbarRowScrollClass,
+    inlineElementRowClass, textTruncateClass, toolbarRowScrollClass,
     stickyHeaderClass,
   } = styles
   const {
-    TagChip, ColumnTypeMenu, AddColumnMenu, ColumnHeaderPropertyTypeMenu,
-    ColumnHeaderMenu, HierarchyCell, InlineTextCellEditor, NestedRowsBulkToggle,
-    ColumnResizeHandle, CellSelectPopover,
+    TagChip, HierarchyCell, InlineTextCellEditor, CellSelectPopover,
   } = components
   const { tablePreferences: workspaceTablePreferencesStore } = stores
-  const { iconByColumnType } = icons
   const {
     splitMultiValues, readDisplayText, renderInlineText, buildMediaCommandContext,
     buildNestedCellMap, renderRichCell, useNestedRowCollapse,
@@ -348,105 +346,12 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       tableStyle={tableStyle}
       ariaLabel={props.ariaLabel ?? 'Table view'}
       header={(
-        <tr>
-            {hasNestedRowHierarchy ? (
-              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] border-b text-left ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`} style={{ width: hierarchyColumnWidthPx }}>
-                <NestedRowsBulkToggle
-                  collapsed={areAllNestedRowsCollapsed}
-                  onToggle={toggleAllNestedRows}
-                  selection={multiRowSelectionEnabled ? { checked: allRowsSelected, mixed: someRowsSelected, onChange: toggleAllRows } : undefined}
-                />
-              </th>
-            ) : null}
-            {visibleColumnMeta.map(({ col: c }) => {
-              const type = (columnTypesById && columnTypesById[c.id]) || defaultColumnTypeForInferredKind(c.kind)
-              const Icon = iconByColumnType[type] || Type
-              const allowTypeEdit = Boolean(canConfigure && props.onChangeColumnType)
-              const canSort = Boolean(canConfigure && props.onSetColumnSort && c.id === view.titleColumnId)
-              const filterOps = c.kind === 'multi-select'
-                ? [{ key: 'includes', label: 'includes' }, { key: 'contains', label: 'contains' }, { key: 'equals', label: 'equals' }]
-                : c.kind === 'select'
-                  ? [{ key: 'equals', label: 'equals' }, { key: 'contains', label: 'contains' }]
-                  : [{ key: 'contains', label: 'contains' }, { key: 'equals', label: 'equals' }]
-              return (
-              <th
-                key={c.id}
-                className={`${headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}
-              >
-                <section className="flex min-w-0 items-center gap-2 overflow-hidden">
-                  <ColumnHeaderPropertyTypeMenu
-                    ariaLabel={`Column type: ${c.name}`}
-                    label={c.name}
-                    Icon={Icon}
-                    portal
-                    portalPlacement="bottom-start"
-                    toggleTargets="icon+chevron"
-                    menu={({ close }: { close: () => void }) => (
-                      <ColumnHeaderMenu
-                        ariaLabel={`Column menu: ${c.name}`}
-                        closeMenu={close}
-                        typeSummaryLabel="Type"
-                        typeValueLabel={labelForViewColumnType(type)}
-                        disableTypeChange={!allowTypeEdit}
-                        renderTypeMenu={() => (
-                          <ColumnTypeMenu
-                            ariaLabel={`Column type: ${c.name}`}
-                            value={type}
-                            close={close}
-                            disabled={!allowTypeEdit}
-                            onSelect={(next: ViewColumnType) => {
-                              if (!allowTypeEdit) return
-                              props.onChangeColumnType?.({ columnId: c.id, nextType: next })
-                            }}
-                          />
-                        )}
-                        onHideInView={canConfigure && props.onHideColumnInView ? () => props.onHideColumnInView?.(c.id) : undefined}
-                        filter={
-                          canConfigure && props.onUpsertColumnFilter
-                            ? {
-                                ops: filterOps,
-                                defaultOp: filterOps[0]?.key || 'contains',
-                                onApply: ({ op, value }: { op: string; value: string }) =>
-                                  props.onUpsertColumnFilter?.({
-                                    columnId: c.id,
-                                    columnKind: c.kind,
-                                    op: (op === 'includes' ? 'includes' : op === 'equals' ? 'equals' : 'contains'),
-                                    value,
-                                  }),
-                              }
-                            : undefined
-                        }
-                        onSortAsc={canSort ? () => props.onSetColumnSort?.({ columnId: c.id, direction: 'asc' }) : undefined}
-                        onSortDesc={canSort ? () => props.onSetColumnSort?.({ columnId: c.id, direction: 'desc' }) : undefined}
-                        disableSort={!canSort}
-                        disableInsert
-                        disableDuplicate
-                        disableDelete
-                        disableMoveLeft
-                        disableMoveRight
-                      />
-                    )}
-                  />
-                </section>
-                <ColumnResizeHandle columnId={c.id} width={readColumnWidth(c.id, readDefaultColumnWidth(c.name))} onPreview={previewColumnResize} onCommit={commitColumnResize} />
-              </th>
-              )
-            })}
-            {canMutate && props.onAddColumn ? (
-              <th
-                className={`${headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}
-              >
-                <AddColumnMenu
-                  ariaLabel="Add column"
-                  nextColumnNumber={view.columns.length + 1}
-                  canMutate={canMutate}
-                  onAddColumn={props.onAddColumn}
-                  summaryClassName={['list-none', menuIconActionClass, 'rounded border cursor-pointer', themeTokens.panel.border, themeTokens.button.hoverBg].join(' ')}
-                  menuPositionClassName={`kg-data-view-add-column-menu absolute right-0 mt-2 ${dataViewMenuPanelClass}`}
-                />
-              </th>
-            ) : null}
-        </tr>
+        <TableViewHeader tableProps={props} visibleColumnMeta={visibleColumnMeta}
+          hasNestedRowHierarchy={hasNestedRowHierarchy} hierarchyColumnWidthPx={hierarchyColumnWidthPx}
+          headerPaddingClassName={headerPaddingClassName} areAllNestedRowsCollapsed={areAllNestedRowsCollapsed}
+          toggleAllNestedRows={toggleAllNestedRows} multiRowSelectionEnabled={multiRowSelectionEnabled}
+          allRowsSelected={allRowsSelected} someRowsSelected={someRowsSelected} toggleAllRows={toggleAllRows}
+          readColumnWidth={readColumnWidth} previewColumnResize={previewColumnResize} commitColumnResize={commitColumnResize} />
       )}
       rows={(
         <>
@@ -455,7 +360,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
             const selectionState = selectionStates.get(r.id) ?? { checked: false, mixed: false }
             const selected = selectionState.checked
             const selectionEnabled = rowSelectionEnabled
-            const rowLabel = String(r.cells[titleColumnIndex] ?? '').trim() || r.id
+            const labelIndex = visibleColumnMeta.find(({ col }) => col.id === view.titleColumnId)?.index ?? visibleColumnMeta[0]?.index ?? titleColumnIndex
+            const rowLabel = String(r.cells[labelIndex] ?? '').trim() || r.id
             return <tr
               key={r.id}
               role="row"

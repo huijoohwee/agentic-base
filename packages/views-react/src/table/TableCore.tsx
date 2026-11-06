@@ -1,4 +1,5 @@
 import React from 'react'
+import { bindStickyHierarchy } from './stickyHierarchy'
 
 export type TableCoreColumn = { id: string; width: number }
 
@@ -18,11 +19,13 @@ export function TableCore<Row>(props: {
   children?: React.ReactNode
 }) {
   const label = props.ariaLabel ?? 'Table view'
+  const frameRef = React.useRef<HTMLElement>(null)
+  React.useLayoutEffect(() => frameRef.current ? bindStickyHierarchy(frameRef.current) : undefined, [])
   return (
-    <section className={`${props.frameClassName} isolate`} aria-label={label}>
+    <section ref={frameRef} className={`${props.frameClassName} isolate`} aria-label={label}>
       <table aria-label={label} className={`${props.tableClassName ?? 'min-w-max w-max'} table-fixed border-separate border-spacing-0 text-xs`} style={props.tableStyle}>
         <colgroup>{props.columns.map(column => <col key={column.id} style={{ width: column.width }} />)}</colgroup>
-        <thead className={`${props.headerClassName} sticky top-0 z-30 isolate`}>
+        <thead className={`${props.headerClassName} sticky top-0 z-30 isolate`} style={{ position: 'sticky', top: 0, zIndex: 30 }}>
           {props.header}
         </thead>
         <tbody className={props.bodyClassName}>
