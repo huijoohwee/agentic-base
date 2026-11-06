@@ -83,8 +83,8 @@
     },
     {
       "path": "packages/views-react/src/table/dataViewDensity.ts",
-      "bytes": 1138,
-      "sha256": "2cf86066b9cef6f79a57abbda8364068ee3650287f4dd41ab631a6fc5f2a6792"
+      "bytes": 1183,
+      "sha256": "75d33565efdafad586e1c1b0822be9fec1fc2925b1b26e134c1dda471580c8fd"
     },
     {
       "path": "packages/views-react/src/table/rowSelection.ts",
