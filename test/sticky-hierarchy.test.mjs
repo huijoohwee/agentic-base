@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { readStickyHierarchy, readStickyHeaderShift } from '../packages/views-react/src/table/stickyHierarchy.ts'
+import { readStickyHierarchy, readStickyHeaderShift, readScrollPaddingTop } from '../packages/views-react/src/table/stickyHierarchy.ts'
 const row = (top, height, depth, parent = false) => ({ top, height, depth, parent })
 test('pins only the active nested ancestor path using measured variable heights', () => {
   const rows = [row(-100, 40, 0, true), row(-60, 60, 1, true), row(0, 40, 2), row(40, 40, 2), row(80, 40, 0, true), row(120, 40, 1)]
@@ -30,4 +30,13 @@ test('header releases at the table end without covering the following content', 
 })
 test('bounded-frame native sticky header receives no additional translation', () => {
   assert.equal(readStickyHeaderShift(99, 41, 1300, 99), 0)
+})
+
+test('native scroll padding reserves pixel or percentage space for surrounding sticky content', () => {
+  assert.equal(readScrollPaddingTop('146px', 896), 146)
+  assert.equal(readScrollPaddingTop('10%', 800), 80)
+})
+test('automatic or negative scroll padding does not invent reserved space', () => {
+  assert.equal(readScrollPaddingTop('auto', 800), 0)
+  assert.equal(readScrollPaddingTop('-10px', 800), 0)
 })

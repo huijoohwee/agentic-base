@@ -5,6 +5,12 @@ export function readStickyHeaderShift(top: number, height: number, tableBottom: 
   return Math.max(0, Math.min(viewportTop - top, tableBottom - top - height))
 }
 
+/** Native scroll padding reserves room for surrounding sticky content, without host selectors. */
+export function readScrollPaddingTop(value: string, viewportHeight: number): number {
+  const length = Number.parseFloat(value)
+  return Number.isFinite(length) ? Math.max(0, value.trim().endsWith('%') ? length * viewportHeight / 100 : length) : 0
+}
+
 function parentElements(element: HTMLElement): HTMLElement[] {
   const parents: HTMLElement[] = []
   let parent = element.parentElement ?? (element.getRootNode() as ShadowRoot).host as HTMLElement | undefined
@@ -70,8 +76,10 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
     const verticalParent = ownsVerticalScroll ? null : parents.find(parent =>
       /^(auto|scroll|overlay)$/.test(ownerWindow.getComputedStyle(parent).overflowY)
       && parent.scrollHeight > parent.clientHeight + 1)
-    const viewportTop = ownsVerticalScroll ? frame.getBoundingClientRect().top + frame.clientTop
-      : verticalParent ? verticalParent.getBoundingClientRect().top + verticalParent.clientTop : 0
+    const scrollOwner = ownsVerticalScroll ? frame : verticalParent ?? frame.ownerDocument.documentElement
+    const reservedTop = readScrollPaddingTop(ownerWindow.getComputedStyle(scrollOwner).scrollPaddingTop, scrollOwner.clientHeight)
+    const viewportTop = reservedTop + (ownsVerticalScroll ? frame.getBoundingClientRect().top + frame.clientTop
+      : verticalParent ? verticalParent.getBoundingClientRect().top + verticalParent.clientTop : 0)
     const headerBounds = header.getBoundingClientRect()
     headerShift = readStickyHeaderShift(headerBounds.top - headerShift, headerBounds.height, tableBounds.bottom, viewportTop)
     header.style.transform = headerShift ? `translateY(${headerShift}px) ${originalHeaderTransform}`.trim() : originalHeaderTransform
@@ -119,6 +127,7 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
   const mutations = new ownerWindow.MutationObserver(observeRows)
   mutations.observe(body, { childList: true, subtree: true, characterData: true,
     attributes: true, attributeFilter: ['data-agentic-base-row-depth', 'data-agentic-base-row-parent', 'class'] })
+  for (const element of [frame, ...parents]) mutations.observe(element, { attributes: true, attributeFilter: ['style', 'class'] })
   for (const element of [frame, ...parents]) element.addEventListener('scroll', schedule, { passive: true })
   ownerWindow.addEventListener('scroll', schedule, { passive: true })
   ownerWindow.addEventListener('resize', schedule)
