@@ -33,3 +33,21 @@ test('row geometry comes from the same responsive shared profile for both densit
   assert.match(density, /compact: sharedUiPin.metrics.rowHeight/)
   assert.match(density, /comfortable: sharedUiPin.metrics.rowHeight/)
 })
+
+test('numeric row metrics use the document view and retain a headless fallback', async () => {
+  const { build } = await import('esbuild')
+  const result = await build({ entryPoints: [new URL('../packages/views-react/src/table/dataViewDensity.ts', import.meta.url).pathname], bundle: true, write: false, format: 'esm', platform: 'node' })
+  const metrics = await import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`)
+  assert.equal(metrics.readBaseDataViewRowHeightPx('compact'), pin.metrics.rowHeight)
+  const prior = Object.getOwnPropertyDescriptor(globalThis, 'document')
+  try {
+    Object.defineProperty(globalThis, 'document', { configurable: true, value: { documentElement: {}, defaultView: { getComputedStyle: () => ({ getPropertyValue: key => key === '--agentic-row-height' ? `${pin.metrics.rowHeightTouch}px` : '' }) } } })
+    assert.equal(metrics.readBaseDataViewRowHeightPx('compact'), pin.metrics.rowHeightTouch)
+    assert.equal(metrics.readBaseDataViewRowHeightPx('comfortable'), pin.metrics.rowHeightTouch)
+    Object.defineProperty(globalThis, 'document', { configurable: true, value: { defaultView: null } })
+    assert.equal(metrics.readBaseDataViewRowHeightPx('comfortable'), pin.metrics.rowHeight)
+  } finally {
+    if (prior) Object.defineProperty(globalThis, 'document', prior)
+    else delete globalThis.document
+  }
+})

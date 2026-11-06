@@ -8,8 +8,8 @@ export const AGENTIC_BASE_DATA_VIEW_ROW_HEIGHT_PX: Readonly<Record<DataViewDensi
 })
 
 export function readBaseDataViewRowHeightPx(preset: DataViewDensityPreset): number {
-  if (typeof document !== 'undefined') {
-    const value = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--agentic-row-height'))
+  if (typeof document !== 'undefined' && document.defaultView) {
+    const value = Number.parseFloat(document.defaultView.getComputedStyle(document.documentElement).getPropertyValue('--agentic-row-height'))
     if (Number.isFinite(value) && value > 0) return value
   }
   return AGENTIC_BASE_DATA_VIEW_ROW_HEIGHT_PX[preset]
