@@ -93,15 +93,15 @@
     },
     {
       "path": "packages/views-react/src/table/stickyHierarchy.ts",
-      "bytes": 7240,
-      "sha256": "27d91919f0e2e0a50db29a9adb5d9ad2cff32bace8bbc4b367a7d752f6cc028b"
+      "bytes": 7193,
+      "sha256": "b0c132e2910688489e9fd30994156fcd35ecbdd806c76a64dbbea53d3ab16d22"
     }
   ],
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 218254,
-      "sha256": "daad39fa7904641baef6db4aef29844c5b98408be4cf05034bf78c24a8d9e89a"
+      "bytes": 218227,
+      "sha256": "043e31f893fd127bb2bede48286c0bc749a8acebb7f1e87a2256f3ec30d63c78"
     },
     {
       "path": "browser-data-view.css",
