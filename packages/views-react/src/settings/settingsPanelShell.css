@@ -1,3 +1,4 @@
+@import "../browser/shared-ui-profile.css";
 .agentic-base-settings-panel {
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@
   min-width: 0;
   overflow: hidden;
   color: var(--agentic-base-settings-muted, #6b7280);
-  font-size: 0.75rem;
+  font-size: var(--agentic-font-size-body); line-height: var(--agentic-line-height-body);
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;

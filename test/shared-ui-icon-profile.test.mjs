@@ -51,3 +51,17 @@ test('numeric row metrics use the document view and retain a headless fallback',
     else delete globalThis.document
   }
 })
+
+
+test('body and panel typography use the same pinned role without local sizes', () => {
+  for (const [key, variable] of [['bodyFontSize', 'font-size-body'], ['bodyLineHeight', 'line-height-body']]) {
+    assert.ok(profileCss.toString().includes(`--agentic-${variable}: ${pin.metrics[key]}px;`))
+  }
+  assert.match(viewCss, /font: var\(--agentic-font-size-body\)\/var\(--agentic-line-height-body\) var\(--agentic-font-sans\)/)
+  assert.doesNotMatch(viewCss, /font-size: (?:13|14)px/)
+  const panelCss = fs.readFileSync(new URL('../packages/views-react/src/panels/floatingPanelShell.css', import.meta.url), 'utf8')
+  assert.match(panelCss, /@import "\.\.\/browser\/shared-ui-profile\.css"/)
+  assert.match(panelCss, /font-size: var\(--agentic-font-size-body\)/)
+  assert.match(profileCss.toString(), /--agentic-ktv-columns:/)
+  assert.match(profileCss.toString(), /@media \(max-width: 639px\)/)
+})
