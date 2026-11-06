@@ -265,7 +265,7 @@ export function BaseNestedRowsBulkToggle(props: {
   }, [props.selection?.mixed])
   return <span className="agentic-base-data-tree-header-controls">
     <button {...props.buttonDataAttributes} type="button" className="agentic-base-nested-rows-bulk-toggle" aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} aria-pressed={props.collapsed} onClick={event => { event.preventDefault(); event.stopPropagation(); props.onToggle() }}>
-      <Icon size={14} aria-label={props.collapsed ? 'Expand all nested rows' : 'Collapse all nested rows'} />
+      <Icon size={14} aria-hidden="true" />
     </button>
     {props.selection ? <label className="agentic-base-row-select-label agentic-base-row-select-label-header">
       <input ref={selectAllRef} type="checkbox" className="agentic-base-row-select agentic-base-row-select-all" aria-label="Select all rows" checked={props.selection.checked} onChange={props.selection.onChange} />

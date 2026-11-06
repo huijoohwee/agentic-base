@@ -18,3 +18,5 @@ Per-base limits are 2,000 records, 5 MiB serialized records, 128 fields per tabl
 Dates use ISO `YYYY-MM-DD` values without timezone conversion. Missing dates are unscheduled. A date with a different month appears in `outsideMonth`; malformed persisted data appears in `invalid` and is not silently repaired.
 
 The demo's local operator policy is illustrative. It does not authenticate callers. A production consumer must supply its own trusted authorization boundary.
+
+TableCore owns one sticky column header and the active expanded ancestor path, measured within the table scrollport. Original rows keep their controls, selection and horizontal alignment; ancestors release at their subtree boundary. The double-chevron header action toggles all groups, while each group has one single-chevron toggle. Consumers supply a bounded viewport and theme tokens, never a second header or hierarchy renderer.

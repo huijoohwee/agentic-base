@@ -43,8 +43,8 @@
     },
     {
       "path": "packages/views-react/src/table/BaseTableHost.tsx",
-      "bytes": 29871,
-      "sha256": "ec198667facc133c01d43b7c8c9f502549c673d0701f865bee6580b745e6cffc"
+      "bytes": 29805,
+      "sha256": "1f79ae9531d82a21d9496e6515d3807ca892f797493288e1b710be1d35da7f11"
     },
     {
       "path": "packages/views-react/src/table/ColumnsTableView.tsx",
@@ -58,8 +58,8 @@
     },
     {
       "path": "packages/views-react/src/table/TableCore.tsx",
-      "bytes": 1327,
-      "sha256": "c3c3daffe91f462625cba8eefa0f518ab8d0f131e4a74ccc5232e2ea33dfa9a9"
+      "bytes": 1604,
+      "sha256": "ee79998df19f75757d54d22ec8aa5c168904b0955b079aa4e7ec0105bd77af22"
     },
     {
       "path": "packages/views-react/src/table/TableHostContext.tsx",
@@ -68,8 +68,13 @@
     },
     {
       "path": "packages/views-react/src/table/TableView.tsx",
-      "bytes": 35484,
-      "sha256": "53837fa5ece52cde022e2b72061c37f0516acbc5f899974337e67b2313dde9c6"
+      "bytes": 30369,
+      "sha256": "b6c74e1d1038007b14590957e1b366bb81e7033977661a15a913a7cde3da5740"
+    },
+    {
+      "path": "packages/views-react/src/table/TableViewHeader.tsx",
+      "bytes": 7531,
+      "sha256": "25f2bc13321b8172ed0a60d58fa48784d1b427ee1029e4b008d0ad0fb5a81cac"
     },
     {
       "path": "packages/views-react/src/table/ViewColumnType.ts",
@@ -85,13 +90,18 @@
       "path": "packages/views-react/src/table/rowSelection.ts",
       "bytes": 4724,
       "sha256": "cf124567da7bbbe7f7d225d7ebe50a0c8d0cefd7f09ed3db1bd306cddff63e4a"
+    },
+    {
+      "path": "packages/views-react/src/table/stickyHierarchy.ts",
+      "bytes": 4909,
+      "sha256": "1fb10191e3758e6c50a89caf4a747985745ac15cbb5ad8acb3d353c5ad1b70c4"
     }
   ],
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 213845,
-      "sha256": "390ded9cf3feb3ce3c3b17906750003b6c7f51327f6ffa74b93b53dbd50681ab"
+      "bytes": 217194,
+      "sha256": "41b74ce7f6de0de0a7023f3b14571621a5b507637bcef493dda2ae526392a703"
     },
     {
       "path": "browser-data-view.css",
