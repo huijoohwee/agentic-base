@@ -73,13 +73,15 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
     if (stopped) return
     const tableBounds = table.getBoundingClientRect()
     const ownsVerticalScroll = frame.scrollHeight > frame.clientHeight + 1
-    const verticalParent = ownsVerticalScroll ? null : parents.find(parent =>
+    const verticalParents = parents.filter(parent =>
       /^(auto|scroll|overlay)$/.test(ownerWindow.getComputedStyle(parent).overflowY)
       && parent.scrollHeight > parent.clientHeight + 1)
-    const scrollOwner = ownsVerticalScroll ? frame : verticalParent ?? frame.ownerDocument.documentElement
-    const reservedTop = readScrollPaddingTop(ownerWindow.getComputedStyle(scrollOwner).scrollPaddingTop, scrollOwner.clientHeight)
-    const viewportTop = reservedTop + (ownsVerticalScroll ? frame.getBoundingClientRect().top + frame.clientTop
-      : verticalParent ? verticalParent.getBoundingClientRect().top + verticalParent.clientTop : 0)
+    const scrollOwners = ownsVerticalScroll ? [frame, ...verticalParents] : verticalParents
+    const documentRoot = frame.ownerDocument.documentElement
+    const viewportTop = Math.max(
+      readScrollPaddingTop(ownerWindow.getComputedStyle(documentRoot).scrollPaddingTop, documentRoot.clientHeight),
+      ...scrollOwners.map(owner => owner.getBoundingClientRect().top + owner.clientTop
+        + readScrollPaddingTop(ownerWindow.getComputedStyle(owner).scrollPaddingTop, owner.clientHeight)))
     const headerBounds = header.getBoundingClientRect()
     headerShift = readStickyHeaderShift(headerBounds.top - headerShift, headerBounds.height, tableBounds.bottom, viewportTop)
     header.style.transform = headerShift ? `translateY(${headerShift}px) ${originalHeaderTransform}`.trim() : originalHeaderTransform
