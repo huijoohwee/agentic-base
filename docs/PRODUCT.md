@@ -20,3 +20,5 @@ Dates use ISO `YYYY-MM-DD` values without timezone conversion. Missing dates are
 The demo's local operator policy is illustrative. It does not authenticate callers. A production consumer must supply its own trusted authorization boundary.
 
 TableCore owns one sticky column header and the active expanded ancestor path, measured within the table scrollport. Original rows keep their controls, selection and horizontal alignment; ancestors release at their subtree boundary. The double-chevron header action toggles all groups, while each group has one single-chevron toggle. Consumers supply a bounded viewport and theme tokens, never a second header or hierarchy renderer.
+
+The same TableCore sticky helper resolves the vertical scroll owner for embedded tables: an unbounded horizontal table frame delegates vertical positioning to its scrolling ancestor pane (including shadow-host ancestry). The original header stays inside the table boundary and uses the same ancestor-row geometry. Bounded grid frames retain native sticky positioning. Outer-pane scrolling, resize, collapse and cleanup use that one owner; consumers supply no sticky variant.
