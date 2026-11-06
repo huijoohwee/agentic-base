@@ -66,7 +66,7 @@ export function bindStickyHierarchy(frame: HTMLElement): () => void {
     pending = 0
     if (stopped) return
     const tableBounds = table.getBoundingClientRect()
-    const ownsVerticalScroll = frame.scrollHeight > frame.clientHeight + 1 || frame.clientHeight > tableBounds.height + 1
+    const ownsVerticalScroll = frame.scrollHeight > frame.clientHeight + 1
     const verticalParent = ownsVerticalScroll ? null : parents.find(parent =>
       /^(auto|scroll|overlay)$/.test(ownerWindow.getComputedStyle(parent).overflowY)
       && parent.scrollHeight > parent.clientHeight + 1)
