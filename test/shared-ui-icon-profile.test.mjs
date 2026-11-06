@@ -21,3 +21,15 @@ test('Base consumes the Design System icon-size projection through its offline b
   assert.match(viewCss, /\.agentic-base-row-drag-handle\s*\{[^}]*width:\s*var\(--agentic-icon-size-default\)/s)
   assert.doesNotMatch(viewCss, /agentic-base-compact-glyph\s*\{[^}]*\b(?:12|0\.75)px\b/s)
 })
+
+test('row geometry comes from the same responsive shared profile for both density inputs', () => {
+  for (const [key, cssName] of [['rowHeight', 'row-height'], ['rowHeightTouch', 'row-height-touch']]) {
+    assert.ok(profileCss.toString().includes(`--agentic-${cssName}: ${pin.metrics[key]}px;`))
+  }
+  assert.match(profileCss.toString(), /@media \(pointer: coarse\), \(max-width: 768px\)/)
+  assert.match(viewCss, /height: var\(--agentic-row-height\) !important/)
+  assert.doesNotMatch(viewCss, /height: (?:38|44|54)px !important/)
+  const density = fs.readFileSync(new URL('../packages/views-react/src/table/dataViewDensity.ts', import.meta.url), 'utf8')
+  assert.match(density, /compact: sharedUiPin.metrics.rowHeight/)
+  assert.match(density, /comfortable: sharedUiPin.metrics.rowHeight/)
+})

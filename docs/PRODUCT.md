@@ -24,3 +24,7 @@ TableCore owns one sticky column header and the active expanded ancestor path, m
 The same TableCore sticky helper resolves the vertical scroll owner for embedded tables: an unbounded horizontal table frame delegates vertical positioning to its scrolling ancestor pane (including shadow-host ancestry). The original header stays inside the table boundary and uses the same ancestor-row geometry. Bounded grid frames retain native sticky positioning. Outer-pane scrolling, resize, collapse and cleanup use that one owner; consumers supply no sticky variant.
 
 The same owner honors the scroll pane's native `scroll-padding-top`, including pixel and percentage values, to keep table controls below surrounding sticky content. Hosts retain their existing padding calculation; no host-specific selector or parallel inset registry is introduced.
+
+## Shared row geometry — 2026-11-06
+
+Table headers, records, ancestor groups and pivot cells consume the Design System shared UI profile v0.2.0. Both legacy density inputs use the same responsive row height as Graph’s compact toolbar: 38 CSS px on desktop and 54 CSS px for coarse pointers or viewports at most 768px wide. Numeric/virtualized consumers read the same CSS metric with pinned profile metadata as a headless fallback. Bounded cell previews preserve full values and editing in the shared renderer; headers retain unclipped menus. The browser artifact includes the exact offline projection. No consumer-specific row-height variant is introduced.
