@@ -214,6 +214,7 @@
   vertical-align: middle;
   white-space: nowrap;
 }
+.agentic-base-data-table th > span { display: inline-flex; align-items: center; }
 .agentic-base-data-table th > :not(details):not([role="separator"]),
 .agentic-base-data-table td > * {
   box-sizing: border-box;
