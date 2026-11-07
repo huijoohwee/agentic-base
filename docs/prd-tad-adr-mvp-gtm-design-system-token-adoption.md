@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.1"
-revision: "0.4.1"
+version: "0.4.2"
+revision: "0.4.2"
 date: "2026-10-29"
 updated_date: "2026-10-30"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.1"
-tad_revision: "0.4.1"
-adr_revision: "0.4.1"
-mvp_revision: "0.4.1"
-gtm_revision: "0.4.1"
+prd_revision: "0.4.2"
+tad_revision: "0.4.2"
+adr_revision: "0.4.2"
+mvp_revision: "0.4.2"
+gtm_revision: "0.4.2"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -194,3 +194,7 @@ The first segment is teams maintaining shared views across repositories; this is
 ## Shared responsive form controls
 
 The existing shared-ui profile v0.5.0 owns dropdown/textbox geometry and 14px/20px text. Base table hosts, native column filter fields, column menu rows and FloatingPanel opt into its generated control utility; local CSS retains paint and flow. Native select and text validation/events stay unchanged. Desktop height is 28px and touch height 48px; multiline editing keeps resizing. Consumer pins bind exact source/registry/projection hashes. Native checks and desktop/mobile Dev evidence are required; source/pin rollback preserves origin data, and no hosted deployment is selected.
+
+## Opened menu adoption
+
+Use shared-ui v0.6.0 for menu surfaces, option spacing, selection, hover/focus and responsive geometry. Base owns one headless menu core with React and native form adapters; Graph field/toolbar and Commerce menus reuse it. The React adapter takes over the shared SemanticSelect/option contract from Graph source 6867e22719d2b880a880dff767a82d2e44149b8e; the Graph files become contract-only adapters. The standalone native artifact remains self-contained and below 500000 bytes. Preserve form semantics, values, events, grouped/disabled options, reset, required validation and offline state. Verify native checks plus opened desktop/mobile menus before source closeout. Production is outside this increment; rollback restores exact predecessor pins/assets without altering origin data.

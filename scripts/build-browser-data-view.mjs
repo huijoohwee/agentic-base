@@ -47,7 +47,9 @@ const built = await build({
 if (built.outputFiles.length !== 1) throw new Error('Expected one browser JavaScript bundle.')
 const outputMetadata = Object.values(built.metafile.outputs).find(output => output.entryPoint === `${sourceRoot}/browser/index.ts`)
 if (!outputMetadata || outputMetadata.imports.length) throw new Error('Browser artifact must contain no external imports.')
-const inputRows = Object.keys(built.metafile.inputs)
+const dropdown = await build({ absWorkingDir: root, entryPoints: [sourceRoot + '/controls/nativeSelect.ts'], bundle: true, write: false, format: 'esm', platform: 'browser', target: 'es2022', minify: true, metafile: true })
+if (dropdown.outputFiles.length !== 1 || Object.values(dropdown.metafile.outputs).some(output => output.imports.length)) throw new Error('Dropdown browser artifact must be self-contained.')
+const inputRows = [...Object.keys(built.metafile.inputs), ...Object.keys(dropdown.metafile.inputs)]
   .filter(relative => relative.startsWith(`${sourceRoot}/`))
   .concat(`${sourceRoot}/browser/browserDataView.css`, sharedUiCssPath, sharedUiPinPath)
   .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
@@ -58,6 +60,7 @@ const inputRows = Object.keys(built.metafile.inputs)
   })
 const files = new Map([
   ['browser-data-view.js', built.outputFiles[0].contents],
+  ['dropdown-menus.js', dropdown.outputFiles[0].contents],
   ['browser-data-view.css', Buffer.concat([
     sharedUiCss,
     Buffer.from('\n'),

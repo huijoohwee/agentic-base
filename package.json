@@ -16,7 +16,8 @@
     "./calendar": "./packages/views-react/src/calendar/index.ts",
     "./settings": "./packages/views-react/src/settings/index.ts",
     "./panels": "./packages/views-react/src/panels/index.ts",
-    "./dashboard": "./packages/views-react/src/dashboard/index.ts"
+    "./dashboard": "./packages/views-react/src/dashboard/index.ts",
+    "./controls": "./packages/views-react/src/controls/index.ts"
   },
   "files": [
     "src/**/*.mjs",

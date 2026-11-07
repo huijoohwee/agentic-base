@@ -1,3 +1,4 @@
+import { DropdownMenuSurface, SemanticSelect } from '../controls/MenuControls'
 import React from 'react'
 import {
   ArrowDown, ArrowLeft, ArrowRight, ArrowUp, BarChart3, Calendar, Check,
@@ -39,7 +40,7 @@ function MenuAction(props: {
   const { label, icon, target, disabled = false, onSelect } = props
   return <li>
     <button type="button" role="menuitem" aria-label={label} aria-disabled={disabled} disabled={disabled}
-      data-kg-selection-target={target} className="agentic-form-control agentic-base-column-menu-row"
+      data-kg-selection-target={target} className="agentic-form-control agentic-menu-option agentic-base-column-menu-row"
       onClick={() => { if (!disabled) onSelect?.() }}>
       <MenuIcon icon={icon} label={label} target={`${target}-icon`} />
       <span data-kg-selection-target={`${target}-label`}>{label}</span>
@@ -53,20 +54,20 @@ export function BaseColumnTypeMenu(props: AnyProps) {
   const isDisabled = Boolean(props.disabled)
   return <details className="agentic-base-column-menu-disclosure agentic-base-column-type-disclosure" data-kg-selection-target="column-type-disclosure">
     <summary aria-label={`Type: ${currentLabel}`} aria-haspopup="menu" data-kg-selection-target="column-type-disclosure-trigger"
-      className="agentic-form-control agentic-base-column-menu-row agentic-base-column-menu-summary">
+      className="agentic-form-control agentic-menu-option agentic-base-column-menu-row agentic-base-column-menu-summary">
       <MenuIcon icon={Columns2} label="Column type" target="column-type-menu-icon" />
       <span data-kg-selection-target="column-type-menu-label">Type</span>
       <span className="agentic-base-column-menu-value" data-kg-selection-target="column-type-current-value">{currentLabel}</span>
       <ChevronDown className="agentic-base-column-menu-chevron" size={14} strokeWidth={1.7} role="img" aria-label="Expand choices" data-kg-selection-target="column-type-expand" />
     </summary>
-    <menu role="menu" aria-label={props.ariaLabel ?? `Column type: ${currentLabel}`} className="agentic-base-column-type-options">
+    <DropdownMenuSurface role="menu" aria-label={props.ariaLabel ?? `Column type: ${currentLabel}`} className="agentic-base-column-type-options">
       {VIEW_COLUMN_TYPE_OPTIONS.map(option => {
         const Icon = typeIconByKey[option.key] ?? Columns2
         const selected = option.key === props.value
         return <li key={option.key}>
           <button type="button" role="menuitemradio" aria-checked={selected} aria-label={option.label}
             aria-disabled={isDisabled} disabled={isDisabled} data-kg-selection-target={`column-type-option-${option.key}`}
-            className="agentic-form-control agentic-base-column-menu-row agentic-base-column-type-option"
+            className="agentic-form-control agentic-menu-option agentic-base-column-menu-row agentic-base-column-type-option"
             onClick={() => { if (isDisabled) return; props.onSelect?.(option.key); props.close?.() }}>
             <MenuIcon icon={Icon} label={`${option.label} type`} target={`column-type-option-icon-${option.key}`} />
             <span data-kg-selection-target={`column-type-option-label-${option.key}`}>{option.label}</span>
@@ -74,7 +75,7 @@ export function BaseColumnTypeMenu(props: AnyProps) {
           </button>
         </li>
       })}
-    </menu>
+    </DropdownMenuSurface>
   </details>
 }
 
@@ -102,10 +103,10 @@ function FilterEditor({ filter, closeMenu, onCancel }: { filter: AnyProps; close
     <fieldset className="agentic-base-column-filter-fields">
       <label className="agentic-base-column-filter-field">
         <span>Op</span>
-        <select aria-label="Filter operation" data-kg-selection-target="column-filter-operation" value={filterOp}
-          onChange={event => setFilterOp(event.target.value)}>
+        <SemanticSelect aria-label="Filter operation" data-kg-selection-target="column-filter-operation" value={filterOp}
+          onValueChange={setFilterOp}>
           {filter.ops.map((op: AnyProps) => <option key={op.key} value={op.key}>{op.label}</option>)}
-        </select>
+        </SemanticSelect>
       </label>
       <label className="agentic-base-column-filter-field">
         <span>Value</span>
@@ -121,7 +122,7 @@ function FilterMenuItem(props: AnyProps) {
   return <li>
     <details ref={disclosureRef} className="agentic-base-column-menu-disclosure agentic-base-column-filter-disclosure" data-kg-selection-target="column-filter-disclosure">
       <summary aria-label="Filter" data-kg-selection-target="column-filter-trigger"
-        aria-disabled={!props.filter} className="agentic-form-control agentic-base-column-menu-row agentic-base-column-menu-summary" onClick={event => { if (!props.filter) event.preventDefault() }}>
+        aria-disabled={!props.filter} className="agentic-form-control agentic-menu-option agentic-base-column-menu-row agentic-base-column-menu-summary" onClick={event => { if (!props.filter) event.preventDefault() }}>
         <MenuIcon icon={Filter} label="Filter" target="column-filter-icon" />
         <span data-kg-selection-target="column-filter-label">Filter</span>
         <ChevronRight size={14} strokeWidth={1.7} role="img" aria-label="Open filter editor" data-kg-selection-target="column-filter-chevron" />
@@ -134,7 +135,7 @@ function FilterMenuItem(props: AnyProps) {
 export function BaseColumnHeaderMenu(props: AnyProps) {
   const action = (callback: (() => void) | undefined) => () => { callback?.(); props.closeMenu?.() }
   const disabled = (name: string, callback?: (() => void)) => Boolean(props[`disable${name}`] || !callback)
-  return <menu role="menu" aria-label={props.ariaLabel} data-kg-selection-target="column-header-menu-content" className="agentic-base-column-menu-list">
+  return <DropdownMenuSurface onDismiss={() => props.closeMenu?.()} role="menu" aria-label={props.ariaLabel} data-kg-selection-target="column-header-menu-content" className="agentic-base-column-menu-list">
     <li>
       {props.renderTypeMenu?.() ?? <BaseColumnTypeMenu ariaLabel={props.ariaLabel} value={props.typeValue} disabled={props.disableTypeChange} close={props.closeMenu} />}
     </li>
@@ -160,6 +161,6 @@ export function BaseColumnHeaderMenu(props: AnyProps) {
       disabled={disabled('Duplicate', props.onDuplicate)} onSelect={action(props.onDuplicate)} />
     <MenuAction label="Delete" icon={Trash2} target="column-delete"
       disabled={disabled('Delete', props.onDelete)} onSelect={action(props.onDelete)} />
-  </menu>
+  </DropdownMenuSurface>
 }
 
