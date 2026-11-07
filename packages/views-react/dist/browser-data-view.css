@@ -25,7 +25,7 @@
   .agentic-ktv-row { grid-template-columns: var(--agentic-ktv-columns-narrow); }
   .agentic-ktv-row > :last-child { grid-column: 1 / -1; }
 }
-.agentic-form-control, .agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea) {
+.agentic-form-control, :is(.agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea), .agentic-input-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select)) {
   box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%;
   block-size: var(--agentic-control-height); min-block-size: var(--agentic-control-height);
   padding-block: 0; padding-inline: var(--agentic-control-padding-inline); border-radius: var(--agentic-control-radius);
@@ -34,10 +34,10 @@
 textarea.agentic-form-control, .agentic-form-controls :where(textarea) {
   block-size: auto; padding-block: var(--agentic-control-padding-block); resize: vertical;
 }
-.agentic-form-control:focus-visible, .agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea):focus-visible {
+.agentic-form-control:focus-visible, :is(.agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea), .agentic-input-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select)):focus-visible {
   outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight); outline-offset: var(--agentic-control-focus-offset);
 }
-.agentic-form-control:disabled, .agentic-form-control[aria-disabled="true"], .agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea):disabled {
+.agentic-form-control:disabled, .agentic-form-control[aria-disabled="true"], :is(.agentic-form-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select, textarea), .agentic-input-controls :where(input:not([type="hidden"], [type="file"], [type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [hidden], .sr-only, .file-input), select)):disabled {
   opacity: .5; cursor: not-allowed;
 }
 @media (pointer: coarse), (max-width: 768px) {
