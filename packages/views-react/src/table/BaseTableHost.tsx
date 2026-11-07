@@ -1,3 +1,4 @@
+import { SemanticSelect } from '../controls/MenuControls'
 import React from 'react'
 import { createPortal } from 'react-dom'
 import {
@@ -221,7 +222,7 @@ function BaseAddColumnMenu(props: AnyProps) {
     <summary aria-label={props.ariaLabel} className={props.summaryClassName} style={{ ...buttonStyle, cursor: 'pointer', listStyle: 'none' }}>+</summary>
     <form style={popoverStyle} onSubmit={event => { event.preventDefault(); if (!name.trim() || !props.canMutate) return; props.onAddColumn({ name: name.trim(), columnType: type }); setName('') }}>
       <label style={{ display: 'grid', gap: 4 }}>Column name<input value={name} onChange={event => setName(event.target.value)} /></label>
-      <label style={{ display: 'grid', gap: 4, marginTop: 8 }}>Type<select value={type} onChange={event => setType(event.target.value)}>{VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}</select></label>
+      <label style={{ display: 'grid', gap: 4, marginTop: 8 }}>Type<SemanticSelect value={type} onValueChange={setType}>{VIEW_COLUMN_TYPE_OPTIONS.map(option => <option key={option.key} value={option.key}>{option.label}</option>)}</SemanticSelect></label>
       <button type="submit" style={{ ...buttonStyle, marginTop: 8 }}>Add column</button>
     </form>
   </details>
