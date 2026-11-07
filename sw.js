@@ -1,7 +1,7 @@
-const CACHE = 'agentic-base-app-v18';
+const CACHE = 'agentic-base-app-v19';
 const ASSETS = [
-  '/?v=18', '/demo/?v=18', '/demo/index.html?v=18', '/demo/app.mjs?v=18', '/demo/styles.css?v=18',
-  '/demo/browser-data-view.js?v=18', '/demo/dropdown-menus.js?v=18', '/demo/browser-data-view.css?v=18', '/demo/manifest.webmanifest?v=18',
+  '/?v=19', '/demo/?v=19', '/demo/index.html?v=19', '/demo/app.mjs?v=19', '/demo/styles.css?v=19',
+  '/demo/browser-data-view.js?v=19', '/demo/dropdown-menus.js?v=19', '/demo/browser-data-view.css?v=19', '/demo/manifest.webmanifest?v=19',
   '/src/index.mjs', '/src/errors.mjs', '/src/schema.mjs', '/src/query.mjs',
   '/src/projectors.mjs', '/src/engine.mjs', '/src/adapters/memory.mjs',
   '/src/adapters/indexeddb.mjs',

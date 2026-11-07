@@ -1,4 +1,4 @@
-import { bindDropdownPopup, MENU_CLASS_NAME, menuOptionClassName } from './dropdownMenu'
+import { bindDropdownPopup, MENU_CLASS_NAME, menuOptionClassName, createMenuIndicator } from './dropdownMenu'
 
 export type NativeSelectHandle = { refresh(): void; destroy(): void }
 const mounted = new WeakMap<HTMLSelectElement, NativeSelectHandle>()
@@ -9,7 +9,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
   const prior = mounted.get(select)
   if (prior) return prior
   if (select.multiple || select.size > 1) throw new Error('Shared dropdown enhancement requires a single-choice select, not a listbox')
-  const button = document.createElement('button'), label = document.createElement('span'), chevron = document.createElement('span')
+  const button = document.createElement('button'), label = document.createElement('span'), chevron = createMenuIndicator('chevron')
   const id = `agentic-select-${crypto.randomUUID()}`
   const wasHidden = select.hidden, tabIndex = select.tabIndex, hadFocus = document.activeElement === select
   const ariaLabel = select.getAttribute('aria-label'), ariaLabelledBy = select.getAttribute('aria-labelledby'), ariaHidden = select.getAttribute('aria-hidden')
@@ -19,8 +19,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
   button.className = `${select.className} agentic-form-control agentic-select-trigger`
   button.dataset.agenticSelectFor = select.id
   button.setAttribute('aria-haspopup', 'menu'); button.setAttribute('aria-expanded', 'false')
-  label.className = 'agentic-menu-label'; chevron.className = 'agentic-menu-mark'
-  chevron.textContent = '⌄'; chevron.setAttribute('aria-hidden', 'true'); button.append(label, chevron)
+  label.className = 'agentic-menu-label'; button.append(label, chevron)
   const nativeFocus = select.focus, proxyFocus = button.focus.bind(button)
   select.focus = proxyFocus
   select.after(button); select.classList.add('agentic-select-source'); select.tabIndex = -1
@@ -61,16 +60,16 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
         const heading = document.createElement('li'); heading.setAttribute('role', 'separator'); heading.setAttribute('aria-label', groupName); heading.textContent = groupName; menu.append(heading)
       }
       group = groupName
-      const row = document.createElement('li'), item = document.createElement('button'), text = document.createElement('span'), mark = document.createElement('span')
+      const row = document.createElement('li'), item = document.createElement('button'), text = document.createElement('span'), mark = createMenuIndicator('check')
       row.setAttribute('role', 'none'); item.type = 'button'; item.tabIndex = -1; item.value = option.value
       item.className = menuOptionClassName(option.selected); item.setAttribute('role', 'menuitemradio')
       item.setAttribute('aria-label', option.label); item.setAttribute('aria-checked', String(option.selected))
       item.disabled = option.disabled || parent?.tagName === 'OPTGROUP' && (parent as HTMLOptGroupElement).disabled
       text.className = 'agentic-menu-label'; text.textContent = option.label
-      mark.className = 'agentic-menu-mark'; mark.textContent = option.selected ? '✓' : ''; mark.setAttribute('aria-hidden', 'true')
+      mark.style.visibility = option.selected ? 'visible' : 'hidden'
       item.append(text, mark); row.append(item); menu.append(row)
-      item.addEventListener('click', () => {
-        if (item.disabled) return
+      item.addEventListener('click', event => {
+        if (event.defaultPrevented || item.disabled) return
         const changed = select.value !== option.value
         select.value = option.value; close(true); refresh(); button.removeAttribute('aria-invalid')
         if (changed) { select.dispatchEvent(new Event('input', { bubbles: true })); select.dispatchEvent(new Event('change', { bubbles: true })) }
