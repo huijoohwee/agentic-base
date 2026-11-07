@@ -9,21 +9,20 @@ const sourceRoot = 'packages/views-react/src'
 const outputRoot = path.join(root, 'packages/views-react/dist')
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const digest = value => createHash('sha256').update(value).digest('hex')
-const sharedUiCssPath = `${sourceRoot}/browser/shared-ui-profile.css`
-const sharedUiPinPath = `${sourceRoot}/browser/shared-ui-profile.pin.json`
-const sharedUiCss = fs.readFileSync(path.join(root, sharedUiCssPath))
-const sharedUiPin = JSON.parse(fs.readFileSync(path.join(root, sharedUiPinPath), 'utf8'))
-if (sharedUiPin.schema !== 'agentic-design-system/consumer-pin/v1'
-  || sharedUiPin.profile?.id !== 'shared-ui'
-  || !/^[a-f0-9]{40}$/.test(sharedUiPin.profile?.sourceRevision ?? '')
-  || !/^[a-f0-9]{40}$/.test(sharedUiPin.profile?.registryRevision ?? '')
-  || !/^sha256:[a-f0-9]{64}$/.test(sharedUiPin.profile?.sourceSha256 ?? '')
-  || !/^sha256:[a-f0-9]{64}$/.test(sharedUiPin.profile?.projectionSha256 ?? '')
-  || digest(sharedUiCss) !== sharedUiPin.profile.projectionSha256.slice('sha256:'.length)
-  || !sharedUiCss.toString('utf8').includes(`agentic-design-system@${sharedUiPin.profile.sourceRevision}`)
-  || !sharedUiCss.toString('utf8').includes(sharedUiPin.profile.sourceSha256.slice('sha256:'.length))) {
-  throw new Error('Shared UI icon-size projection does not match its immutable Design System pin.')
+function readCentralProjection(id) {
+  const cssPath = `${sourceRoot}/browser/${id}-profile.css`, pinPath = `${sourceRoot}/browser/${id}-profile.pin.json`
+  const css = fs.readFileSync(path.join(root, cssPath)), pin = JSON.parse(fs.readFileSync(path.join(root, pinPath), 'utf8'))
+  if (pin.schema !== 'agentic-design-system/consumer-pin/v1' || pin.profile?.id !== id
+    || pin.profile.owner !== 'github.com/huijoohwee/agentic-design-system'
+    || !/^[a-f0-9]{40}$/.test(pin.profile.sourceRevision ?? '') || !/^[a-f0-9]{40}$/.test(pin.profile.registryRevision ?? '')
+    || !/^sha256:[a-f0-9]{64}$/.test(pin.profile.sourceSha256 ?? '')
+    || `sha256:${digest(css)}` !== pin.profile.projectionSha256
+    || !css.toString().includes('agentic-design-system') || !css.toString().includes(pin.profile.sourceSha256.slice(7))) {
+    throw new Error(`${id} projection does not match its immutable Design System pin.`)
+  }
+  return { cssPath, pinPath, css }
 }
+const sharedUi = readCentralProjection('shared-ui'), baseProfile = readCentralProjection('base')
 const built = await build({
   absWorkingDir: root,
   entryPoints: [`${sourceRoot}/browser/index.ts`],
@@ -51,7 +50,7 @@ const dropdown = await build({ absWorkingDir: root, entryPoints: [sourceRoot + '
 if (dropdown.outputFiles.length !== 1 || Object.values(dropdown.metafile.outputs).some(output => output.imports.length)) throw new Error('Dropdown browser artifact must be self-contained.')
 const inputRows = [...Object.keys(built.metafile.inputs), ...Object.keys(dropdown.metafile.inputs)]
   .filter(relative => relative.startsWith(`${sourceRoot}/`))
-  .concat(`${sourceRoot}/browser/browserDataView.css`, sharedUiCssPath, sharedUiPinPath)
+  .concat(`${sourceRoot}/browser/browserDataView.css`, sharedUi.cssPath, sharedUi.pinPath, baseProfile.cssPath, baseProfile.pinPath)
   .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
   .sort()
   .map(relative => {
@@ -62,7 +61,8 @@ const files = new Map([
   ['browser-data-view.js', built.outputFiles[0].contents],
   ['dropdown-menus.js', dropdown.outputFiles[0].contents],
   ['browser-data-view.css', Buffer.concat([
-    sharedUiCss,
+    sharedUi.css,
+    baseProfile.css,
     Buffer.from('\n'),
     fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`)),
   ])],
