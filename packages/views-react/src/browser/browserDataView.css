@@ -103,13 +103,13 @@
 }
 .agentic-base-column-menu-row:focus-visible,
 .agentic-base-column-icon-action:focus-visible {
-  outline: 2px solid Highlight;
-  outline-offset: 1px;
+  outline: var(--agentic-control-focus-width) solid var(--agentic-control-focus, Highlight);
+  outline-offset: var(--agentic-control-focus-offset);
 }
 .agentic-base-column-menu-row:disabled,
 .agentic-base-column-menu-row[aria-disabled="true"] {
   color: var(--agentic-base-menu-muted, color-mix(in srgb, CanvasText 52%, Canvas));
-  cursor: default;
+  cursor: not-allowed;
 }
 .agentic-base-column-menu-row svg { flex: 0 0 auto; color: currentColor; }
 .agentic-base-column-menu-value { min-width: 0; margin-left: auto; overflow: hidden; color: var(--agentic-base-menu-muted, color-mix(in srgb, CanvasText 68%, Canvas)); text-overflow: ellipsis; white-space: nowrap; }
