@@ -63,5 +63,5 @@ test('body and panel typography use the same pinned role without local sizes', (
   assert.match(panelCss, /@import "\.\.\/browser\/shared-ui-profile\.css"/)
   assert.match(panelCss, /font-size: var\(--agentic-font-size-body\)/)
   assert.match(profileCss.toString(), /--agentic-ktv-columns:/)
-  assert.match(profileCss.toString(), /@media \(max-width: 639px\)/)
+  assert.doesNotMatch(viewCss, /--agentic-ktv-columns\s*:/)
 })
