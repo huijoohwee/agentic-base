@@ -18,8 +18,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 18338,
-      "sha256": "f30add3298040f5d30f994add6a3a91a56e1c6c197e356aff7cdc6b197219612"
+      "bytes": 18435,
+      "sha256": "112b0c51d766dc8bbcfb53f6e28fea1d2ef35c7b20ea9b3648ec8b341b71947e"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -28,13 +28,13 @@
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 3341,
-      "sha256": "6e3b16138f8933c9dd20880c3a7edb4d135202bd8015ae541a6308c2cf5dcf40"
+      "bytes": 4103,
+      "sha256": "450e07dca0142ba4ab400efa54cb370b0cc88831636def9b78d6517ff7747308"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 798,
-      "sha256": "220c46603f3c3c0380b225e3c5b181a6c51bf34f668ac21294a0e20d5f9bfc41"
+      "sha256": "76c2b18f112d1a191c7f3276c9a09e84acd37918cd1ea7787374362657e268d2"
     },
     {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
@@ -101,12 +101,12 @@
     {
       "path": "browser-data-view.js",
       "bytes": 219412,
-      "sha256": "ee8be08c5963821808fe33e126dc481274f399071c30802d6b92e8a511e389fa"
+      "sha256": "ad03a35a7b18ec819a1897641025a45fdd2ab1ec322157dc9b00648a3309898d"
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 21680,
-      "sha256": "9973e04b9d981ec0f254d0903cbae85ccbc45d4e152b0e4fd9b648fbf66c6445"
+      "bytes": 22539,
+      "sha256": "6b982066a30ae66720e126647c2cd5c936f4bc3111acb7b34e900116cc291b89"
     }
   ]
 }
