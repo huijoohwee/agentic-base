@@ -10,7 +10,7 @@ Requires Node.js 22 or later for the development scripts. No package install is 
 npm run dev
 ```
 
-Open `http://127.0.0.1:4173/`. Choose **Create local sample** to create a base and sample records. Reload the page to read the same origin-local data. The service worker caches only the static demo and source modules; record data stays in IndexedDB.
+Open `http://127.0.0.1:4174/`. Choose **Create local sample** to create a base and sample records. Reload the page to read the same origin-local data. The service worker caches only the static demo and source modules; record data stays in IndexedDB.
 
 ## Contract use
 
@@ -29,3 +29,5 @@ The demo is a projection harness, not a second product UI. This repository is th
 This implementation does not provide file storage, remote sync, an edge database, MCP/WebMCP servers, or production deployment. The repository's original materials are licensed under MIT; see [LICENSE](LICENSE). Third-party components retain their own licenses and notices. `package.json` remains private to prevent registry publication; GitHub source visibility does not publish a package. No consumer data or credentials belong in this repository.
 
 Graph PR #1470 was closed as superseded by merged successor #1471, which includes the same functional view changes and later Calendar refinements. Graph's current `main` passed its protected Integration Gate. Graph imports the shared React views from Base, while Shoply embeds the bounded browser Table artifact; both keep their schemas, data, authorization, actions, persistence, and host lifecycle. This repository change does not migrate consumer data or deploy either product.
+
+The local Base demo uses port 4174 so it has a separate service-worker and IndexedDB origin from the Design System catalog. Existing data at an older origin stays intact. Native demo fields opt into the same generated shared control geometry as packaged table and panel fields.
