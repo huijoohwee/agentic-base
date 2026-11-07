@@ -208,7 +208,7 @@ function BaseColumnHeaderPropertyTypeMenu(props: AnyProps) {
       <span data-kg-selection-target="column-type-label" style={{ flex: '0 1 auto', minWidth: 0, maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{props.label}</span>
       <ChevronDown size={13} color="#64748b" role="img" aria-label="Open column menu" data-kg-selection-target="column-menu-chevron" />
     </button>
-    {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
+    {open && menuContainer ? createPortal(<section ref={surfaceRef} role="dialog" aria-label={props.ariaLabel} data-kg-selection-target="column-menu-surface" className="agentic-base-column-menu-surface agentic-form-controls" style={{ ...columnMenuSurfaceStyle, ...menuTheme, left: menuPlacement?.left ?? 0, top: menuPlacement?.top ?? 0, maxHeight: menuPlacement?.maxHeight ?? 'calc(100vh - 16px)', visibility: menuPlacement ? 'visible' : 'hidden' }}>
       {props.menu?.({ close })}
     </section>, menuContainer) : null}
   </span>
@@ -397,7 +397,7 @@ const baseHost: TableHostAdapter = {
   copy: { newRecordLabel: 'New record' },
   styles: {
     actionRowClass: 'agentic-base-action-row', compactGlyphClass: 'agentic-base-compact-glyph', dataViewMenuPanelClass: 'agentic-base-menu-panel',
-    dataViewTableFrameClass: 'agentic-base-data-view', dataViewTableProgressClass: 'agentic-base-progress',
+    dataViewTableFrameClass: 'agentic-base-data-view agentic-form-controls', dataViewTableProgressClass: 'agentic-base-progress',
     dataViewTableValueClass: 'agentic-base-data-table-value', elementRowClass: 'flex min-w-0 items-center', inlineElementRowClass: 'inline-flex min-w-0 items-center',
     menuIconActionClass: 'agentic-base-menu-icon-action', textTruncateClass: 'truncate', toolbarRowScrollClass: 'flex min-w-0 overflow-x-auto', stickyHeaderClass: 'agentic-base-data-table-sticky-header',
   },

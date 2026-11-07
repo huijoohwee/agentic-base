@@ -13,6 +13,7 @@
   --agentic-base-border: #e5e7eb;
   --agentic-base-row-hover: #fffbeb;
   --agentic-base-action-hover: #f3f4f6;
+  --agentic-control-focus: var(--agentic-base-focus, Highlight);
   color: var(--agentic-base-text-primary, #172033);
   background: var(--agentic-base-surface, #fff);
   font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans);
@@ -85,15 +86,11 @@
   display: flex;
   width: 100%;
   min-width: 0;
-  min-height: 32px;
   align-items: center;
   gap: 10px;
-  padding: 5px 8px;
   border: 0;
-  border-radius: 3px;
   color: inherit;
   background: transparent;
-  font: inherit;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -105,9 +102,7 @@
   background: var(--agentic-base-menu-hover, color-mix(in srgb, CanvasText 7%, Canvas));
 }
 .agentic-base-column-menu-row:focus-visible,
-.agentic-base-column-icon-action:focus-visible,
-.agentic-base-column-filter-field input:focus-visible,
-.agentic-base-column-filter-field select:focus-visible {
+.agentic-base-column-icon-action:focus-visible {
   outline: 2px solid Highlight;
   outline-offset: 1px;
 }
@@ -168,10 +163,7 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  min-height: 32px;
-  padding: 4px 7px;
   border: 1px solid var(--agentic-base-menu-border, color-mix(in srgb, CanvasText 24%, Canvas));
-  border-radius: 4px;
   color: var(--agentic-base-menu-text, CanvasText);
   background: var(--agentic-base-menu-surface, Canvas);
   font: inherit;
