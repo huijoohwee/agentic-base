@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.3"
-revision: "0.4.3"
+version: "0.4.4"
+revision: "0.4.4"
 date: "2026-10-29"
 updated_date: "2026-11-07"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.3"
-tad_revision: "0.4.3"
-adr_revision: "0.4.3"
-mvp_revision: "0.4.3"
-gtm_revision: "0.4.3"
+prd_revision: "0.4.4"
+tad_revision: "0.4.4"
+adr_revision: "0.4.4"
+mvp_revision: "0.4.4"
+gtm_revision: "0.4.4"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -197,4 +197,4 @@ The existing shared-ui profile v0.5.0 owns dropdown/textbox geometry and 14px/20
 
 ## Opened menu adoption
 
-Use shared-ui v0.6.0 for menu surfaces, option spacing, selection, hover/focus and responsive geometry. Base owns one headless menu core with React and native form adapters, preserving focus already held by a newly rendered select; Graph field/toolbar and Commerce menus reuse it. The React adapter takes over the shared SemanticSelect/option contract from Graph source 6867e22719d2b880a880dff767a82d2e44149b8e; the Graph files become contract-only adapters. The standalone native artifact remains self-contained and below 500000 bytes. Preserve form semantics, values, events, grouped/disabled options, reset, required validation and offline state. Verify native checks plus opened desktop/mobile menus before source closeout. Production is outside this increment; rollback restores exact predecessor pins/assets without altering origin data.
+Use shared-ui v0.6.0 for menu surfaces, option spacing, selection, hover/focus and responsive geometry. Base owns one headless menu core with React and native form adapters, preserving focus already held by a newly rendered select; Graph field/toolbar and Commerce menus reuse it. The React adapter takes over the shared SemanticSelect/option contract from Graph source 6867e22719d2b880a880dff767a82d2e44149b8e; the Graph files become contract-only adapters. The standalone native artifact remains self-contained and below 500000 bytes. Preserve form semantics, values, events, grouped/disabled options, reset, required validation and offline state. Native and React indicators use one SVG definition and shared icon-size tokens. Menu events remain observable, cancelled inspection gestures do not dismiss or select, and ordinary outside gestures still dismiss. Verify native checks plus opened desktop/mobile menus before source closeout. Production is outside this increment; rollback restores exact predecessor pins/assets without altering origin data.

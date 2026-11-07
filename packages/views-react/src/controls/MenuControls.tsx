@@ -1,6 +1,12 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName } from './dropdownMenu'
+import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, type MenuIndicatorKind } from './dropdownMenu'
+
+function MenuIndicator({ kind, label }: { kind: MenuIndicatorKind; label: string }) {
+  return <svg className="agentic-menu-mark" style={menuIndicatorStyle(kind)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" role="img" aria-label={label}>
+    <path d={MENU_INDICATOR_PATHS[kind]} />
+  </svg>
+}
 
 export type SemanticSelectOption = { value: string; label: string; disabled: boolean; group?: string }
 function textContent(node: React.ReactNode): string {
@@ -92,7 +98,7 @@ export const SemanticSelect = React.forwardRef<HTMLButtonElement, SemanticSelect
         if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) { event.preventDefault(); event.stopPropagation(); show() }
       }}>
       <span className="agentic-menu-label">{selected?.label || selectedValue || 'Choose…'}</span>
-      <span className="agentic-menu-mark" role="img" aria-label="Show choices">⌄</span>
+      <MenuIndicator kind="chevron" label="Show choices" />
     </button>
     {name || required ? <input type={required ? 'text' : 'hidden'} name={name} form={form}
       className={required ? 'sr-only' : undefined} tabIndex={-1} required={required} disabled={disabled}
@@ -100,20 +106,19 @@ export const SemanticSelect = React.forwardRef<HTMLButtonElement, SemanticSelect
       onInvalid={event => { event.preventDefault(); setInvalid(true); triggerRef.current?.focus() }} /> : null}
     {invalid && !selectedValue ? <span id={errorId} role="alert">Choose a value.</span> : null}
     {open && typeof document !== 'undefined' ? createPortal(
-      <menu ref={menuRef} role="menu" id={menuId} aria-label={label} className={`${MENU_CLASS_NAME} agentic-menu-popup ${menuTextClassName}`}
-        onClick={event => event.stopPropagation()} onPointerDown={event => event.stopPropagation()}>
+      <menu ref={menuRef} role="menu" id={menuId} aria-label={label} className={`${MENU_CLASS_NAME} agentic-menu-popup ${menuTextClassName}`}>
         {options.map((option, index) => <React.Fragment key={`${option.group || ''}:${option.value}:${index}`}>
           {option.group && option.group !== options[index - 1]?.group ? <li role="separator" aria-label={option.group}>{option.group}</li> : null}
           <li role="none">
             <button type="button" role="menuitemradio" aria-checked={option.value === selectedValue}
               aria-label={option.label} value={option.value} disabled={option.disabled} tabIndex={-1}
-              className={menuOptionClassName(option.value === selectedValue)} onClick={() => {
-                if (option.disabled) return
+              className={menuOptionClassName(option.value === selectedValue)} onClick={event => {
+                if (event.defaultPrevented || option.disabled) return
                 setLocalValue(option.value); setInvalid(false); close(true)
                 if (option.value !== selectedValue) onValueChange?.(option.value)
               }}>
               <span className="agentic-menu-label">{option.label}</span>
-              {option.value === selectedValue ? <span className="agentic-menu-mark" role="img" aria-label="Selected">✓</span> : null}
+              {option.value === selectedValue ? <MenuIndicator kind="check" label="Selected" /> : null}
             </button>
           </li>
         </React.Fragment>)}

@@ -3,6 +3,22 @@ export const MENU_CLASS_NAME = 'agentic-menu'
 export const MENU_OPTION_CLASS_NAME = 'agentic-form-control agentic-menu-option'
 export type DropdownOpenDetail = { sourceId: string }
 
+export const MENU_INDICATOR_PATHS = { chevron: 'm6 9 6 6 6-6', check: 'M20 6 9 17l-5-5' } as const
+export type MenuIndicatorKind = keyof typeof MENU_INDICATOR_PATHS
+export function menuIndicatorStyle(kind: MenuIndicatorKind) {
+  const size = `var(--agentic-icon-size-${kind === 'chevron' ? 'compact' : 'default'})`
+  return { inlineSize: size, blockSize: size, display: 'block', flex: '0 0 auto' }
+}
+export function createMenuIndicator(kind: MenuIndicatorKind, label?: string): SVGSVGElement {
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  for (const [key, value] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })) icon.setAttribute(key, value)
+  icon.classList.add('agentic-menu-mark'); Object.assign(icon.style, menuIndicatorStyle(kind))
+  if (label) { icon.setAttribute('role', 'img'); icon.setAttribute('aria-label', label) }
+  else icon.setAttribute('aria-hidden', 'true')
+  const path = document.createElementNS(icon.namespaceURI, 'path'); path.setAttribute('d', MENU_INDICATOR_PATHS[kind]); icon.append(path)
+  return icon
+}
+
 export function menuOptionClassName(selected: boolean): string {
   return `${MENU_OPTION_CLASS_NAME}${selected ? ' agentic-menu-selected' : ''}`
 }
@@ -90,13 +106,16 @@ export function positionDropdownMenu(anchor: HTMLElement, menu: HTMLElement): vo
 
 /** One-open coordination, positioning, outside dismissal and focus lifecycle. */
 export function bindDropdownPopup(anchor: HTMLElement, menu: HTMLElement, dismiss: (restoreFocus: boolean) => void): () => void {
+  let active = true
   emitDropdownOpen(menu.id)
   const unsubscribe = subscribeDropdownOpen(detail => { if (detail.sourceId !== menu.id) dismiss(false) })
   const keyboard = bindMenuKeyboard(menu, dismiss)
   const place = () => { if (!anchor.isConnected || anchor.matches(':disabled')) dismiss(false); else positionDropdownMenu(anchor, menu) }
   const outside = (event: PointerEvent) => {
     const route = event.composedPath()
-    if (!route.includes(anchor) && !route.includes(menu)) dismiss(false)
+    if (route.includes(anchor) || route.includes(menu)) return
+    // Inspection and other owners can cancel a gesture later in its propagation.
+    queueMicrotask(() => { if (active && !event.defaultPrevented) dismiss(false) })
   }
   document.addEventListener('pointerdown', outside, true)
   window.addEventListener('resize', place)
@@ -107,6 +126,7 @@ export function bindDropdownPopup(anchor: HTMLElement, menu: HTMLElement, dismis
   place()
   focusMenuEntry(menuEntries(menu).find(entry => entry.getAttribute('aria-checked') === 'true') || menuEntries(menu)[0])
   return () => {
+    active = false
     unsubscribe(); keyboard(); observer?.disconnect()
     document.removeEventListener('pointerdown', outside, true)
     window.removeEventListener('resize', place)
