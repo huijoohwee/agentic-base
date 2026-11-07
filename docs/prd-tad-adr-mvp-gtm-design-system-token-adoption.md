@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.0"
-revision: "0.4.0"
+version: "0.4.1"
+revision: "0.4.1"
 date: "2026-10-29"
 updated_date: "2026-10-30"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.0"
-tad_revision: "0.4.0"
-adr_revision: "0.4.0"
-mvp_revision: "0.4.0"
-gtm_revision: "0.4.0"
+prd_revision: "0.4.1"
+tad_revision: "0.4.1"
+adr_revision: "0.4.1"
+mvp_revision: "0.4.1"
+gtm_revision: "0.4.1"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -190,3 +190,7 @@ The first segment is teams maintaining shared views across repositories; this is
 | PRD-TAD-ADR-MVP-GTM | CID | RAO | Updated Date |
 |---|---|---|---|
 | `BASE-DESIGN-TOKEN-ADOPTION-001@0.4.0` | C: Base view token values are duplicated in authored CSS and its generated output. · I: resolve and render each value from one central owner. · D: preserve component behavior, offline output, rights, and exact rollback pins. | R: Base maintainer · A: bind the generated view CSS to the exact central profile and reject local overrides · O: one verified value source per key · check: `npm run check` plus the named token contract, output, singleton, and rollback checks. | 2026-10-30 |
+
+## Shared responsive form controls
+
+The existing shared-ui profile v0.5.0 owns dropdown/textbox geometry and 14px/20px text. Base table hosts, native column filter fields, column menu rows and FloatingPanel opt into its generated control utility; local CSS retains paint and flow. Native select and text validation/events stay unchanged. Desktop height is 28px and touch height 48px; multiline editing keeps resizing. Consumer pins bind exact source/registry/projection hashes. Native checks and desktop/mobile Dev evidence are required; source/pin rollback preserves origin data, and no hosted deployment is selected.

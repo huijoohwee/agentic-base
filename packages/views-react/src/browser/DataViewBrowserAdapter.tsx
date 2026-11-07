@@ -112,7 +112,7 @@ const browserTableHost = createBaseTableHost({
   },
   styles: {
     actionRowClass: 'agentic-base-action-row', compactGlyphClass: 'agentic-base-compact-glyph', dataViewMenuPanelClass: 'agentic-base-menu-panel',
-    dataViewTableFrameClass: 'agentic-base-data-view', dataViewTableProgressClass: 'agentic-base-progress', dataViewTableValueClass: 'agentic-base-data-table-value',
+    dataViewTableFrameClass: 'agentic-base-data-view agentic-form-controls', dataViewTableProgressClass: 'agentic-base-progress', dataViewTableValueClass: 'agentic-base-data-table-value',
     elementRowClass: 'agentic-base-element-row', inlineElementRowClass: 'agentic-base-inline-element-row', menuIconActionClass: 'agentic-base-menu-icon-action',
     textTruncateClass: 'agentic-base-text-truncate', toolbarRowScrollClass: 'agentic-base-toolbar-row-scroll', stickyHeaderClass: 'agentic-base-data-table-sticky-header',
   },

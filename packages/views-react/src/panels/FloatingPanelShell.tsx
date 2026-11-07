@@ -26,7 +26,7 @@ export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShe
 }, ref) {
   return <section className={['agentic-base-floating-panel-root', rootClassName].filter(Boolean).join(' ')} style={rootStyle}
     data-agentic-base-panel-layer={panelLayer} onPointerDownCapture={onPointerDownCapture} onFocusCapture={onFocusCapture}>
-    <aside ref={ref} className="agentic-base-floating-panel" style={panelStyle}
+    <aside ref={ref} className="agentic-base-floating-panel agentic-form-controls" style={panelStyle}
       data-agentic-base-floating-panel="true" data-agentic-base-panel-minimized={minimized ? 'true' : undefined}
       data-agentic-base-row-height={rowHeight} data-agentic-base-field-line={fieldLine}>
       <section className={['agentic-base-floating-panel-inner', minimized ? '' : 'agentic-base-floating-panel-expanded'].filter(Boolean).join(' ')}

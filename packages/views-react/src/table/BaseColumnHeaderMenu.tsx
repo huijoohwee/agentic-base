@@ -39,7 +39,7 @@ function MenuAction(props: {
   const { label, icon, target, disabled = false, onSelect } = props
   return <li>
     <button type="button" role="menuitem" aria-label={label} aria-disabled={disabled} disabled={disabled}
-      data-kg-selection-target={target} className="agentic-base-column-menu-row"
+      data-kg-selection-target={target} className="agentic-form-control agentic-base-column-menu-row"
       onClick={() => { if (!disabled) onSelect?.() }}>
       <MenuIcon icon={icon} label={label} target={`${target}-icon`} />
       <span data-kg-selection-target={`${target}-label`}>{label}</span>
@@ -53,7 +53,7 @@ export function BaseColumnTypeMenu(props: AnyProps) {
   const isDisabled = Boolean(props.disabled)
   return <details className="agentic-base-column-menu-disclosure agentic-base-column-type-disclosure" data-kg-selection-target="column-type-disclosure">
     <summary aria-label={`Type: ${currentLabel}`} aria-haspopup="menu" data-kg-selection-target="column-type-disclosure-trigger"
-      className="agentic-base-column-menu-row agentic-base-column-menu-summary">
+      className="agentic-form-control agentic-base-column-menu-row agentic-base-column-menu-summary">
       <MenuIcon icon={Columns2} label="Column type" target="column-type-menu-icon" />
       <span data-kg-selection-target="column-type-menu-label">Type</span>
       <span className="agentic-base-column-menu-value" data-kg-selection-target="column-type-current-value">{currentLabel}</span>
@@ -66,7 +66,7 @@ export function BaseColumnTypeMenu(props: AnyProps) {
         return <li key={option.key}>
           <button type="button" role="menuitemradio" aria-checked={selected} aria-label={option.label}
             aria-disabled={isDisabled} disabled={isDisabled} data-kg-selection-target={`column-type-option-${option.key}`}
-            className="agentic-base-column-menu-row agentic-base-column-type-option"
+            className="agentic-form-control agentic-base-column-menu-row agentic-base-column-type-option"
             onClick={() => { if (isDisabled) return; props.onSelect?.(option.key); props.close?.() }}>
             <MenuIcon icon={Icon} label={`${option.label} type`} target={`column-type-option-icon-${option.key}`} />
             <span data-kg-selection-target={`column-type-option-label-${option.key}`}>{option.label}</span>
@@ -121,7 +121,7 @@ function FilterMenuItem(props: AnyProps) {
   return <li>
     <details ref={disclosureRef} className="agentic-base-column-menu-disclosure agentic-base-column-filter-disclosure" data-kg-selection-target="column-filter-disclosure">
       <summary aria-label="Filter" data-kg-selection-target="column-filter-trigger"
-        aria-disabled={!props.filter} className="agentic-base-column-menu-row agentic-base-column-menu-summary" onClick={event => { if (!props.filter) event.preventDefault() }}>
+        aria-disabled={!props.filter} className="agentic-form-control agentic-base-column-menu-row agentic-base-column-menu-summary" onClick={event => { if (!props.filter) event.preventDefault() }}>
         <MenuIcon icon={Filter} label="Filter" target="column-filter-icon" />
         <span data-kg-selection-target="column-filter-label">Filter</span>
         <ChevronRight size={14} strokeWidth={1.7} role="img" aria-label="Open filter editor" data-kg-selection-target="column-filter-chevron" />

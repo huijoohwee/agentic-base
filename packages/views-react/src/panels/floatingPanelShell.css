@@ -13,6 +13,7 @@
 
 /* The shell owns body typography for every tab, including portalled controls. */
 .agentic-base-floating-panel {
+  --agentic-control-focus: var(--base-accent, Highlight);
   font-family: var(--agentic-font-sans);
   font-size: var(--agentic-font-size-body);
   line-height: var(--agentic-line-height-body);
