@@ -9,7 +9,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
   const prior = mounted.get(select)
   if (prior) return prior
   if (select.multiple || select.size > 1) throw new Error('Shared dropdown enhancement requires a single-choice select, not a listbox')
-  const button = document.createElement('button'), label = document.createElement('span'), chevron = createMenuIndicator('chevron')
+  const button = document.createElement('button'), label = document.createElement('span'), chevron = createMenuIndicator('chevron', 'Show choices')
   const id = `agentic-select-${crypto.randomUUID()}`
   const wasHidden = select.hidden, tabIndex = select.tabIndex, hadFocus = document.activeElement === select
   const ariaLabel = select.getAttribute('aria-label'), ariaLabelledBy = select.getAttribute('aria-labelledby'), ariaHidden = select.getAttribute('aria-hidden')
@@ -60,14 +60,15 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
         const heading = document.createElement('li'); heading.setAttribute('role', 'separator'); heading.setAttribute('aria-label', groupName); heading.textContent = groupName; menu.append(heading)
       }
       group = groupName
-      const row = document.createElement('li'), item = document.createElement('button'), text = document.createElement('span'), mark = createMenuIndicator('check')
+      const row = document.createElement('li'), item = document.createElement('button'), text = document.createElement('span')
       row.setAttribute('role', 'none'); item.type = 'button'; item.tabIndex = -1; item.value = option.value
       item.className = menuOptionClassName(option.selected); item.setAttribute('role', 'menuitemradio')
       item.setAttribute('aria-label', option.label); item.setAttribute('aria-checked', String(option.selected))
       item.disabled = option.disabled || parent?.tagName === 'OPTGROUP' && (parent as HTMLOptGroupElement).disabled
       text.className = 'agentic-menu-label'; text.textContent = option.label
-      mark.style.visibility = option.selected ? 'visible' : 'hidden'
-      item.append(text, mark); row.append(item); menu.append(row)
+      item.append(text)
+      if (option.selected) item.append(createMenuIndicator('check', 'Selected'))
+      row.append(item); menu.append(row)
       item.addEventListener('click', event => {
         if (event.defaultPrevented || item.disabled) return
         const changed = select.value !== option.value
