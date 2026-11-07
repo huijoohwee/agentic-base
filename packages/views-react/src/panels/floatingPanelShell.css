@@ -1,3 +1,4 @@
+@import "../browser/shared-ui-profile.css";
 .agentic-base-floating-panel-root { position: relative; min-width: 0; min-height: 0; }
 .agentic-base-floating-panel { position: relative; display: flex; min-width: 0; min-height: 0; max-width: calc(100vw - 1rem); max-height: calc(100dvh - 1rem); overflow: hidden; border: 1px solid var(--base-border, #d1d5db); border-radius: .5rem; box-shadow: var(--base-shadow-overlay, 0 8px 24px #0003); pointer-events: auto; color: var(--base-text-primary, #111827); background: var(--base-panel, #fff); }
 .agentic-base-floating-panel-inner { display: flex; min-width: 0; min-height: 0; flex-direction: column; gap: .25rem; padding: var(--base-toolbar-compact-padding, .5rem); }
@@ -8,4 +9,15 @@
 .agentic-base-floating-panel-close:focus-visible { outline: 2px solid var(--base-accent, #3b82f6); outline-offset: 2px; }
 @media (max-width: 640px) {
   .agentic-base-floating-panel { max-width: calc(100vw - .5rem); max-height: calc(100dvh - .5rem); }
+}
+
+/* The shell owns body typography for every tab, including portalled controls. */
+.agentic-base-floating-panel {
+  font-family: var(--agentic-font-sans);
+  font-size: var(--agentic-font-size-body);
+  line-height: var(--agentic-line-height-body);
+}
+.agentic-base-floating-panel :where(section, article, div, p, span, small, label, output, dl, dt, dd, summary, button, input, select, textarea, li, a):not(:where(h1 *, h2 *, h3 *, h4 *, h5 *, h6 *)) {
+  font-size: var(--agentic-font-size-body);
+  line-height: var(--agentic-line-height-body);
 }

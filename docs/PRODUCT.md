@@ -28,3 +28,5 @@ The same owner honors the scroll pane's native `scroll-padding-top`, including p
 ## Shared row geometry — 2026-11-06
 
 Table headers, records, ancestor groups and pivot cells consume the Design System shared UI profile v0.2.0. Both legacy density inputs use the same responsive row height as Graph’s compact toolbar: 38 CSS px on desktop and 54 CSS px for coarse pointers or viewports at most 768px wide. Numeric/virtualized consumers read the same CSS metric with pinned profile metadata as a headless fallback. Bounded cell previews preserve full values and editing in the shared renderer; headers retain unclipped menus. The browser artifact includes the exact offline projection. No consumer-specific row-height variant is introduced.
+
+Shared UI body typography and responsive KTV tracks belong to the pinned Design System profile. Floating-panel tabs and browser tables consume the 14px/20px body role; semantic headings and code retain their roles. Shared row geometry remains 38px/54px. No downloaded font, service or alternate renderer is introduced.
