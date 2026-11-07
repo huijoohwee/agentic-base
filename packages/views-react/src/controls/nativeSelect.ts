@@ -11,7 +11,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
   if (select.multiple || select.size > 1) throw new Error('Shared dropdown enhancement requires a single-choice select, not a listbox')
   const button = document.createElement('button'), label = document.createElement('span'), chevron = document.createElement('span')
   const id = `agentic-select-${crypto.randomUUID()}`
-  const wasHidden = select.hidden, tabIndex = select.tabIndex
+  const wasHidden = select.hidden, tabIndex = select.tabIndex, hadFocus = document.activeElement === select
   const ariaLabel = select.getAttribute('aria-label'), ariaLabelledBy = select.getAttribute('aria-labelledby'), ariaHidden = select.getAttribute('aria-hidden')
   const labels = [...(select.labels || [])], labelTargets = labels.map(item => item.htmlFor)
   let menu: HTMLMenuElement | null = null, release: (() => void) | undefined
@@ -97,7 +97,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
     select.removeEventListener('change', refresh); select.removeEventListener('invalid', invalid); select.removeEventListener('focus', focus)
     select.form?.removeEventListener('reset', reset); mounted.delete(select)
   } }
-  mounted.set(select, handle); refresh(); return handle
+  mounted.set(select, handle); refresh(); if (hadFocus && !button.disabled && !button.hidden) button.focus({ preventScroll: true }); return handle
 }
 
 /** Observe dynamic form projections; owners can explicitly refresh property-only updates. */
