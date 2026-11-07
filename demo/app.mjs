@@ -1,5 +1,5 @@
 import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
-import { mountDataView } from './browser-data-view.js?v=14';
+import { mountDataView } from './browser-data-view.js?v=15';
 
 const BASE_ID = 'demo_base_v1';
 const ACTOR_ID = 'local_demo_operator';
