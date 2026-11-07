@@ -103,20 +103,32 @@ export function positionDropdownMenu(anchor: HTMLElement, menu: HTMLElement): vo
   menu.style.top = `${Math.max(top + edge, Math.min(below + size.height <= top + height - edge ? below : above, top + height - size.height - edge))}px`
 }
 
+/** Toolbar-compatible mouse dismissal leaves intercepted pointer gestures inspectable. */
+export function bindOutsideDismiss(contains: (event: MouseEvent) => boolean, dismiss: () => void, openingGuardMs = 0): () => void {
+  const openedAt = Date.now(), pending = new Set<ReturnType<typeof setTimeout>>()
+  const outside = (event: MouseEvent) => {
+    if (Date.now() - openedAt < openingGuardMs || contains(event)) return
+    // Wait for the whole gesture dispatch, including later inspection listeners.
+    const timer = setTimeout(() => { pending.delete(timer); if (!event.defaultPrevented) dismiss() }, 0)
+    pending.add(timer)
+  }
+  window.addEventListener('mousedown', outside, true)
+  return () => {
+    window.removeEventListener('mousedown', outside, true)
+    pending.forEach(timer => clearTimeout(timer)); pending.clear()
+  }
+}
+
 /** One-open coordination, positioning, outside dismissal and focus lifecycle. */
 export function bindDropdownPopup(anchor: HTMLElement, menu: HTMLElement, dismiss: (restoreFocus: boolean) => void): () => void {
-  let active = true
   emitDropdownOpen(menu.id)
   const unsubscribe = subscribeDropdownOpen(detail => { if (detail.sourceId !== menu.id) dismiss(false) })
   const keyboard = bindMenuKeyboard(menu, dismiss)
   const place = () => { if (!anchor.isConnected || anchor.matches(':disabled')) dismiss(false); else positionDropdownMenu(anchor, menu) }
-  const outside = (event: PointerEvent) => {
+  const outside = bindOutsideDismiss(event => {
     const route = event.composedPath()
-    if (route.includes(anchor) || route.includes(menu)) return
-    // Inspection and other owners can cancel a gesture later in its propagation.
-    queueMicrotask(() => { if (active && !event.defaultPrevented) dismiss(false) })
-  }
-  document.addEventListener('pointerdown', outside, true)
+    return route.includes(anchor) || route.includes(menu)
+  }, () => dismiss(false))
   window.addEventListener('resize', place)
   window.addEventListener('scroll', place, true)
   window.visualViewport?.addEventListener('resize', place)
@@ -125,9 +137,8 @@ export function bindDropdownPopup(anchor: HTMLElement, menu: HTMLElement, dismis
   place()
   focusMenuEntry(menuEntries(menu).find(entry => entry.getAttribute('aria-checked') === 'true') || menuEntries(menu)[0])
   return () => {
-    active = false
     unsubscribe(); keyboard(); observer?.disconnect()
-    document.removeEventListener('pointerdown', outside, true)
+    outside()
     window.removeEventListener('resize', place)
     window.removeEventListener('scroll', place, true)
     window.visualViewport?.removeEventListener('resize', place)
