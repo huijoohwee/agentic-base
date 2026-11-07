@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.6"
-revision: "0.4.6"
+version: "0.4.7"
+revision: "0.4.7"
 date: "2026-10-29"
 updated_date: "2026-11-07"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.6"
-tad_revision: "0.4.6"
-adr_revision: "0.4.6"
-mvp_revision: "0.4.6"
-gtm_revision: "0.4.6"
+prd_revision: "0.4.7"
+tad_revision: "0.4.7"
+adr_revision: "0.4.7"
+mvp_revision: "0.4.7"
+gtm_revision: "0.4.7"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -200,3 +200,5 @@ The existing shared-ui profile v0.5.0 owns dropdown/textbox geometry and 14px/20
 Use shared-ui v0.6.0 for menu surfaces, option spacing, selection, hover/focus and responsive geometry. Base owns one headless menu core with React and native form adapters, preserving focus already held by a newly rendered select; Graph field/toolbar and Commerce menus reuse it. The React adapter takes over the shared SemanticSelect/option contract from Graph source 6867e22719d2b880a880dff767a82d2e44149b8e; the Graph files become contract-only adapters. The standalone native artifact remains self-contained and below 500000 bytes. Preserve form semantics, values, events, grouped/disabled options, reset, required validation and offline state. Native and React indicators use one SVG definition and shared icon-size tokens. Visible indicators are named, hit-testable SVG images; unselected native options have no hidden checkmark placeholder. Menu, list item and button wrappers retain semantic selection targets. Menu events remain observable, cancelled inspection gestures do not dismiss or select, and ordinary outside gestures still dismiss. Verify native checks plus opened desktop/mobile menus before source closeout. Production is outside this increment; rollback restores exact predecessor pins/assets without altering origin data.
 
 Field and native-select popups use the same Base outside-dismiss helper as Graph host overlays. It observes mousedown after the pointer interception opportunity, waits until dispatch completes to honor cancelled inspection gestures, and cancels pending callbacks on disposal. Keyboard selection, ordinary outside dismissal, touch compatibility mouse events and semantic hit targets remain covered; native annotation-picker behavior requires live observation.
+
+Base now consumes the existing central nine-role profile as an exact pinned CSS projection, including shadow-host defaults. Authored browser CSS contains no declarations or literal fallbacks for those registered roles. Shared UI metrics remain in their existing central profile. The build verifies both immutable profile digests and emits one offline stylesheet; rollback restores the prior pins/assets together without clearing data. No schema or Production effect.

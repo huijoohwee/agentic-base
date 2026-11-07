@@ -17,9 +17,19 @@
       "sha256": "2b98fb8076ff3bcac36c8de5c353f5cfa775d3772d2e26f2da1f524d679064aa"
     },
     {
+      "path": "packages/views-react/src/browser/base-profile.css",
+      "bytes": 647,
+      "sha256": "9fb7da765d4f597f7e130faa51c10faff9dd977b943818904e4d474236f28758"
+    },
+    {
+      "path": "packages/views-react/src/browser/base-profile.pin.json",
+      "bytes": 652,
+      "sha256": "a865db85c273a5ebb08b06e60cb2c8e4c8f62501ae03ed744feecb52a2d0ca75"
+    },
+    {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 17232,
-      "sha256": "ea36715ec8bb4d9b2c22f663fd8f40831aa972124ce950f2e5f0873e859ec797"
+      "bytes": 16554,
+      "sha256": "8a4a6afeecc4cb5ed445dab286b7d17292cab35a0698023283ea61fcc0c1aee2"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -125,8 +135,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 23735,
-      "sha256": "7a7c3aa03667716c9ca2fd9680bb3d026b6d7195b35488bd0f6c5919440168f2"
+      "bytes": 23704,
+      "sha256": "ae38e0b8f52c1ce7255d6403e227f40148da8156ba20aacc2eab23aee9769a3b"
     }
   ]
 }

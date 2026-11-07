@@ -65,3 +65,15 @@ test('body and panel typography use the same pinned role without local sizes', (
   assert.match(profileCss.toString(), /--agentic-ktv-columns:/)
   assert.doesNotMatch(viewCss, /--agentic-ktv-columns\s*:/)
 })
+
+
+test('Base inherits centrally projected roles without local registered defaults', () => {
+  const basePin = JSON.parse(fs.readFileSync(new URL('base-profile.pin.json', source), 'utf8'))
+  const baseCss = fs.readFileSync(new URL('base-profile.css', source), 'utf8')
+  assert.equal(sha256(baseCss), basePin.profile.projectionSha256)
+  assert.match(baseCss, /:root, :host/)
+  for (const variable of baseCss.matchAll(/(--agentic-base-[a-z-]+):/g)) {
+    assert.doesNotMatch(viewCss, new RegExp(`${variable[1]}\\s*:`))
+  }
+  assert.ok(artifactCss.includes(baseCss))
+})
