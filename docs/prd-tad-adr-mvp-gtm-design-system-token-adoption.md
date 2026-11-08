@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.8"
-revision: "0.4.8"
+version: "0.4.9"
+revision: "0.4.9"
 date: "2026-10-29"
 updated_date: "2026-11-08"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.8"
-tad_revision: "0.4.8"
-adr_revision: "0.4.8"
-mvp_revision: "0.4.8"
-gtm_revision: "0.4.8"
+prd_revision: "0.4.9"
+tad_revision: "0.4.9"
+adr_revision: "0.4.9"
+mvp_revision: "0.4.9"
+gtm_revision: "0.4.9"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -203,6 +203,8 @@ Field and native-select popups use the same Base outside-dismiss helper as Graph
 
 Base now consumes the existing central nine-role profile as an exact pinned CSS projection, including shadow-host defaults. Authored browser CSS contains no declarations or literal fallbacks for those registered roles. Shared UI metrics remain in their existing central profile. The build verifies both immutable profile digests and emits one offline stylesheet; rollback restores the prior pins/assets together without clearing data. No schema or Production effect.
 
-### Shared KTV and icon renderer (0.4.8)
+### Shared KTV and icon renderer (0.4.9)
 
 Existing controls export one semantic KTV row and named SVG renderer, consuming the central 61-icon library and shared layout projection at `dcb183ea6f7f040bcf25cd31f2867acb97857de5`. Graph retains only product labels/aliases; native/React menus use the same pinned chevron/check artwork. Runtime CSS owns responsive tracks, spacing and typography; adapters supply data and behavior. Pin validation rejects artwork drift. Rollback restores the prior producer pin/assets together without changing user records; no Production activation is selected.
+
+The existing controls use explicit ESM imports and a JSON import attribute so NodeNext shared consumers use the same owner as bundler consumers. No control behavior or asset variant is introduced.

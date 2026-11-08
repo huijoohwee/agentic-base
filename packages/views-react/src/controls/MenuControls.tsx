@@ -1,6 +1,6 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, SHARED_ICON_NODES, SHARED_ICON_VIEW_BOX, type SharedIconName, type MenuIndicatorKind } from './dropdownMenu'
+import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, SHARED_ICON_NODES, SHARED_ICON_VIEW_BOX, type SharedIconName, type MenuIndicatorKind } from './dropdownMenu.js'
 
 function MenuIndicator({ kind, label }: { kind: MenuIndicatorKind; label: string }) {
   return <svg className="agentic-menu-mark" style={menuIndicatorStyle(kind)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" role="img" aria-label={label}>
