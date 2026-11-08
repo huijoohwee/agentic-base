@@ -1,4 +1,5 @@
 import React from 'react'
+import '../browser/shared-ui-profile.css'
 import './floatingPanelShell.css'
 
 export type FloatingPanelShellProps = {
