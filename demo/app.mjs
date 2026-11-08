@@ -1,6 +1,6 @@
 import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
-import { mountDataView } from './browser-data-view.js?v=27';
-import { enhanceSelects } from './dropdown-menus.js?v=27';
+import { mountDataView } from './browser-data-view.js?v=28';
+import { enhanceSelects } from './dropdown-menus.js?v=28';
 enhanceSelects(document);
 
 const BASE_ID = 'demo_base_v1';

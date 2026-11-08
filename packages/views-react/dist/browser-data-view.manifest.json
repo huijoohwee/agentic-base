@@ -38,13 +38,13 @@
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 11060,
-      "sha256": "bb043bd680b93c88de141da8a74a87fde09a5cc53e45bbab7449ef951bffeeb3"
+      "bytes": 12741,
+      "sha256": "eeaab49fb7f895f55d2406266701a9e6062b311c1597ce2fbfe81268a2b37b8c"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 798,
-      "sha256": "d439019100a3611647b577f65fb5283246adfb351a09fd5d8e599a0225dac99f"
+      "sha256": "36353467469187d0e17c867b05f3e245dc490aec76c3dad460b989257545ad8e"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
@@ -136,7 +136,7 @@
     {
       "path": "browser-data-view.js",
       "bytes": 240186,
-      "sha256": "0e96405302c1cc73288fbb34b08f17d13e5af7dea0e0adcaa3b891ae383e1983"
+      "sha256": "474ca32102be075e18731850d5143788d9b4d9afd73e4a4c53633992e85c3b80"
     },
     {
       "path": "dropdown-menus.js",
@@ -145,8 +145,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 28291,
-      "sha256": "c9169bf373aaa5f312246fdae71fe99b8dc13886b479e8d9afb18707836f2c36"
+      "bytes": 29972,
+      "sha256": "0e062110e60f5212aa1ded272230dc6e0b7fae71b31820d2531adbb266fc224a"
     }
   ]
 }
