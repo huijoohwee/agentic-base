@@ -1,3 +1,5 @@
+import sharedUiPin from '../browser/shared-ui-profile.pin.json'
+
 export type DashboardWidgetSnapGrid = { enabled: boolean; x: number; y?: number }
 export type DashboardWidgetColumnStyle = { width: string; gap: number }
 
@@ -19,7 +21,7 @@ export function dashboardColumnStyle(width: number, columns: number, grid: Dashb
   columns = Math.max(1, Math.min(12, Math.floor(columns) || 1))
   const size = Number.isFinite(grid.x) && grid.x > 0 ? grid.x : 10
   const snap = (value: number) => Math.round(value / size) * size
-  const gap = grid.enabled ? Math.max(size, snap(12)) : 12
+  const gap = grid.enabled ? Math.max(size, snap(sharedUiPin.metrics.dashboardCardGap)) : sharedUiPin.metrics.dashboardCardGap
   const available = Math.max(0, (Math.max(0, Number.isFinite(width) ? width : 0) - gap * (columns - 1)) / columns)
   const snapped = Math.min(snap(available), Math.floor(available / size) * size)
   return { gap, width: grid.enabled && snapped > 0 ? `${snapped}px` : `calc((100% - ${gap * (columns - 1)}px) / ${columns})` }

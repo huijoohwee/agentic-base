@@ -76,7 +76,7 @@ export function enhanceSelect(select: HTMLSelectElement): NativeSelectHandle {
         if (changed) { select.dispatchEvent(new Event('input', { bubbles: true })); select.dispatchEvent(new Event('change', { bubbles: true })) }
       })
     }
-    (select.closest('dialog') || document.body).append(menu); button.setAttribute('aria-expanded', 'true'); button.setAttribute('aria-controls', menu.id)
+    (select.closest('dialog, [popover]') || document.body).append(menu); button.setAttribute('aria-expanded', 'true'); button.setAttribute('aria-controls', menu.id)
     release = bindDropdownPopup(button, menu, close)
   }
   const keys = (event: KeyboardEvent) => {

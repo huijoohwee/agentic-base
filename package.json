@@ -17,6 +17,8 @@
     "./settings": "./packages/views-react/src/settings/index.ts",
     "./panels": "./packages/views-react/src/panels/index.ts",
     "./dashboard": "./packages/views-react/src/dashboard/index.ts",
+    "./toolbar-icons": "./packages/views-react/src/controls/toolbar-icons.js",
+    "./toolbar.css": "./packages/views-react/src/controls/toolbar.css",
     "./controls": "./packages/views-react/src/controls/index.ts"
   },
   "files": [

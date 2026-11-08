@@ -60,8 +60,11 @@ test('body and panel typography use the same pinned role without local sizes', (
   assert.match(viewCss, /font: var\(--agentic-font-size-body\)\/var\(--agentic-line-height-body\) var\(--agentic-font-sans\)/)
   assert.doesNotMatch(viewCss, /font-size: (?:13|14)px/)
   const panelCss = fs.readFileSync(new URL('../packages/views-react/src/panels/floatingPanelShell.css', import.meta.url), 'utf8')
-  assert.match(panelCss, /@import "\.\.\/browser\/shared-ui-profile\.css"/)
-  assert.match(panelCss, /font-size: var\(--agentic-font-size-body\)/)
+  const panelPin = JSON.parse(fs.readFileSync(new URL('../panels/floatingPanelShell.pin.json', source), 'utf8'))
+  assert.equal(panelPin.owner, pin.profile.owner)
+  assert.match(panelPin.revision, /^[a-f0-9]{40}$/)
+  assert.equal(panelPin.path, 'site/floating-panel.css')
+  assert.equal(sha256(panelCss), `sha256:${panelPin.sha256}`, 'FloatingPanel must be the unmodified Design System asset')
   assert.match(profileCss.toString(), /--agentic-ktv-columns:/)
   assert.doesNotMatch(viewCss, /--agentic-ktv-columns\s*:/)
 })
@@ -96,4 +99,29 @@ test('KTV and icons render one semantic row with a visible named Type glyph', as
   const iconPin = JSON.parse(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.pin.json', import.meta.url)))
   assert.equal(Object.keys(library.icons).length, 61)
   assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url))).digest('hex'), iconPin.sha256)
+})
+
+test('dashboard checkboxes reuse the pinned responsive group layout', () => {
+  const dashboard = new URL('../packages/views-react/src/dashboard/', import.meta.url)
+  const editor = fs.readFileSync(new URL('DashboardWidgetEditor.tsx', dashboard), 'utf8')
+  const controls = fs.readFileSync(new URL('../controls/CheckboxGroup.tsx', dashboard), 'utf8')
+  assert.match(editor, /type === 'checkbox-list' \? <CheckboxGroup>/)
+  assert.ok(editor.includes('<CheckboxOption key={option.value}'))
+  assert.ok(controls.includes('className="agentic-checkbox-group"'))
+  assert.match(profileCss.toString(), /\.agentic-checkbox-group > label \{[^}]*min-block-size: var\(--agentic-control-height\)/)
+  for (const file of fs.readdirSync(dashboard).filter(file => file.endsWith('.css'))) {
+    assert.doesNotMatch(fs.readFileSync(new URL(file, dashboard), 'utf8'), /\.agentic-checkbox-group\b/)
+  }
+})
+
+test('the exported Toolbar is the pinned Design System surface used by the demo', () => {
+  const controls = new URL('../packages/views-react/src/controls/', import.meta.url)
+  const pin = JSON.parse(fs.readFileSync(new URL('toolbar.pin.json', controls)))
+  assert.equal(pin.owner, 'github.com/huijoohwee/agentic-design-system')
+  assert.equal(pin.path, 'site/toolbar.css')
+  const icons = fs.readFileSync(new URL('toolbar-icons.js', controls))
+  assert.equal(createHash('sha256').update(icons).digest('hex'), pin.iconsSha256)
+  assert.match(pin.revision, /^[a-f0-9]{40}$/)
+  assert.equal(createHash('sha256').update(fs.readFileSync(new URL('toolbar.css', controls))).digest('hex'), pin.sha256)
+  assert.doesNotMatch(fs.readFileSync(new URL('../demo/styles.css', import.meta.url), 'utf8'), /\.agentic-toolbar\b/)
 })

@@ -1,3 +1,4 @@
+export { DashboardPrimitive } from './DashboardPrimitives'
 export { DashboardCardGrid } from './DashboardCardGrid'
 export type { DashboardCard, DashboardCardAccent, DashboardCardGridProps } from './DashboardCardGrid'
 export { DashboardCanvasLayout } from './DashboardCanvasLayout'

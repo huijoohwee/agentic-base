@@ -1,4 +1,5 @@
 import React from 'react'
+import { CheckboxGroup, CheckboxOption } from '../controls/CheckboxGroup'
 import {
   WorkspaceDataViewComfortableTextInput,
   WorkspaceDataViewCompactCheckbox,
@@ -70,12 +71,12 @@ export function DashboardWidgetEditor({
         {field.type === 'checkbox' ? <label className={`flex gap-2 text-xs ${theme.text.primary}`}>
           <WorkspaceDataViewCompactCheckbox type="checkbox" checked={field.checked} onChange={event => onFieldChange(field.id, event.target.checked)} />{field.label}
         </label> : null}
-        {field.type === 'checkbox-list' ? <fieldset className={`space-y-1 text-xs ${theme.text.primary}`}>
-          <legend>{field.label}</legend>{field.options.map(option => <label key={option.value} className="flex gap-2">
-            <WorkspaceDataViewCompactCheckbox type="checkbox" checked={field.value.includes(option.value)}
-              onChange={event => onFieldChange(field.id, event.target.checked ? [...field.value, option.value] : field.value.filter(value => value !== option.value))} />{option.label}
-          </label>)}
-        </fieldset> : null}
+        {field.type === 'checkbox-list' ? <CheckboxGroup>
+          <legend>{field.label}</legend>
+          {field.options.map(option => <CheckboxOption key={option.value} label={option.label}
+            inputComponent={WorkspaceDataViewCompactCheckbox} checked={field.value.includes(option.value)}
+            onChange={event => onFieldChange(field.id, event.target.checked ? [...field.value, option.value] : field.value.filter(value => value !== option.value))} />)}
+        </CheckboxGroup> : null}
         {field.type === 'custom' ? <section aria-label={field.label}>{field.content}</section> : null}
       </React.Fragment>)}
       {error || hostError ? <p role="alert" className={`text-xs ${theme.text.secondary}`}>{error || hostError}</p> : null}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { ToggleButton, ToggleButtonGroup } from '../controls/ToggleButtonGroup'
 import { CalendarDays, Grid2X2, KanbanSquare, Table2 } from 'lucide-react'
 import { LayoutChoice, SettingsPanelShell, WorkspaceDataViewComfortableTextInput, WorkspaceDataViewCompactCheckbox, WorkspaceDataViewFieldSelect } from './SettingsPrimitives'
 
@@ -78,21 +79,21 @@ export function ViewSettingsPanel(props: ViewSettingsPanelProps) {
       </label> : null}
       {props.onChangeRowHeight ? <section aria-label="Density" className="space-y-2">
         <h3 className="m-0 text-xs font-semibold">Density</h3>
-        <div role="group" aria-label="Row height" className="flex gap-2">
-          {(['compact', 'comfortable'] as const).map(value => <button type="button" key={value} className={actionClass}
-            aria-pressed={(props.rowHeight ?? 'comfortable') === value} onClick={() => props.onChangeRowHeight?.(value)}>
+        <ToggleButtonGroup aria-label="Row height">
+          {(['compact', 'comfortable'] as const).map(value => <ToggleButton key={value}
+            pressed={(props.rowHeight ?? 'comfortable') === value} onClick={() => props.onChangeRowHeight?.(value)}>
             {value === 'compact' ? 'Compact' : 'Comfortable'}
-          </button>)}
-        </div>
+          </ToggleButton>)}
+        </ToggleButtonGroup>
       </section> : null}
       {props.onChangeFieldLineMode ? <section aria-label="Field line" className="space-y-2">
         <h3 className="m-0 text-xs font-semibold">Field line</h3>
-        <div role="group" aria-label="Field line mode" className="flex gap-2">
-          {(['single', 'double', 'flex'] as const).map(value => <button type="button" key={value} className={actionClass}
-            aria-pressed={(props.fieldLineMode ?? 'single') === value} onClick={() => props.onChangeFieldLineMode?.(value)}>
+        <ToggleButtonGroup aria-label="Field line mode">
+          {(['single', 'double', 'flex'] as const).map(value => <ToggleButton key={value}
+            pressed={(props.fieldLineMode ?? 'single') === value} onClick={() => props.onChangeFieldLineMode?.(value)}>
             {value === 'single' ? 'Single line' : value === 'double' ? 'Two lines' : 'Flex'}
-          </button>)}
-        </div>
+          </ToggleButton>)}
+        </ToggleButtonGroup>
       </section> : null}
       {active ? <p className="m-0 text-xs" aria-live="polite">Selected: {active.name}</p> : null}
     </section>

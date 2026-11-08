@@ -33,6 +33,7 @@ function safePath(urlPath) {
   if (urlPath === '/' || urlPath === '/demo' || urlPath === '/demo/') return resolve(root, 'demo/index.html');
   if (urlPath === '/demo/dropdown-menus.js') return resolve(root, 'packages/views-react/dist/dropdown-menus.js');
   if (urlPath === '/demo/browser-data-view.js') return resolve(root, 'packages/views-react/dist/browser-data-view.js');
+  if (urlPath === '/demo/toolbar.css') return resolve(root, 'packages/views-react/src/controls/toolbar.css');
   if (urlPath === '/demo/browser-data-view.css') return resolve(root, 'packages/views-react/dist/browser-data-view.css');
   if (urlPath === '/sw.js') return resolve(root, 'sw.js');
   if (!allowed.some(prefix => urlPath.startsWith(prefix)) || urlPath.includes('..')) return null;

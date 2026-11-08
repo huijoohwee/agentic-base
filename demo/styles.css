@@ -52,6 +52,5 @@ footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.
   .masthead { display: block; }
   .connection { display: inline-block; margin-top: 0.8rem; }
   .section-heading { align-items: flex-start; flex-wrap: wrap; }
-  .view-picker, .month-picker { width: 100%; }
   .table-host { height: min(62vh, 40rem); min-height: 13rem; }
 }
