@@ -97,3 +97,16 @@ test('KTV and icons render one semantic row with a visible named Type glyph', as
   assert.equal(Object.keys(library.icons).length, 61)
   assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url))).digest('hex'), iconPin.sha256)
 })
+
+test('dashboard checkboxes reuse the pinned responsive group layout', () => {
+  const dashboard = new URL('../packages/views-react/src/dashboard/', import.meta.url)
+  const editor = fs.readFileSync(new URL('DashboardWidgetEditor.tsx', dashboard), 'utf8')
+  const controls = fs.readFileSync(new URL('../controls/CheckboxGroup.tsx', dashboard), 'utf8')
+  assert.match(editor, /type === 'checkbox-list' \? <CheckboxGroup>/)
+  assert.ok(editor.includes('<CheckboxOption key={option.value}'))
+  assert.ok(controls.includes('className="agentic-checkbox-group"'))
+  assert.match(profileCss.toString(), /\.agentic-checkbox-group > label \{[^}]*min-block-size: var\(--agentic-control-height\)/)
+  for (const file of fs.readdirSync(dashboard).filter(file => file.endsWith('.css'))) {
+    assert.doesNotMatch(fs.readFileSync(new URL(file, dashboard), 'utf8'), /\.agentic-checkbox-group\b/)
+  }
+})
