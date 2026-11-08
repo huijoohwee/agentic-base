@@ -27,7 +27,7 @@ const typeIconByKey: Record<string, ComponentType<any>> = {
 }
 
 function MenuIcon({ icon: Icon, label, target }: { icon: ComponentType<any>; label: string; target: string }) {
-  return <Icon size={16} strokeWidth={1.7} role="img" aria-label={label} data-kg-selection-target={target} />
+  return <Icon className="agentic-icon" role="img" aria-label={label} data-kg-selection-target={target} />
 }
 
 function MenuAction(props: {
@@ -58,7 +58,7 @@ export function BaseColumnTypeMenu(props: AnyProps) {
       <MenuIcon icon={Columns2} label="Column type" target="column-type-menu-icon" />
       <span data-kg-selection-target="column-type-menu-label">Type</span>
       <span className="agentic-base-column-menu-value" data-kg-selection-target="column-type-current-value">{currentLabel}</span>
-      <ChevronDown className="agentic-base-column-menu-chevron" size={14} strokeWidth={1.7} role="img" aria-label="Expand choices" data-kg-selection-target="column-type-expand" />
+      <ChevronDown className="agentic-icon agentic-base-column-menu-chevron" role="img" aria-label="Expand choices" data-kg-selection-target="column-type-expand" />
     </summary>
     <DropdownMenuSurface role="menu" aria-label={props.ariaLabel ?? `Column type: ${currentLabel}`} className="agentic-base-column-type-options">
       {VIEW_COLUMN_TYPE_OPTIONS.map(option => {
@@ -125,7 +125,7 @@ function FilterMenuItem(props: AnyProps) {
         aria-disabled={!props.filter} className="agentic-form-control agentic-menu-option agentic-base-column-menu-row agentic-base-column-menu-summary" onClick={event => { if (!props.filter) event.preventDefault() }}>
         <MenuIcon icon={Filter} label="Filter" target="column-filter-icon" />
         <span data-kg-selection-target="column-filter-label">Filter</span>
-        <ChevronRight size={14} strokeWidth={1.7} role="img" aria-label="Open filter editor" data-kg-selection-target="column-filter-chevron" />
+        <ChevronRight className="agentic-icon" role="img" aria-label="Open filter editor" data-kg-selection-target="column-filter-chevron" />
       </summary>
       {props.filter ? <FilterEditor filter={props.filter} closeMenu={props.closeMenu} onCancel={() => disclosureRef.current?.removeAttribute('open')} /> : null}
     </details>
