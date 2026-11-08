@@ -21,7 +21,7 @@ import { UI_TEXT_TRUNCATE } from '@/lib/ui/textLayout'
 import { uiToolbarRowScrollClassName } from '@/features/toolbar/ui/toolbarStyles'
 import { UI_INTENT_TOKENS } from 'grph-shared/ui/intentTokens'
 import { splitMultiValues } from '@/features/markdown/ui/markdownDataViewValueUtils'
-import { DashboardBarChart, DashboardCanvasLayout, DashboardCardGrid, DashboardLineAreaChart, DashboardMetricTile, DashboardWidgetBoard, DashboardWidgetCard, DashboardWidgetDisclosure, DashboardWidgetEditor, DashboardWidgetFrame, DashboardWidgetLayoutSettings, DashboardWidgetPalette, DashboardWidgetSection, dashboardColumnStyle, dashboardWidgetRows, type DashboardWidgetEditorField } from '../src/dashboard'
+import { DashboardPrimitive, DashboardBarChart, DashboardCanvasLayout, DashboardCardGrid, DashboardLineAreaChart, DashboardMetricTile, DashboardWidgetBoard, DashboardWidgetCard, DashboardWidgetDisclosure, DashboardWidgetEditor, DashboardWidgetFrame, DashboardWidgetLayoutSettings, DashboardWidgetPalette, DashboardWidgetSection, dashboardColumnStyle, dashboardWidgetRows, type DashboardWidgetEditorField } from '../src/dashboard'
 import { FieldWorkbench, FieldWorkbenchGroup, FieldWorkbenchItem, FieldWorkbenchSearch, SettingsPanelShell, ViewSettingsPanel, type SavedViewOption, type ViewLayout } from '../src/settings'
 import { SettingsHostProvider } from '../src/settings/SettingsHostContext'
 import { graphSettingsHost } from './GraphSettingsHost'
@@ -305,8 +305,8 @@ function DashboardPreview() {
   ]
   return <DashboardCanvasLayout
     ariaLabel="Agent Mission dashboard"
-    title={<h1 className="m-0 text-xl font-semibold">Agent Mission · workspace overview</h1>}
-    description={<p className="m-0 text-sm text-[color:var(--kg-text-secondary)]">Shared responsive shell; the host supplies data, theme, and actions.</p>}
+    title={<DashboardPrimitive kind="heading" level={1}>Agent Mission · workspace overview</DashboardPrimitive>}
+    description={<DashboardPrimitive kind="text">Shared responsive shell; the host supplies data, theme, and actions.</DashboardPrimitive>}
     hero={<DashboardLineAreaChart series={series} tone="blue" gridEnabled area />}
     observation="Local preview snapshot · data and commands are host supplied."
     overview={<DashboardCardGrid

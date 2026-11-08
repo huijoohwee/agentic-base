@@ -15,7 +15,7 @@ export type DashboardWidgetDisclosureProps = {
 export function DashboardWidgetDisclosure({
   id, title, children, expanded, onExpandedChange, className = '', summaryClassName = '',
 }: DashboardWidgetDisclosureProps) {
-  return <details data-agentic-base-dashboard-disclosure={id}
+  return <details data-dashboard-primitive="disclosure" data-dashboard-disclosure={id} data-agentic-base-dashboard-disclosure={id}
     className={['agentic-base-dashboard-disclosure', className].filter(Boolean).join(' ')}
     open={expanded} onToggle={event => onExpandedChange(event.currentTarget.open)}>
     <summary className={['agentic-base-dashboard-disclosure-summary', summaryClassName].filter(Boolean).join(' ')}>{title}</summary>
