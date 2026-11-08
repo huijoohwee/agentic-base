@@ -119,6 +119,8 @@ test('the exported Toolbar is the pinned Design System surface used by the demo'
   const pin = JSON.parse(fs.readFileSync(new URL('toolbar.pin.json', controls)))
   assert.equal(pin.owner, 'github.com/huijoohwee/agentic-design-system')
   assert.equal(pin.path, 'site/toolbar.css')
+  const icons = fs.readFileSync(new URL('toolbar-icons.js', controls))
+  assert.equal(createHash('sha256').update(icons).digest('hex'), pin.iconsSha256)
   assert.match(pin.revision, /^[a-f0-9]{40}$/)
   assert.equal(createHash('sha256').update(fs.readFileSync(new URL('toolbar.css', controls))).digest('hex'), pin.sha256)
   assert.doesNotMatch(fs.readFileSync(new URL('../demo/styles.css', import.meta.url), 'utf8'), /\.agentic-toolbar\b/)
