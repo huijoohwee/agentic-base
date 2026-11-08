@@ -113,3 +113,13 @@ test('dashboard checkboxes reuse the pinned responsive group layout', () => {
     assert.doesNotMatch(fs.readFileSync(new URL(file, dashboard), 'utf8'), /\.agentic-checkbox-group\b/)
   }
 })
+
+test('the exported Toolbar is the pinned Design System surface used by the demo', () => {
+  const controls = new URL('../packages/views-react/src/controls/', import.meta.url)
+  const pin = JSON.parse(fs.readFileSync(new URL('toolbar.pin.json', controls)))
+  assert.equal(pin.owner, 'github.com/huijoohwee/agentic-design-system')
+  assert.equal(pin.path, 'site/toolbar.css')
+  assert.match(pin.revision, /^[a-f0-9]{40}$/)
+  assert.equal(createHash('sha256').update(fs.readFileSync(new URL('toolbar.css', controls))).digest('hex'), pin.sha256)
+  assert.doesNotMatch(fs.readFileSync(new URL('../demo/styles.css', import.meta.url), 'utf8'), /\.agentic-toolbar\b/)
+})
