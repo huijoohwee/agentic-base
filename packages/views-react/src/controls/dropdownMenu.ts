@@ -15,8 +15,8 @@ export function menuIndicatorStyle(kind: MenuIndicatorKind) {
 }
 export function createMenuIndicator(kind: MenuIndicatorKind, label: string): SVGSVGElement {
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  for (const [key, value] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })) icon.setAttribute(key, value)
-  icon.classList.add('agentic-menu-mark'); Object.assign(icon.style, menuIndicatorStyle(kind))
+  for (const [key, value] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })) icon.setAttribute(key, value)
+  icon.classList.add('agentic-icon', 'agentic-menu-mark'); Object.assign(icon.style, menuIndicatorStyle(kind))
   icon.setAttribute('role', 'img'); icon.setAttribute('aria-label', label)
   const path = document.createElementNS(icon.namespaceURI, 'path'); path.setAttribute('d', MENU_INDICATOR_PATHS[kind]); icon.append(path)
   return icon

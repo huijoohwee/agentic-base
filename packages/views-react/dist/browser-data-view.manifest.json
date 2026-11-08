@@ -38,23 +38,23 @@
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 7560,
-      "sha256": "eef7e110f89035a1aefac4a503eb994c830241e7eb57481ed50960af951c7044"
+      "bytes": 8685,
+      "sha256": "1a54a6b83fe9cb270834c3e6c5356775b671f346f3e6acaf93fca7a75ea7f992"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 798,
-      "sha256": "402164308de75bd8f124473a4c3a6b57515e07114770a94ac4de2c47865186aa"
+      "sha256": "f575f6037519d2527c54504856714cf349727754b1dc70557491102893b59a7b"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
-      "bytes": 10642,
-      "sha256": "10785519b6561198dcde9e44ece66b4b7f1097ea8e2e3d4cb15d5fe6c8ac2dff"
+      "bytes": 10623,
+      "sha256": "4c957810d79e7a6f14123c8d61a25bc851371548ae1e0a535de1544b8c192a11"
     },
     {
       "path": "packages/views-react/src/controls/dropdownMenu.ts",
-      "bytes": 9123,
-      "sha256": "1d72a8bd745d5e45f88380b458e55fc0c468259ce5f90d302abf565ba505c138"
+      "bytes": 9118,
+      "sha256": "e3a08bfa7fec688b43ab2c77acc73cda72450bd54ad9f914adbdf5fb00fe8944"
     },
     {
       "path": "packages/views-react/src/controls/icons.json",
@@ -135,18 +135,18 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 240210,
-      "sha256": "f801de07e595792df2ac81b4f434367deb554ead4cc0aacc2fd7333d1a3f350c"
+      "bytes": 240195,
+      "sha256": "c23d91da886bbeaf688b63829b4464e1f8066732b803982c3afc32b2e1ffec80"
     },
     {
       "path": "dropdown-menus.js",
-      "bytes": 21008,
-      "sha256": "f67200ab6b5e68b5e9732e0734754c3ae79ad464bcc259e72940f83e4d427741"
+      "bytes": 21004,
+      "sha256": "41793f9a83def8323a31336e9762ecdd1ce60e4b88602e21214e4c428c544190"
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 24762,
-      "sha256": "0fb364c12013bad128b45a28329d31196c40f31e1087ee691b1d38d5ac6597ff"
+      "bytes": 25887,
+      "sha256": "b9e8fad15a54140a00e8ca0324545c69a591126c02b316c811adf7c617552185"
     }
   ]
 }

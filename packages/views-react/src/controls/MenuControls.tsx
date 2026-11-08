@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, SHARED_ICON_NODES, SHARED_ICON_VIEW_BOX, type SharedIconName, type MenuIndicatorKind } from './dropdownMenu.js'
 
 function MenuIndicator({ kind, label }: { kind: MenuIndicatorKind; label: string }) {
-  return <svg className="agentic-menu-mark" style={menuIndicatorStyle(kind)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" role="img" aria-label={label}>
+  return <svg className="agentic-icon agentic-menu-mark" style={menuIndicatorStyle(kind)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label={label}>
     <path d={MENU_INDICATOR_PATHS[kind]} />
   </svg>
 }
@@ -12,7 +12,7 @@ export type DesignIconProps = Omit<React.SVGProps<SVGSVGElement>, 'name' | 'chil
 export function DesignIcon({ name, label, className = '', ...props }: DesignIconProps) {
   const nodes = SHARED_ICON_NODES[name]
   if (!nodes) throw new Error(`Unknown shared icon: ${name}`)
-  return <svg viewBox={SHARED_ICON_VIEW_BOX} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}
+  return <svg viewBox={SHARED_ICON_VIEW_BOX} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}
     className={`agentic-icon ${className}`} aria-hidden={undefined} role="img" aria-label={props['aria-label'] || label || name}>
     {nodes.map(([tag, attributes], index) => React.createElement(tag as string, { ...attributes as object, key: index }))}
   </svg>
