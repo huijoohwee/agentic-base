@@ -1,11 +1,39 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
-import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, type MenuIndicatorKind } from './dropdownMenu'
+import { bindDropdownPopup, bindMenuKeyboard, MENU_CLASS_NAME, menuOptionClassName, MENU_INDICATOR_PATHS, menuIndicatorStyle, SHARED_ICON_NODES, SHARED_ICON_VIEW_BOX, type SharedIconName, type MenuIndicatorKind } from './dropdownMenu'
 
 function MenuIndicator({ kind, label }: { kind: MenuIndicatorKind; label: string }) {
   return <svg className="agentic-menu-mark" style={menuIndicatorStyle(kind)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" role="img" aria-label={label}>
     <path d={MENU_INDICATOR_PATHS[kind]} />
   </svg>
+}
+
+export type DesignIconProps = Omit<React.SVGProps<SVGSVGElement>, 'name' | 'children'> & { name: SharedIconName; label?: string }
+export function DesignIcon({ name, label, className = '', ...props }: DesignIconProps) {
+  const nodes = SHARED_ICON_NODES[name]
+  if (!nodes) throw new Error(`Unknown shared icon: ${name}`)
+  return <svg viewBox={SHARED_ICON_VIEW_BOX} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}
+    className={`agentic-icon ${className}`} aria-hidden={undefined} role="img" aria-label={props['aria-label'] || label || name}>
+    {nodes.map(([tag, attributes], index) => React.createElement(tag as string, { ...attributes as object, key: index }))}
+  </svg>
+}
+export const DESIGN_ICONS = Object.fromEntries(Object.keys(SHARED_ICON_NODES).map(name => [name,
+  (props: Omit<DesignIconProps, 'name'>) => <DesignIcon {...props} name={name as SharedIconName} />,
+])) as Record<SharedIconName, React.ComponentType<Omit<DesignIconProps, 'name'>>>
+
+export type KeyTypeValueRowProps = {
+  keyNode: React.ReactNode; typeNode?: React.ReactNode; valueNode: React.ReactNode
+  align?: 'center' | 'start'; className?: string; keyClassName?: string; typeClassName?: string; valueClassName?: string
+  id?: string; dataKgAnchor?: string; onClick?: () => void
+}
+/** One semantic KTV structure. Layout and typography come from the central CSS projection. */
+export function KeyTypeValueRow({ keyNode, typeNode, valueNode, align = 'center', className = '', keyClassName = '', typeClassName = '', valueClassName = '', id, dataKgAnchor, onClick }: KeyTypeValueRowProps) {
+  return <section className="agentic-ktv-container"><dl id={id} data-panel-field-row="true" data-kg-anchor={dataKgAnchor} data-align={align}
+    className={`agentic-ktv-row ${className}`} onClick={onClick}>
+    <dt className={`agentic-ktv-key ${keyClassName}`}>{keyNode}</dt>
+    <dd className={`agentic-ktv-type ${typeClassName}`}>{typeNode ?? <DesignIcon name="Type" label="Text" />}</dd>
+    <dd className={`agentic-ktv-value ${valueClassName}`}>{valueNode}</dd>
+  </dl></section>
 }
 
 export type SemanticSelectOption = { value: string; label: string; disabled: boolean; group?: string }

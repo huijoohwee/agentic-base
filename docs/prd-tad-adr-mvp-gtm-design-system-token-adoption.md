@@ -1,19 +1,19 @@
 ---
 title: "Shared View Token Adoption"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.4.7"
-revision: "0.4.7"
+version: "0.4.8"
+revision: "0.4.8"
 date: "2026-10-29"
-updated_date: "2026-11-07"
+updated_date: "2026-11-08"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "BASE-DESIGN-TOKEN-ADOPTION-001"
-prd_revision: "0.4.7"
-tad_revision: "0.4.7"
-adr_revision: "0.4.7"
-mvp_revision: "0.4.7"
-gtm_revision: "0.4.7"
+prd_revision: "0.4.8"
+tad_revision: "0.4.8"
+adr_revision: "0.4.8"
+mvp_revision: "0.4.8"
+gtm_revision: "0.4.8"
 local_rung: "spec-complete"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -202,3 +202,7 @@ Use shared-ui v0.6.0 for menu surfaces, option spacing, selection, hover/focus a
 Field and native-select popups use the same Base outside-dismiss helper as Graph host overlays. It observes mousedown after the pointer interception opportunity, waits until dispatch completes to honor cancelled inspection gestures, and cancels pending callbacks on disposal. Keyboard selection, ordinary outside dismissal, touch compatibility mouse events and semantic hit targets remain covered; native annotation-picker behavior requires live observation.
 
 Base now consumes the existing central nine-role profile as an exact pinned CSS projection, including shadow-host defaults. Authored browser CSS contains no declarations or literal fallbacks for those registered roles. Shared UI metrics remain in their existing central profile. The build verifies both immutable profile digests and emits one offline stylesheet; rollback restores the prior pins/assets together without clearing data. No schema or Production effect.
+
+### Shared KTV and icon renderer (0.4.8)
+
+Existing controls export one semantic KTV row and named SVG renderer, consuming the central 61-icon library and shared layout projection at `dcb183ea6f7f040bcf25cd31f2867acb97857de5`. Graph retains only product labels/aliases; native/React menus use the same pinned chevron/check artwork. Runtime CSS owns responsive tracks, spacing and typography; adapters supply data and behavior. Pin validation rejects artwork drift. Rollback restores the prior producer pin/assets together without changing user records; no Production activation is selected.
