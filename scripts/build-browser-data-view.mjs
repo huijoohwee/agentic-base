@@ -22,6 +22,10 @@ function readCentralProjection(id) {
   }
   return { cssPath, pinPath, css }
 }
+const iconPath = `${sourceRoot}/controls/icons.json`, iconPinPath = `${sourceRoot}/controls/icons.pin.json`
+const iconPin = JSON.parse(fs.readFileSync(path.join(root, iconPinPath), 'utf8'))
+if (iconPin.owner !== 'github.com/huijoohwee/agentic-design-system' || !/^[a-f0-9]{40}$/.test(iconPin.revision)
+  || iconPin.sha256 !== digest(fs.readFileSync(path.join(root, iconPath)))) throw new Error('Central icon library pin drift.')
 const sharedUi = readCentralProjection('shared-ui'), baseProfile = readCentralProjection('base')
 const built = await build({
   absWorkingDir: root,
@@ -50,7 +54,7 @@ const dropdown = await build({ absWorkingDir: root, entryPoints: [sourceRoot + '
 if (dropdown.outputFiles.length !== 1 || Object.values(dropdown.metafile.outputs).some(output => output.imports.length)) throw new Error('Dropdown browser artifact must be self-contained.')
 const inputRows = [...Object.keys(built.metafile.inputs), ...Object.keys(dropdown.metafile.inputs)]
   .filter(relative => relative.startsWith(`${sourceRoot}/`))
-  .concat(`${sourceRoot}/browser/browserDataView.css`, sharedUi.cssPath, sharedUi.pinPath, baseProfile.cssPath, baseProfile.pinPath)
+  .concat(iconPath, iconPinPath, `${sourceRoot}/browser/browserDataView.css`, sharedUi.cssPath, sharedUi.pinPath, baseProfile.cssPath, baseProfile.pinPath)
   .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
   .sort()
   .map(relative => {

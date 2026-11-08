@@ -77,3 +77,21 @@ test('Base inherits centrally projected roles without local registered defaults'
   }
   assert.ok(artifactCss.includes(baseCss))
 })
+
+
+test('KTV and icons render one semantic row with a visible named Type glyph', async () => {
+  const { build } = await import('esbuild')
+  const result = await build({ stdin: { contents: `import React from 'react'; import { renderToStaticMarkup } from 'react-dom/server'; import { KeyTypeValueRow, DesignIcon } from './packages/views-react/src/controls/MenuControls'; export const html=renderToStaticMarkup(React.createElement(KeyTypeValueRow,{keyNode:'Limit',typeNode:React.createElement(DesignIcon,{name:'Hash',label:'Number'}),valueNode:React.createElement('input',{type:'number',value:8,readOnly:true})}));`, resolveDir: new URL('..', import.meta.url).pathname, loader: 'tsx' }, bundle: true, write: false, format: 'esm', platform: 'node', packages: 'external' })
+  const compiled = new URL('../node_modules/.cache/ktv-render-test.mjs', import.meta.url)
+  fs.mkdirSync(new URL('.', compiled), { recursive: true }); fs.writeFileSync(compiled, result.outputFiles[0].contents)
+  const { html } = await import(compiled.href)
+  assert.equal((html.match(/<dl\b/g) || []).length, 1)
+  assert.match(html, /<dt[^>]*>Limit<\/dt>/)
+  assert.match(html, /<dd[^>]*agentic-ktv-type[^>]*><svg[^>]*role="img"[^>]*aria-label="Number"/)
+  assert.doesNotMatch(html, /aria-hidden|<div/)
+  assert.match(html, /<dd[^>]*agentic-ktv-value[^>]*><input/)
+  const library = JSON.parse(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url)))
+  const iconPin = JSON.parse(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.pin.json', import.meta.url)))
+  assert.equal(Object.keys(library.icons).length, 61)
+  assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url))).digest('hex'), iconPin.sha256)
+})

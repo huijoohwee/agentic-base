@@ -4,3 +4,7 @@ export { enhanceSelect, enhanceSelects } from './nativeSelect'
 export type { NativeSelectHandle } from './nativeSelect'
 export { DROPDOWN_OPEN_EVENT, MENU_CLASS_NAME, MENU_OPTION_CLASS_NAME, menuOptionClassName, bindMenuKeyboard, bindDropdownPopup, bindOutsideDismiss, positionDropdownMenu, emitDropdownOpen, subscribeDropdownOpen, readDropdownOpenEventDetail } from './dropdownMenu'
 export type { DropdownOpenDetail } from './dropdownMenu'
+
+export { DesignIcon, DESIGN_ICONS, KeyTypeValueRow } from './MenuControls'
+export type { DesignIconProps, KeyTypeValueRowProps } from './MenuControls'
+export type { SharedIconName } from './dropdownMenu'

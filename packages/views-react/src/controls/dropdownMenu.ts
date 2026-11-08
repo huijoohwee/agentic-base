@@ -1,9 +1,13 @@
+import iconLibrary from './icons.json'
 export const DROPDOWN_OPEN_EVENT = 'agentic:dropdown-open'
 export const MENU_CLASS_NAME = 'agentic-menu'
 export const MENU_OPTION_CLASS_NAME = 'agentic-form-control agentic-menu-option'
 export type DropdownOpenDetail = { sourceId: string }
 
-export const MENU_INDICATOR_PATHS = { chevron: 'm6 9 6 6 6-6', check: 'M20 6 9 17l-5-5' } as const
+export type SharedIconName = keyof typeof iconLibrary.icons
+export const SHARED_ICON_NODES = iconLibrary.icons as unknown as Record<SharedIconName, readonly (readonly [string, Record<string, string>])[]>
+export const SHARED_ICON_VIEW_BOX = iconLibrary.viewBox
+export const MENU_INDICATOR_PATHS = { chevron: SHARED_ICON_NODES.ChevronDown[0][1].d, check: SHARED_ICON_NODES.Check[0][1].d } as const
 export type MenuIndicatorKind = keyof typeof MENU_INDICATOR_PATHS
 export function menuIndicatorStyle(kind: MenuIndicatorKind) {
   const size = `var(--agentic-icon-size-${kind === 'chevron' ? 'compact' : 'default'})`
