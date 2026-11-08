@@ -1,4 +1,4 @@
-import iconLibrary from './icons.json'
+import iconLibrary from './icons.json' with { type: 'json' }
 export const DROPDOWN_OPEN_EVENT = 'agentic:dropdown-open'
 export const MENU_CLASS_NAME = 'agentic-menu'
 export const MENU_OPTION_CLASS_NAME = 'agentic-form-control agentic-menu-option'

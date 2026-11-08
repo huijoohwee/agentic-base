@@ -48,13 +48,13 @@
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
-      "bytes": 10639,
-      "sha256": "0c3d87169c41e9c9ed469f5ff3bf34291a87786994b82ac8b3af16c5a98bce9e"
+      "bytes": 10642,
+      "sha256": "10785519b6561198dcde9e44ece66b4b7f1097ea8e2e3d4cb15d5fe6c8ac2dff"
     },
     {
       "path": "packages/views-react/src/controls/dropdownMenu.ts",
-      "bytes": 9101,
-      "sha256": "3feafd37f996d59035e5769281b75167786cd2ec5bd86c768814a9a39834142c"
+      "bytes": 9123,
+      "sha256": "1d72a8bd745d5e45f88380b458e55fc0c468259ce5f90d302abf565ba505c138"
     },
     {
       "path": "packages/views-react/src/controls/icons.json",
@@ -68,8 +68,8 @@
     },
     {
       "path": "packages/views-react/src/controls/nativeSelect.ts",
-      "bytes": 8838,
-      "sha256": "4cc69f2d265dccd81beb499613c8cf34118a92f6415982e831f4a0f2ad445960"
+      "bytes": 8841,
+      "sha256": "46c36f2c07008183d05f9d29c9a7d9b5fa1a0e70de8d6ccdba60197b506a5d69"
     },
     {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
@@ -141,7 +141,7 @@
     {
       "path": "dropdown-menus.js",
       "bytes": 21008,
-      "sha256": "a0b2eb46e1a87d246ac34887b0c42ee4147bebd444dbc645c1426dd812d89baa"
+      "sha256": "f67200ab6b5e68b5e9732e0734754c3ae79ad464bcc259e72940f83e4d427741"
     },
     {
       "path": "browser-data-view.css",

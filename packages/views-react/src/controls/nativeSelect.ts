@@ -1,4 +1,4 @@
-import { bindDropdownPopup, MENU_CLASS_NAME, menuOptionClassName, createMenuIndicator } from './dropdownMenu'
+import { bindDropdownPopup, MENU_CLASS_NAME, menuOptionClassName, createMenuIndicator } from './dropdownMenu.js'
 
 export type NativeSelectHandle = { refresh(): void; destroy(): void }
 const mounted = new WeakMap<HTMLSelectElement, NativeSelectHandle>()
