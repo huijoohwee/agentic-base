@@ -270,11 +270,6 @@ function DashboardPreview() {
     if (id === 'expanded' && typeof value === 'boolean') setWidgetExpanded(value)
     if (id === 'visible' && typeof value === 'boolean') setWidgetVisible(value)
   }
-  const accentClassNameByRole = {
-    primary: 'border-sky-500/40',
-    secondary: 'border-violet-500/40',
-    success: 'border-emerald-500/40',
-  } as const
   const actionClassName = 'rounded border px-2 py-1 text-xs'
   const paletteToolbar = (title: string) => ({ visible, onFlip }: { visible: boolean; onFlip: () => void }) => visible
     ? <button type="button" data-agentic-base-dashboard-action="flip" className={actionClassName} onClick={onFlip}>Configure {title}</button>
@@ -316,13 +311,12 @@ function DashboardPreview() {
     observation="Local preview snapshot · data and commands are host supplied."
     overview={<DashboardCardGrid
       ariaLabel="Agent Mission dashboard summary"
-      accentClassNameByRole={accentClassNameByRole}
       eyebrowClassName="uppercase tracking-wide"
       descriptionClassName="text-[color:var(--kg-text-secondary)]"
       cards={[
-        { id: 'index', accent: 'primary', eyebrow: <span className="text-sky-500">01 · INDEX</span>, title: 'No linked sources', description: 'Load a retained codebase graph index.', actions: <button type="button" className={actionClassName}>Index manifest</button> },
-        { id: 'traverse', accent: 'secondary', eyebrow: <span className="text-violet-500">02 · TRAVERSE & CONTEXTUALIZE</span>, title: 'Source knowledge graph', description: 'Start with highly connected nodes, then load exact-snapshot neighbors on demand.', actions: <button type="button" className={actionClassName}>Explore codebase · D3</button> },
-        { id: 'observe', accent: 'success', eyebrow: <span className="text-emerald-500">03 · OBSERVE & EVALUATE</span>, title: 'failed · unevaluated', description: '2/2 retained spans · 1 worktree · Partial trace', content: 'Evaluation score: Unknown', actions: <><button type="button" className={actionClassName}>Mission manifest</button><button type="button" className={actionClassName}>Evaluation evidence</button></> },
+        { id: 'index', accent: 'primary', eyebrow: '01 · INDEX', title: 'No linked sources', description: 'Load a retained codebase graph index.', actions: <button type="button" className={actionClassName}>Index manifest</button> },
+        { id: 'traverse', accent: 'secondary', eyebrow: '02 · TRAVERSE & CONTEXTUALIZE', title: 'Source knowledge graph', description: 'Start with highly connected nodes, then load exact-snapshot neighbors on demand.', actions: <button type="button" className={actionClassName}>Explore codebase · D3</button> },
+        { id: 'observe', accent: 'success', eyebrow: '03 · OBSERVE & EVALUATE', title: 'failed · unevaluated', description: '2/2 retained spans · 1 worktree · Partial trace', content: 'Evaluation score: Unknown', actions: <><button type="button" className={actionClassName}>Mission manifest</button><button type="button" className={actionClassName}>Evaluation evidence</button></> },
       ]}
     />}
     metrics={<div className="grid grid-cols-1 gap-3 sm:grid-cols-3" role="group" aria-label="Metric values">

@@ -1,4 +1,5 @@
 import React from 'react'
+import '../browser/shared-ui-profile.css'
 
 export type DashboardCardAccent = 'primary' | 'secondary' | 'success' | 'warning' | 'neutral'
 export type DashboardCard = {
@@ -13,6 +14,7 @@ export type DashboardCard = {
 
 export type DashboardCardGridProps = {
   ariaLabel: string
+  headingLevel?: 3 | 4
   cards: readonly DashboardCard[]
   columns?: 2 | 3 | 4
   className?: string
@@ -23,16 +25,11 @@ export type DashboardCardGridProps = {
   accentClassNameByRole?: Partial<Record<DashboardCardAccent, string>>
 }
 
-const GRID_COLUMNS: Record<NonNullable<DashboardCardGridProps['columns']>, string> = {
-  2: 'grid-cols-1 sm:grid-cols-2',
-  3: 'grid-cols-1 lg:grid-cols-3',
-  4: 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4',
-}
-
 export function DashboardCardGrid({
   ariaLabel,
   cards,
   columns = 3,
+  headingLevel = 3,
   className = '',
   cardClassName = '',
   eyebrowClassName = '',
@@ -40,17 +37,18 @@ export function DashboardCardGrid({
   descriptionClassName = '',
   accentClassNameByRole = {},
 }: DashboardCardGridProps) {
-  return <ol aria-label={ariaLabel} className={['grid min-w-0 gap-3', GRID_COLUMNS[columns], className].filter(Boolean).join(' ')}>
-    {cards.map(card => <li key={card.id} className={[
-      'min-w-0 rounded border p-3',
+  const Heading = headingLevel === 4 ? 'h4' : 'h3'
+  return <section className="agentic-dashboard-region"><ol aria-label={ariaLabel} data-columns={columns} className={['agentic-dashboard-grid', className].filter(Boolean).join(' ')}>
+    {cards.map(card => <li key={card.id} data-accent={card.accent} className={[
+      'agentic-dashboard-card',
       accentClassNameByRole[card.accent || 'neutral'] || '',
       cardClassName,
     ].filter(Boolean).join(' ')}>
-      {card.eyebrow != null ? <p className={['text-xs', eyebrowClassName].filter(Boolean).join(' ')}>{card.eyebrow}</p> : null}
-      <h3 className={['font-semibold', titleClassName].filter(Boolean).join(' ')}>{card.title}</h3>
-      {card.description != null ? <p className={['py-1 text-xs', descriptionClassName].filter(Boolean).join(' ')}>{card.description}</p> : null}
-      {card.content != null ? <div className="min-w-0 pb-2 text-xs">{card.content}</div> : null}
-      {card.actions != null ? <div className="flex flex-wrap gap-2">{card.actions}</div> : null}
+      {card.eyebrow != null ? <p className={['agentic-dashboard-eyebrow', eyebrowClassName].filter(Boolean).join(' ')}>{card.eyebrow}</p> : null}
+      <Heading className={['font-semibold', titleClassName].filter(Boolean).join(' ')}>{card.title}</Heading>
+      {card.description != null ? <p className={['agentic-dashboard-description', descriptionClassName].filter(Boolean).join(' ')}>{card.description}</p> : null}
+      {card.content != null ? <div className="agentic-dashboard-detail">{card.content}</div> : null}
+      {card.actions != null ? <div className="agentic-dashboard-actions">{card.actions}</div> : null}
     </li>)}
-  </ol>
+  </ol></section>
 }
