@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { createHash } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
-import { build, version } from 'esbuild'
+import { build, transform, version } from 'esbuild'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = 'packages/views-react/src'
@@ -68,7 +68,9 @@ const files = new Map([
     sharedUi.css,
     baseProfile.css,
     Buffer.from('\n'),
-    fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`)),
+    Buffer.from((await transform(fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`), 'utf8'), {
+      loader: 'css', minifyWhitespace: true, legalComments: 'inline',
+    })).code),
   ])],
 ])
 for (const [name, bytes] of files) {
