@@ -12,9 +12,9 @@ const css = await readFile(resolve(root, 'packages/views-react/src/browser/share
 test('shared control border projection matches its central pin', () => {
   const profile = pin.profile;
   const digest = createHash('sha256').update(css).digest('hex');
-  assert.equal(profile.sourceRevision, '5b568d97dd441c15b8ddef9be75de12394490df8');
-  assert.equal(profile.registryRevision, 'b25dcb54572d4af0e5964f69360153da63fc0e96');
-  assert.equal(profile.sourceSha256, 'sha256:86998f0f397c49544f4f4726d5b842bee03d02c8d98794d3db8ce34534a67c04');
+  assert.equal(profile.sourceRevision, '30e403a55bd9f5b6c7e58a7cc7de632e1b2714ae');
+  assert.equal(profile.registryRevision, '058c56f18f2dab16b46a20ac12cdc4243612bf28');
+  assert.equal(profile.sourceSha256, 'sha256:26e70f6d765e97d4dae02175d312c50b9038b1448d5710b8c78102ae4493bba3');
   assert.equal(profile.projectionSha256, `sha256:${digest}`);
   assert.match(css, new RegExp(`Generated from agentic-design-system@${profile.sourceRevision}; profile sha256 ${profile.sourceSha256.slice(7)}`));
 });
