@@ -32,9 +32,10 @@
     "doctor": "agentic-os doctor",
     "lane": "agentic-os start",
     "release:common": "agentic-os release-common",
-    "check": "node scripts/check-syntax.mjs && node scripts/compact-json.mjs --check && tsc --noEmit -p packages/views-react/tsconfig.json && node scripts/build-browser-data-view.mjs --check && node --test && node scripts/evidence.mjs && npm --prefix node_modules/agentic-os run evals",
+    "check": "node scripts/check-syntax.mjs && node scripts/check-demo-design-tokens.mjs && node scripts/compact-json.mjs --check && tsc --noEmit -p packages/views-react/tsconfig.json && node scripts/build-browser-data-view.mjs --check && node --test && node scripts/evidence.mjs && npm --prefix node_modules/agentic-os run evals",
     "build:browser-data-view": "node scripts/build-browser-data-view.mjs --write",
     "check:browser-data-view": "node scripts/build-browser-data-view.mjs --check",
+    "check:demo-design-tokens": "node scripts/check-demo-design-tokens.mjs",
     "dev": "node scripts/dev-server.mjs"
   },
   "peerDependencies": {
