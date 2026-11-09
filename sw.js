@@ -1,4 +1,4 @@
-const CACHE = 'agentic-base-app-v35';
+const CACHE = 'agentic-base-app-v36';
 const ASSETS = [
   '/?v=32', '/demo/?v=32', '/demo/index.html?v=32', '/demo/app.mjs?v=31', '/demo/styles.css?v=32',
   '/demo/browser-data-view.js?v=31', '/demo/dropdown-menus.js?v=31', '/demo/browser-data-view.css?v=31', '/demo/manifest.webmanifest?v=32',
