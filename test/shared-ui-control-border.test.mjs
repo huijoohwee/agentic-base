@@ -8,15 +8,29 @@ import test from 'node:test';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.pin.json'), 'utf8'));
 const css = await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.css'), 'utf8');
+const panelCss = await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.css'), 'utf8');
+const panelPin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.pin.json'), 'utf8'));
 
 test('shared control border projection matches its central pin', () => {
   const profile = pin.profile;
   const digest = createHash('sha256').update(css).digest('hex');
-  assert.equal(profile.sourceRevision, '30e403a55bd9f5b6c7e58a7cc7de632e1b2714ae');
-  assert.equal(profile.registryRevision, '058c56f18f2dab16b46a20ac12cdc4243612bf28');
-  assert.equal(profile.sourceSha256, 'sha256:26e70f6d765e97d4dae02175d312c50b9038b1448d5710b8c78102ae4493bba3');
+  assert.equal(profile.sourceRevision, '267cdb31047b02d4f54ea6708fb2518a8a2a57f4');
+  assert.equal(profile.registryRevision, 'f9e058d7b3be3acc411634ad84695d6d642f1cd2');
+  assert.equal(profile.sourceSha256, 'sha256:6bc322f50d5c6cdfb82dc8b472e0ea3a440cb51d1379aadd0a204738c615d2c5');
   assert.equal(profile.projectionSha256, `sha256:${digest}`);
   assert.match(css, new RegExp(`Generated from agentic-design-system@${profile.sourceRevision}; profile sha256 ${profile.sourceSha256.slice(7)}`));
+});
+
+test('FloatingPanel radius is read only from the Design System shared profile', () => {
+  assert.equal(pin.metrics.floatingPanelRadius, 8);
+  assert.match(css, /--agentic-floating-panel-radius: 8px;/u);
+  assert.equal((css.match(/--agentic-floating-panel-radius\s*:/gu) ?? []).length, 1);
+  const panelRule = panelCss.match(/\.agentic-base-floating-panel\s*\{[^}]+\}/u)?.[0] ?? '';
+  assert.match(panelRule, /border-radius:\s*var\(--agentic-floating-panel-radius\)/u);
+  assert.doesNotMatch(panelRule, /--island-radius|--agentic-control-radius/u);
+  assert.doesNotMatch(panelCss, /--agentic-floating-panel-radius\s*:/u);
+  assert.equal(panelPin.revision, pin.profile.registryRevision);
+  assert.equal(createHash('sha256').update(panelCss).digest('hex'), panelPin.sha256);
 });
 
 test('native form fields and enhanced selects use one shared border declaration', () => {
