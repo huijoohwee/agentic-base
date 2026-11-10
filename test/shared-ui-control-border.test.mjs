@@ -7,6 +7,7 @@ import test from 'node:test';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.pin.json'), 'utf8'));
+const migration = JSON.parse(await readFile(resolve(root, 'packages/views-react/migration-source.json'), 'utf8'));
 const css = await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.css'), 'utf8');
 const panelCss = await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.css'), 'utf8');
 const panelPin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.pin.json'), 'utf8'));
@@ -29,7 +30,7 @@ test('FloatingPanel radius is read only from the Design System shared profile', 
   assert.match(panelRule, /border-radius:\s*var\(--agentic-floating-panel-radius\)/u);
   assert.doesNotMatch(panelRule, /--island-radius|--agentic-control-radius/u);
   assert.doesNotMatch(panelCss, /--agentic-floating-panel-radius\s*:/u);
-  assert.equal(panelPin.revision, pin.profile.registryRevision);
+  assert.equal(panelPin.revision, migration.sourceSnapshots['src/panels/floatingPanelShell.css'].commit);
   assert.equal(createHash('sha256').update(panelCss).digest('hex'), panelPin.sha256);
 });
 

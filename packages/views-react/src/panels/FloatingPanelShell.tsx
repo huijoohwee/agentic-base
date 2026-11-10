@@ -1,31 +1,18 @@
 import React from 'react'
+import type { FloatingPanelShellProps } from './floatingPanelContract'
 import '../browser/shared-ui-profile.css'
 import './floatingPanelShell.css'
 
-export type FloatingPanelShellProps = {
-  rootClassName?: string
-  rootStyle?: React.CSSProperties
-  panelStyle?: React.CSSProperties
-  ariaLabel?: string
-  minimized?: boolean
-  pinned?: boolean
-  rowHeight?: string
-  fieldLine?: string
-  onPointerDownCapture?: React.PointerEventHandler<HTMLElement>
-  onFocusCapture?: React.FocusEventHandler<HTMLElement>
-  panelLayer?: string
-  onHeaderPointerDown?: React.PointerEventHandler<HTMLElement>
-  header: React.ReactNode
-  children: React.ReactNode
-}
+export type { FloatingPanelShellProps } from './floatingPanelContract'
 
 /** Shared floating panel chrome; the consumer owns placement, drag policy, and view state. */
 export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShellProps>(function FloatingPanelShell({
-  rootClassName = '', rootStyle, panelStyle, ariaLabel = 'Floating panel', minimized = false,
+  rootPlacement = 'flow', rootStyle, panelStyle, ariaLabel = 'Floating panel', minimized = false,
   pinned = true, rowHeight, fieldLine, onHeaderPointerDown, onPointerDownCapture, onFocusCapture,
   panelLayer, header, children,
 }, ref) {
-  return <section className={['agentic-base-floating-panel-root', rootClassName].filter(Boolean).join(' ')} style={rootStyle}
+  return <section className="agentic-base-floating-panel-root" style={rootStyle}
+    data-agentic-floating-panel-placement={rootPlacement === 'flow' ? undefined : rootPlacement}
     data-agentic-base-panel-layer={panelLayer} onPointerDownCapture={onPointerDownCapture} onFocusCapture={onFocusCapture}>
     <aside ref={ref} className="agentic-base-floating-panel agentic-form-controls" style={panelStyle}
       data-agentic-base-floating-panel="true" data-agentic-base-panel-minimized={minimized ? 'true' : undefined}

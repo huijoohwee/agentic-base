@@ -4,7 +4,7 @@
 
 ## FloatingPanel ownership
 
-Base pins the Design System `site/floating-panel.css` file byte-for-byte and consumes the shared UI profile projection. The canonical `overlay.floating.radius` token supplies the 8px overlay radius. The shell has no Graph `--island-radius` fallback, product-specific radius declaration, or consumer override. Base continues to own its React adapter and host placement behavior; style changes begin in the Design System.
+Base pins the Design System `site/floating-panel.css` and `site/floating-panel-contract.d.ts` projections by exact revision and digest. The shell, close control, and controlled tab rail consume those shared props and styles; consumer classes, arbitrary icon nodes, icon sizing, stroke, tab selection variants, and product panel CSS overrides are excluded. Placement is selected through the shared `rootPlacement` values. The canonical `overlay.floating.radius` token supplies the 8px overlay radius. Base continues to own its React adapter and host placement behavior; style changes begin in the Design System.
 
 The MVP provides:
 
