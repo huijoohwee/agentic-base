@@ -15,6 +15,23 @@ npm run dev
 
 The root workflow demo's IndexedDB check is at `http://127.0.0.1:4173/test-browser/idb-atomicity.html`; it injects a write failure against a temporary database, verifies the committed revision remains intact, and deletes the temporary database.
 
+## E2E storage boundaries
+
+The demo's default IndexedDB (`agentic-base-local-v1`) holds origin-local records and is user data.
+Generic cleanup and source rollback must preserve it. The atomicity check uses a per-run
+`crypto.randomUUID()` database name and deletes only that exact temporary database; new browser E2E
+must follow the same run-owned isolation instead of clearing an origin or browser profile.
+
+Keep `packages/views-react/dist` and its source manifest as the generated offline distribution
+artifact. Rebuild and compare it through `npm run build:browser-data-view` and
+`npm run check:browser-data-view`; do not retire it as a cache. Keep the active dependency install
+bound to `package-lock.json` for offline development. Use the shared Agentic OS storage owner for
+one exact retained quarantine target when measured bytes justify compression; size, age and the
+`node_modules` name alone do not authorize retirement. Record validation wall time separately from
+allocated bytes; a browser pass is functional evidence, not a storage benchmark or data backup. For
+command-level CPU/RSS, use the shared Agentic OS receipt when it owns the run; do not infer browser
+origin storage from process memory or report unavailable host metrics as zero.
+
 The GitHub Actions workflow runs the same check and writes a compact source-check receipt to the job summary. It does not publish a package, upload customer data, or provision a hosted service. It uses the included standard runner quota, one pinned checkout action, and no dependency cache or artifact upload.
 
 The exact Git commit is the consumer distribution path; no registry publication occurs. The source-rights review and owner-selected MIT license cover this repository's owner-authored materials only; third-party components retain their own notices and licenses. `package.json` remains private to disable registry publication. Graph and Shoply Actions use separate read-only keys. Pin a full Base commit SHA; Git access method follows the repository's current visibility and consumer policy.

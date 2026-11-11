@@ -57,7 +57,7 @@
     "@types/d3": "7.4.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/29004b5ec299eb8ddda1485508099c0e186c130f",
+    "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/dd96b3d319aad5b26fc92be0d187e670a564ff58",
     "d3": "7.9.0",
     "esbuild": "0.25.12",
     "lucide-react": "0.562.0",
