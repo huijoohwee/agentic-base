@@ -29,7 +29,7 @@ test('shared panel radius is read only from the Design System shared profile', (
   assert.match(panelRule, /border-radius:\s*var\(--agentic-panel-radius\)/u);
   assert.doesNotMatch(panelRule, /--island-radius|--agentic-control-radius|--agentic-floating-panel-radius/u);
   assert.doesNotMatch(panelCss, /--agentic-floating-panel-radius\s*:/u);
-  assert.equal(panelPin.revision, 'bc5b3503e83f2029c79efdff9b01b3b90f496625');
+  assert.equal(panelPin.revision, 'a3d30260ab31b1067fe3f9ee5c6fce5fba684bc9');
   assert.equal(createHash('sha256').update(panelCss).digest('hex'), panelPin.sha256);
 });
 
