@@ -9,11 +9,8 @@ export type FloatingPanelPanelStyle = Pick<React.CSSProperties,
   | 'maxWidth' | 'maxHeight' | 'zIndex'
 >
 
-/** The shell accepts only placement plus the named host-token bridge variables. */
-export type FloatingPanelRootStyle = FloatingPanelPanelStyle & Partial<Record<
-  | '--base-accent' | '--base-text-primary' | '--base-text-secondary' | '--base-border'
-  | '--base-panel' | '--base-shadow-overlay' | '--base-toolbar-compact-padding', string
->>
+/** The shell accepts placement and geometry only; visuals come from the shared profile. */
+export type FloatingPanelRootStyle = FloatingPanelPanelStyle
 
 export interface FloatingPanelShellProps {
   rootPlacement?: FloatingPanelRootPlacement

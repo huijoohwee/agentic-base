@@ -7,7 +7,6 @@ import test from 'node:test';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.pin.json'), 'utf8'));
-const migration = JSON.parse(await readFile(resolve(root, 'packages/views-react/migration-source.json'), 'utf8'));
 const css = await readFile(resolve(root, 'packages/views-react/src/browser/shared-ui-profile.css'), 'utf8');
 const panelCss = await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.css'), 'utf8');
 const panelPin = JSON.parse(await readFile(resolve(root, 'packages/views-react/src/panels/floatingPanelShell.pin.json'), 'utf8'));
@@ -15,22 +14,22 @@ const panelPin = JSON.parse(await readFile(resolve(root, 'packages/views-react/s
 test('shared control border projection matches its central pin', () => {
   const profile = pin.profile;
   const digest = createHash('sha256').update(css).digest('hex');
-  assert.equal(profile.sourceRevision, '267cdb31047b02d4f54ea6708fb2518a8a2a57f4');
-  assert.equal(profile.registryRevision, 'f9e058d7b3be3acc411634ad84695d6d642f1cd2');
-  assert.equal(profile.sourceSha256, 'sha256:6bc322f50d5c6cdfb82dc8b472e0ea3a440cb51d1379aadd0a204738c615d2c5');
+  assert.equal(profile.sourceRevision, '60fc0c71de7a1fffa5f00957c78cdd9a28c5656c');
+  assert.equal(profile.registryRevision, 'c72ab37ff7e081ba8b4fb4bad1bee83f4f56e7ae');
+  assert.equal(profile.sourceSha256, 'sha256:13974bff2d509be4af80e607c91bbe3a31a76ad292f4813d0ac75b7e98045be8');
   assert.equal(profile.projectionSha256, `sha256:${digest}`);
   assert.match(css, new RegExp(`Generated from agentic-design-system@${profile.sourceRevision}; profile sha256 ${profile.sourceSha256.slice(7)}`));
 });
 
-test('FloatingPanel radius is read only from the Design System shared profile', () => {
+test('shared panel radius is read only from the Design System shared profile', () => {
   assert.equal(pin.metrics.floatingPanelRadius, 8);
   assert.match(css, /--agentic-floating-panel-radius: 8px;/u);
   assert.equal((css.match(/--agentic-floating-panel-radius\s*:/gu) ?? []).length, 1);
-  const panelRule = panelCss.match(/\.agentic-base-floating-panel\s*\{[^}]+\}/u)?.[0] ?? '';
-  assert.match(panelRule, /border-radius:\s*var\(--agentic-floating-panel-radius\)/u);
-  assert.doesNotMatch(panelRule, /--island-radius|--agentic-control-radius/u);
+  const panelRule = panelCss.match(/\.agentic-panel-surface,\s*\.agentic-base-floating-panel\s*\{[^}]+\}/u)?.[0] ?? '';
+  assert.match(panelRule, /border-radius:\s*var\(--agentic-panel-radius\)/u);
+  assert.doesNotMatch(panelRule, /--island-radius|--agentic-control-radius|--agentic-floating-panel-radius/u);
   assert.doesNotMatch(panelCss, /--agentic-floating-panel-radius\s*:/u);
-  assert.equal(panelPin.revision, migration.sourceSnapshots['src/panels/floatingPanelShell.css'].commit);
+  assert.equal(panelPin.revision, 'bc5b3503e83f2029c79efdff9b01b3b90f496625');
   assert.equal(createHash('sha256').update(panelCss).digest('hex'), panelPin.sha256);
 });
 

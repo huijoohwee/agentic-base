@@ -9,8 +9,8 @@ const demoRoot = join(root, 'demo')
 const panelPath = 'packages/views-react/src/panels/floatingPanelShell.css'
 const tokenPath = 'packages/views-react/src/browser/shared-ui-profile.css'
 const pinPath = 'packages/views-react/src/panels/floatingPanelShell.pin.json'
-const panelSelector = /\.agentic-(?:base-floating-panel(?:-[\w-]+)?|floating-panel-(?:tabs?|title|body|dock))|\[data-agentic-base-floating-panel/iu
-const panelToken = /--agentic-(?:floating-panel-radius|row-height(?:-touch)?|control-height(?:-touch)?|control-selected-(?:foreground|background)|control-focus-(?:width|offset))\s*:/u
+const panelSelector = /\.agentic-(?:base-floating-panel(?:-[\w-]+)?|floating-panel-(?:tabs?|title|body|dock)|panel-(?:surface|main(?:--(?:open|collapsed))?(?:-dock)?|bottom(?:-dock)?|header|title|body)|editor-workspace(?:-[\w-]+)?)|\[data-agentic-base-floating-panel/iu
+const panelToken = /--agentic-(?:panel-[\w-]+|floating-panel-(?:radius|layer|bottom-offset)|menu-edge-gap|row-height(?:-touch)?|control-height(?:-touch)?|control-selected-(?:foreground|background)|control-focus-(?:width|offset))\s*:/u
 const fail = message => { throw new Error(`FloatingPanel Design System check failed: ${message}`) }
 const digest = bytes => createHash('sha256').update(bytes).digest('hex')
 
