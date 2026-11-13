@@ -7,7 +7,7 @@
 .agentic-toolbar-dock {
   position: sticky;
   inset-block-start: 0;
-  z-index: calc(var(--agentic-floating-panel-layer, 4) - 1);
+  z-index: var(--agentic-toolbar-overlay-layer);
   display: grid;
   justify-items: center;
   min-inline-size: 0;
@@ -16,6 +16,7 @@
     var(--agentic-toolbar-inset) max(var(--agentic-toolbar-inset), env(safe-area-inset-left));
   pointer-events: none;
 }
+.agentic-toolbar-overlay-layer { z-index: var(--agentic-toolbar-overlay-layer); }
 /* Equal side tracks keep the toolbar centered when one action is hidden. */
 .agentic-toolbar-dock:has(> [data-dock-edge]) {
   grid-template-columns: var(--agentic-control-height) minmax(0, 1fr) var(--agentic-control-height);
@@ -76,10 +77,13 @@
   block-size: var(--agentic-control-height);
   padding: 0;
 }
-.agentic-toolbar-item:hover { background: var(--kg-panel-bg-hover, var(--agentic-base-hover, ButtonFace)); }
+.agentic-toolbar-item:hover { background: var(--agentic-control-hover-background); }
 .agentic-toolbar-item:is([aria-current], [aria-expanded=true], [aria-pressed=true]) {
   color: var(--agentic-control-selected-foreground);
   background: var(--agentic-control-selected-background);
+}
+.agentic-toolbar-item:is([aria-current], [aria-expanded=true], [aria-pressed=true]):hover {
+  background: var(--agentic-control-hover-background);
 }
 .agentic-toolbar-item:focus-visible {
   outline: var(--agentic-control-focus-width) solid var(--kg-accent, Highlight);

@@ -1,7 +1,8 @@
 {
   "owner": "github.com/huijoohwee/agentic-design-system",
-  "revision": "9a5826c5c2dff9ede8f5fe88da3a78a743a49034",
+  "revision": "1a8b23757e6ce2f7d18df4fe560a16d249615f7f",
   "path": "site/toolbar.css",
-  "sha256": "0bfb089e0f717c8bde20a5db76ce0a42c85502561aef24a067cd4787f2e127c8",
-  "iconsSha256": "aae52a4abcdf20186e08cab4533419295000013c3482709f004782c3fa093f05"
+  "sha256": "db161bb0de13e69a87212421addf71413b3af1742723abc2100009f4be1adc0e",
+  "runtimePath": "site/toolbar-icons.js",
+  "iconsSha256": "f304f25cdef7e054bdd9c62ca7e9f79959363c4e210c9cede0640609183a4471"
 }
