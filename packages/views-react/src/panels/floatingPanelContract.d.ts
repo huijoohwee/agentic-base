@@ -17,7 +17,6 @@ export interface FloatingPanelShellProps {
   rootStyle?: FloatingPanelRootStyle
   panelStyle?: FloatingPanelPanelStyle
   ariaLabel?: string
-  avoidBottomPanel?: boolean
   minimized?: boolean
   pinned?: boolean
   rowHeight?: string

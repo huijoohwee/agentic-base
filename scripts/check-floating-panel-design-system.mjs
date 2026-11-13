@@ -71,9 +71,9 @@ if (JSON.stringify(Object.keys(controls.panelControls ?? {}).sort()) !== JSON.st
   || !controlGroup.includes('className="agentic-panel-control-group"')
   || controlGroup.includes('className?: string')
   || !panelCss.toString('utf8').includes('.agentic-panel-control-group')
-  || !panelCss.toString('utf8').includes('[data-agentic-floating-panel-avoid-bottom="true"]')
-  || !panelCss.toString('utf8').includes('--agentic-floating-panel-available-height')
-  || !await readFile(join(sourceRoot, 'panels/FloatingPanelShell.tsx'), 'utf8').then(source => source.includes('avoidBottomPanel') && source.includes('--agentic-floating-panel-available-height') && source.includes("'[data-agentic-panel-kind=\"bottom\"]'"))
+  || panelCss.toString('utf8').includes('floating-panel-avoid-bottom')
+  || panelCss.toString('utf8').includes('floating-panel-available-height')
+  || await readFile(join(sourceRoot, 'panels/FloatingPanelShell.tsx'), 'utf8').then(source => source.includes('avoidBottomPanel') || source.includes('floating-panel-available-height'))
   || !closeButton.includes('<PanelControlButton control="close"')
   || /export interface FloatingPanelCloseButtonProps\s*\{[^}]*\blabel\s*:/su.test(await readFile(join(sourceRoot, 'panels/floatingPanelContract.d.ts'), 'utf8'))) {
   fail('panel controls must use the canonical semantic role map, one shared order/visibility adapter, and reject per-consumer labels')

@@ -179,8 +179,3 @@
     inline-size: min(var(--agentic-panel-width), calc(100vw - 2 * var(--agentic-menu-edge-gap)));
   }
 }
-
-/* A floating surface yields height to a registered BottomPanel so both headers remain usable. */
-.agentic-base-floating-panel-root[data-agentic-floating-panel-avoid-bottom="true"][data-agentic-floating-panel-placement="viewport-overlay"] > .agentic-base-floating-panel {
-  max-block-size: min(var(--agentic-panel-main-max-height), max(var(--agentic-row-height), calc(var(--agentic-floating-panel-available-height, 100dvh) - var(--agentic-panel-gap))));
-}
