@@ -3,7 +3,7 @@
   "package": "@agentic-base/views-react",
   "sourceContract": "agentic-base/browser-data-view/v1",
   "bundle": {
-    "esbuild": "0.28.2",
+    "esbuild": "0.25.12",
     "react": "18.3.1",
     "reactDom": "18.3.1",
     "format": "esm",
@@ -135,8 +135,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 241378,
-      "sha256": "c654976cc85b417fb839f07b04ce088d4282d72b1c94d348f2984fa09ec8bdcc"
+      "bytes": 241607,
+      "sha256": "d06136ba97942396399f795294ad4aa629dadf2fbad8b196a5db64e16a057311"
     },
     {
       "path": "dropdown-menus.js",
