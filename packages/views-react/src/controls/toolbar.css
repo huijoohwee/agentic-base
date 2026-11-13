@@ -7,7 +7,7 @@
 .agentic-toolbar-dock {
   position: sticky;
   inset-block-start: 0;
-  z-index: calc(var(--agentic-floating-panel-layer, 4) - 1);
+  z-index: var(--agentic-toolbar-overlay-layer);
   display: grid;
   justify-items: center;
   min-inline-size: 0;
@@ -16,6 +16,7 @@
     var(--agentic-toolbar-inset) max(var(--agentic-toolbar-inset), env(safe-area-inset-left));
   pointer-events: none;
 }
+.agentic-toolbar-overlay-layer { z-index: var(--agentic-toolbar-overlay-layer); }
 /* Equal side tracks keep the toolbar centered when one action is hidden. */
 .agentic-toolbar-dock:has(> [data-dock-edge]) {
   grid-template-columns: var(--agentic-control-height) minmax(0, 1fr) var(--agentic-control-height);
