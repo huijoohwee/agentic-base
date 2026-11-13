@@ -17,38 +17,40 @@ export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShe
     if (!avoidBottomPanel || rootPlacement !== 'viewport-overlay') return
     const root = rootRef.current
     const surface = root?.querySelector<HTMLElement>('.agentic-base-floating-panel')
-    if (!root || !surface || typeof document === 'undefined') return
+    const ownerDocument = root?.ownerDocument
+    const ownerWindow = ownerDocument?.defaultView
+    if (!root || !surface || !ownerDocument || !ownerWindow) return
 
     let bottomPanel: HTMLElement | null = null
     let resizeObserver: ResizeObserver | null = null
     const update = () => {
       const rect = bottomPanel?.getBoundingClientRect()
       const floatingTop = surface.getBoundingClientRect().top
-      if (!rect || rect.width <= 0 || rect.height <= 0 || rect.top <= floatingTop || rect.top >= window.innerHeight) {
+      if (!rect || rect.width <= 0 || rect.height <= 0 || rect.top <= floatingTop || rect.top >= ownerWindow.innerHeight) {
         root.style.removeProperty('--agentic-floating-panel-available-height')
         return
       }
       root.style.setProperty('--agentic-floating-panel-available-height', `${Math.floor(rect.top - floatingTop)}px`)
     }
     const findBottomPanel = () => {
-      const next = document.querySelector<HTMLElement>('[data-agentic-panel-kind="bottom"]')
+      const next = ownerDocument.querySelector<HTMLElement>('[data-agentic-panel-kind="bottom"]')
       if (next === bottomPanel) return
       resizeObserver?.disconnect()
       bottomPanel = next
-      if (bottomPanel && typeof ResizeObserver !== 'undefined') {
-        resizeObserver = new ResizeObserver(update)
+      if (bottomPanel && typeof ownerWindow.ResizeObserver !== 'undefined') {
+        resizeObserver = new ownerWindow.ResizeObserver(update)
         resizeObserver.observe(bottomPanel)
       }
       update()
     }
-    const mutations = new MutationObserver(findBottomPanel)
-    mutations.observe(document.documentElement, { childList: true, subtree: true })
-    window.addEventListener('resize', update, { passive: true })
+    const mutations = new ownerWindow.MutationObserver(findBottomPanel)
+    mutations.observe(ownerDocument.documentElement, { childList: true, subtree: true })
+    ownerWindow.addEventListener('resize', update, { passive: true })
     findBottomPanel()
     return () => {
       mutations.disconnect()
       resizeObserver?.disconnect()
-      window.removeEventListener('resize', update)
+      ownerWindow.removeEventListener('resize', update)
       root.style.removeProperty('--agentic-floating-panel-available-height')
     }
   }, [avoidBottomPanel, rootPlacement])
