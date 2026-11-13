@@ -44,7 +44,7 @@
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 1024,
-      "sha256": "919c4f042bf67ae24981c1dd5f7b40fe8b8661c528d0e657a34991bfcbbfadbd"
+      "sha256": "4737c90cc24ad49af7e359312b05a988846496dd2463136fd02afa776980eb43"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
@@ -136,7 +136,7 @@
     {
       "path": "browser-data-view.js",
       "bytes": 241607,
-      "sha256": "fbfaa86838848c78487a0e9118a744e6c582954901365184a954d6ca4113b834"
+      "sha256": "a80c9d810154ba26413219b62bf032b924a828c697a92b6b9b4d0eab87975fbc"
     },
     {
       "path": "dropdown-menus.js",
