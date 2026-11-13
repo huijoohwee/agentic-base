@@ -38,33 +38,33 @@
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 19722,
-      "sha256": "e9fce49e9dce6cde8afa4cde9dc0e8d77ee8642cc10d4d38f66d35d3f53361b0"
+      "bytes": 20496,
+      "sha256": "5396a794b984c505960807e419f2bfd4504c1006af96533d710d7e433af26063"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
-      "bytes": 856,
-      "sha256": "4755af3c5a67f168b9a0ad45808bfc29758426c3fd566456f622acea724940e8"
+      "bytes": 1024,
+      "sha256": "a8f1feb3a71967021eee3e566a6bab3623387efe8cd418381347ab66cbe7ee3e"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
-      "bytes": 10623,
-      "sha256": "4c957810d79e7a6f14123c8d61a25bc851371548ae1e0a535de1544b8c192a11"
+      "bytes": 10903,
+      "sha256": "4a36fe6d414936fe407a1177383ea447f13914895afeceb51440da727f915893"
     },
     {
       "path": "packages/views-react/src/controls/dropdownMenu.ts",
-      "bytes": 9118,
-      "sha256": "e3a08bfa7fec688b43ab2c77acc73cda72450bd54ad9f914adbdf5fb00fe8944"
+      "bytes": 9255,
+      "sha256": "8a5899cffed4637b42a6f293e8c0c2cffcc64d339202d9f76602ba93bdd32f5f"
     },
     {
       "path": "packages/views-react/src/controls/icons.json",
-      "bytes": 12805,
-      "sha256": "52ab0c590ab71329f16d101e493f8dc21c455c918d52431c790a1477fcb357a1"
+      "bytes": 14011,
+      "sha256": "8ae9c970e70e9947496bde996af86ce2ca9291fcd6f1cfafae6e417071f33468"
     },
     {
       "path": "packages/views-react/src/controls/icons.pin.json",
       "bytes": 285,
-      "sha256": "0050f6da9e3a905c849437a4d38b7d536aec52410cd6787cb0d812ffd2cab86b"
+      "sha256": "430164c60ae5235396f52359c6fbd384ef21756c0d6b679edaa2efb2f1582cdc"
     },
     {
       "path": "packages/views-react/src/controls/nativeSelect.ts",
@@ -135,18 +135,18 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 240228,
-      "sha256": "52646b5b0f63e4621b41caef69356a95e2e15d86e702a821fa90a845c15e211a"
+      "bytes": 241621,
+      "sha256": "45078a8a5257d0ac96b0b16035aaefcb07eded2cae449cd9ff790799f2521816"
     },
     {
       "path": "dropdown-menus.js",
-      "bytes": 21015,
-      "sha256": "9d81985b342f002324dd60ce8d3f04efa911d6be55fb3ff438ad667ea5cd8b0c"
+      "bytes": 22132,
+      "sha256": "946ddf7822a1f983e8fec8471ebea69aaa6f9cd3cd77990c19e5c4a3e522b091"
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 35202,
-      "sha256": "a028ebf83c95b0c480ea4f6fb8b455bd738ddf0225e67f7a3bd567ef53136163"
+      "bytes": 35976,
+      "sha256": "68e26ad9c3e26f218b94f026ac2fa0f53799306ba2656c41204c89b7cb29a5e6"
     }
   ]
 }

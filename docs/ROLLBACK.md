@@ -2,7 +2,7 @@
 
 No deployed runtime or published package exists in this increment. Source recovery is a reviewed revert of the exact candidate after preserving its worktree and check receipt; this does not authorize a push, merge, cleanup, or deployment rollback.
 
-For FloatingPanel, restore the prior Design System revision and byte-identical CSS/contract projections together with their migration digests and `floatingPanelShell.pin.json`. Do not retain a mixed revision or add a local style/prop override during rollback.
+For the shared panel family, restore the prior Design System profile, byte-identical panel stylesheet, and their exact source and projection pins together. Keep the browser artifact manifest aligned with those inputs. Do not retain mixed revisions or add local panel style/token overrides during rollback.
 
 Consumer rollback is an exact Base dependency-pin revert in that consumer's reviewed change. For Shoply, restore the previous generated browser asset and its manifest digest with the pin. Keep the prior import adapter and build receipt until the replacement passes; never remove consumer domain data or rewrite its schema as part of a UI rollback. No consumer cutover is complete until its rollback pin/artifact has been built and read back locally.
 

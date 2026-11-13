@@ -97,7 +97,8 @@ test('KTV and icons render one semantic row with a visible named Type glyph', as
   assert.match(html, /<dd[^>]*agentic-ktv-value[^>]*><input/)
   const library = JSON.parse(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url)))
   const iconPin = JSON.parse(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.pin.json', import.meta.url)))
-  assert.equal(Object.keys(library.icons).length, 61)
+  assert.equal(library.version, '1.3.0')
+  for (const name of ['X', 'Rocket', 'Minimize2', 'Maximize2']) assert.ok(library.icons[name], `missing shared icon: ${name}`)
   assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../packages/views-react/src/controls/icons.json', import.meta.url))).digest('hex'), iconPin.sha256)
 })
 
