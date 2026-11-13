@@ -64,7 +64,7 @@
     {
       "path": "packages/views-react/src/controls/icons.pin.json",
       "bytes": 285,
-      "sha256": "6bc1d8dde015c60e85efcecea6ef3bddc55613355e9b20902c5648f9b8783b5b"
+      "sha256": "2335247aafa7b3e80617ac1c514178b0a64a8bf8bb4d517003fdc90ab5875c8b"
     },
     {
       "path": "packages/views-react/src/controls/nativeSelect.ts",
