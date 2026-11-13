@@ -6,6 +6,8 @@ export type DropdownOpenDetail = { sourceId: string }
 
 export type SharedIconName = keyof typeof iconLibrary.icons
 export const SHARED_ICON_NODES = iconLibrary.icons as unknown as Record<SharedIconName, readonly (readonly [string, Record<string, string>])[]>
+export const PANEL_CONTROL_DEFINITIONS = iconLibrary.panelControls
+export type PanelControlName = keyof typeof PANEL_CONTROL_DEFINITIONS
 export const SHARED_ICON_VIEW_BOX = iconLibrary.viewBox
 export const MENU_INDICATOR_PATHS = { chevron: SHARED_ICON_NODES.ChevronDown[0][1].d, check: SHARED_ICON_NODES.Check[0][1].d } as const
 export type MenuIndicatorKind = keyof typeof MENU_INDICATOR_PATHS
