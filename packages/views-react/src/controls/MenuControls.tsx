@@ -12,15 +12,17 @@ export type DesignIconProps = Omit<React.SVGProps<SVGSVGElement>, 'name' | 'chil
 export function DesignIcon({ name, label, className = '', ...props }: DesignIconProps) {
   const nodes = SHARED_ICON_NODES[name]
   if (!nodes) throw new Error(`Unknown shared icon: ${name}`)
+  const decorative = props['aria-hidden'] === true || props['aria-hidden'] === 'true'
+  const iconClassName = [...new Set(['agentic-icon', ...className.split(/\s+/).filter(Boolean)])].join(' ')
   return <svg viewBox={SHARED_ICON_VIEW_BOX} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}
-    className={`agentic-icon ${className}`} aria-hidden={undefined} role="img" aria-label={props['aria-label'] || label || name}>
+    className={iconClassName} aria-hidden={decorative ? true : props['aria-hidden']}
+    role={decorative ? undefined : props.role || 'img'} aria-label={decorative ? undefined : props['aria-label'] || label || name}>
     {nodes.map(([tag, attributes], index) => React.createElement(tag as string, { ...attributes as object, key: index }))}
   </svg>
 }
 export const DESIGN_ICONS = Object.fromEntries(Object.keys(SHARED_ICON_NODES).map(name => [name,
   (props: Omit<DesignIconProps, 'name'>) => <DesignIcon {...props} name={name as SharedIconName} />,
 ])) as Record<SharedIconName, React.ComponentType<Omit<DesignIconProps, 'name'>>>
-
 export type KeyTypeValueRowProps = {
   keyNode: React.ReactNode; typeNode?: React.ReactNode; valueNode: React.ReactNode
   align?: 'center' | 'start'; className?: string; keyClassName?: string; typeClassName?: string; valueClassName?: string

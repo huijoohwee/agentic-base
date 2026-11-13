@@ -402,7 +402,7 @@ function FloatingPanelPreview() {
       panelStyle={{ width: 'min(28rem, 100%)', height: '100%' }} pinned={pinned}
       header={<><div className="min-w-0"><strong className="block truncate text-sm">View</strong><span className="block truncate text-xs text-[color:var(--kg-text-secondary)]">Markdown YAML Frontmatter</span></div>
         <div className="flex shrink-0 items-center gap-1"><button type="button" aria-pressed={pinned} onClick={() => setPinned(value => !value)}>{pinned ? 'Unpin' : 'Pin'}</button>
-          <FloatingPanelCloseButton label="Close View panel" onClose={() => setOpen(false)} /></div></>}>
+          <FloatingPanelCloseButton onClose={() => setOpen(false)} /></div></>}>
       <section className="min-h-0 flex-1 overflow-y-auto rounded border border-[color:var(--kg-border)] bg-white p-3" aria-label="View settings content">
         <p className="m-0 text-sm">Shared FloatingPanel shell</p>
         <p className="text-xs text-[color:var(--kg-text-secondary)]">Placement, pin state, and view content are supplied by the consumer.</p>
