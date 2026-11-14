@@ -110,6 +110,7 @@
 }
 .agentic-base-floating-panel:not(.agentic-panel-main):not(.agentic-panel-bottom) :is(.agentic-panel-header, .agentic-base-floating-panel-header) .agentic-floating-panel-tab:has(> .agentic-icon) > span,
 .agentic-base-floating-panel[data-agentic-base-panel-minimized="true"] .agentic-floating-panel-tab:has(> .agentic-icon) > span { font-size: 0; line-height: 0; }
+.agentic-base-floating-panel:is(.agentic-panel-main, .agentic-panel-bottom) .agentic-floating-panel-tab:not([aria-selected="true"]):has(> .agentic-icon) > span { font-size: 0; line-height: 0; }
 .agentic-base-floating-panel .agentic-floating-panel-tab {
   box-sizing: border-box; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center;
   min-inline-size: var(--agentic-control-height);
