@@ -26,7 +26,7 @@ export function FloatingPanelTabs({ label, activeKey, onSelect, children, ...att
 }
 
 /** Tab selection is derived only from the parent rail's activeKey. */
-export function FloatingPanelTab({ tabKey, label, id, ariaControls, disabled = false, iconOnly = false, icon: Icon, dataAttributes }: FloatingPanelTabProps) {
+export function FloatingPanelTab({ tabKey, label, id, ariaControls, disabled = false, icon: Icon, dataAttributes }: FloatingPanelTabProps) {
   const tabs = useContext(TabsContext)
   if (!tabs) throw new Error('FloatingPanelTab must be rendered inside FloatingPanelTabs')
   const generatedId = useId()
@@ -37,6 +37,6 @@ export function FloatingPanelTab({ tabKey, label, id, ariaControls, disabled = f
     aria-label={label} title={label} tabIndex={selected ? 0 : -1} className="agentic-floating-panel-tab"
     onClick={() => tabs.onSelect(tabKey)}>
     {Icon && <Icon aria-hidden="true" className="agentic-icon" focusable="false" />}
-    {!iconOnly && <span>{label}</span>}
+    <span>{label}</span>
   </button>
 }
