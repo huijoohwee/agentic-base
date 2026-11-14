@@ -19,7 +19,7 @@ export const FloatingPanelShell = React.forwardRef<HTMLElement, FloatingPanelShe
       data-agentic-base-row-height={rowHeight} data-agentic-base-field-line={fieldLine}>
       <section className={['agentic-base-floating-panel-inner', minimized ? '' : 'agentic-base-floating-panel-expanded'].filter(Boolean).join(' ')}
         aria-label={ariaLabel}>
-        <header className={['agentic-base-floating-panel-header', !pinned ? 'agentic-base-floating-panel-draggable' : ''].filter(Boolean).join(' ')}
+        <header className={['agentic-panel-header', 'agentic-base-floating-panel-header', !pinned ? 'agentic-base-floating-panel-draggable' : ''].filter(Boolean).join(' ')}
           onPointerDown={onHeaderPointerDown}>{header}</header>
         {children}
       </section>

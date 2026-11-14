@@ -119,6 +119,7 @@ if (JSON.stringify(controls.panelControls) !== JSON.stringify(expectedPanelContr
   || !panelCss.toString('utf8').includes('.agentic-panel-control-group')
   || panelCss.toString('utf8').includes('[data-agentic-floating-panel-avoid-bottom="true"]')
   || panelCss.toString('utf8').includes('--agentic-floating-panel-available-height')
+  || !floatingShell.includes("'agentic-panel-header', 'agentic-base-floating-panel-header'")
   || floatingShell.includes('avoidBottomPanel') || floatingShell.includes('ResizeObserver')
   || floatingShell.includes('MutationObserver') || floatingShell.includes('--agentic-floating-panel-available-height')
   || !floatingContract.toString('utf8').includes('@deprecated Retained as a no-op compatibility shim')
