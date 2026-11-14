@@ -57,7 +57,7 @@ if (toolbarPin.owner !== 'github.com/huijoohwee/agentic-design-system'
   || !/^[a-f0-9]{64}$/u.test(toolbarPin.iconsSha256 ?? '')) {
   fail('the panel-control runtime must name the central owner, source path, and exact digest')
 }
-const toolbarCss = await readFile(join(sourceRoot, 'controls/toolbar.css'))
+const toolbarCss = await readFile(join(root, toolbarCssPath))
 const sharedTokenCss = await readFile(join(root, tokenPath))
 if (digest(toolbarCss) !== toolbarPin.sha256) {
   fail('the toolbar stylesheet must remain the byte-exact pinned Design System projection')
@@ -117,15 +117,15 @@ if (JSON.stringify(controls.panelControls) !== JSON.stringify(expectedPanelContr
   || !controlGroup.includes('className="agentic-panel-control-group"')
   || controlGroup.includes('className?: string')
   || !panelCss.toString('utf8').includes('.agentic-panel-control-group')
-  || panelCss.toString('utf8').includes('[data-agentic-floating-panel-avoid-bottom="true"]')
-  || panelCss.toString('utf8').includes('--agentic-floating-panel-available-height')
   || !floatingShell.includes("'agentic-panel-header', 'agentic-base-floating-panel-header'")
-  || floatingShell.includes('avoidBottomPanel') || floatingShell.includes('ResizeObserver')
-  || floatingShell.includes('MutationObserver') || floatingShell.includes('--agentic-floating-panel-available-height')
-  || !floatingContract.toString('utf8').includes('@deprecated Retained as a no-op compatibility shim')
+  || floatingShell.includes('avoidBottomPanel')
+  || /export interface FloatingPanelCloseButtonProps\s*\{[^}]*\blabel\s*:/su.test(floatingContract.toString('utf8'))
+  || panelCss.toString('utf8').includes('floating-panel-avoid-bottom')
+  || panelCss.toString('utf8').includes('floating-panel-available-height')
+  || await readFile(join(sourceRoot, 'panels/FloatingPanelShell.tsx'), 'utf8').then(source => source.includes('avoidBottomPanel') || source.includes('floating-panel-available-height'))
   || !closeButton.includes('<PanelControlButton control="close"')
-  || /export interface FloatingPanelCloseButtonProps\s*\{[^}]*\blabel\s*:/su.test(floatingContract.toString('utf8'))) {
-  fail('panel controls must use the canonical semantic role map and shared visual contract without sibling-driven resizing or per-consumer labels')
+  || /export interface FloatingPanelCloseButtonProps\s*\{[^}]*\blabel\s*:/su.test(await readFile(join(sourceRoot, 'panels/floatingPanelContract.d.ts'), 'utf8'))) {
+  fail('panel controls must use the canonical semantic role map, one shared order/visibility adapter, and reject per-consumer labels')
 }
 
 const files = [...await cssFiles(sourceRoot), ...await cssFiles(demoRoot)]

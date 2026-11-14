@@ -17,8 +17,6 @@ export interface FloatingPanelShellProps {
   rootStyle?: FloatingPanelRootStyle
   panelStyle?: FloatingPanelPanelStyle
   ariaLabel?: string
-  /** @deprecated Retained as a no-op compatibility shim; sibling panels never resize this panel. */
-  avoidBottomPanel?: boolean
   minimized?: boolean
   pinned?: boolean
   rowHeight?: string
