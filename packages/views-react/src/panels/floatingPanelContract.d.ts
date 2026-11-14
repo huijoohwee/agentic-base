@@ -49,7 +49,6 @@ export interface FloatingPanelTabProps {
   id?: string
   ariaControls?: string
   disabled?: boolean
-  iconOnly?: boolean
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
   dataAttributes?: Readonly<Record<`data-${string}`, string>>
 }
