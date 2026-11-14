@@ -14,6 +14,7 @@ const toolbarCssPath = 'packages/views-react/src/controls/toolbar.css'
 const controlPath = 'packages/views-react/src/controls/PanelControlButton.tsx'
 const groupPath = 'packages/views-react/src/controls/PanelControlGroup.tsx'
 const runtimePath = 'packages/views-react/src/controls/toolbar-icons.js'
+const iconPinPath = 'packages/views-react/src/controls/icons.pin.json'
 const closePath = 'packages/views-react/src/panels/FloatingPanelCloseButton.tsx'
 const controlIconsPath = 'packages/views-react/src/controls/icons.json'
 const panelSelector = /\.agentic-(?:base-floating-panel(?:-[\w-]+)?|floating-panel-(?:tabs?|title|body|dock)|panel-(?:surface|main(?:--(?:open|collapsed))?(?:-dock)?|bottom(?:-dock)?|header|title|body)|editor-workspace(?:-[\w-]+)?)|\[data-agentic-base-floating-panel/iu
@@ -41,6 +42,7 @@ if (pin.owner !== 'github.com/huijoohwee/agentic-design-system'
   || !/^[a-f0-9]{64}$/u.test(pin.sha256 ?? '')) {
   fail('consumer pin must name the central owner, exact revision, source path, and SHA-256 digest')
 }
+const designSystemRevision = pin.revision
 
 const panelCss = await readFile(join(root, panelPath))
 if (panelCss.length >= 128000 || digest(panelCss) !== pin.sha256) {
@@ -49,6 +51,7 @@ if (panelCss.length >= 128000 || digest(panelCss) !== pin.sha256) {
 if (toolbarPin.owner !== 'github.com/huijoohwee/agentic-design-system'
   || toolbarPin.path !== 'site/toolbar.css'
   || !/^[a-f0-9]{40}$/u.test(toolbarPin.revision ?? '')
+  || toolbarPin.revision !== designSystemRevision
   || !/^[a-f0-9]{64}$/u.test(toolbarPin.sha256 ?? '')
   || toolbarPin.runtimePath !== 'site/toolbar-icons.js'
   || !/^[a-f0-9]{64}$/u.test(toolbarPin.iconsSha256 ?? '')) {
@@ -64,12 +67,14 @@ if (sharedTokenPin.schema !== 'agentic-design-system/consumer-pin/v1'
   || sharedTokenPin.profile?.id !== 'shared-ui'
   || !/^[a-f0-9]{40}$/u.test(sharedTokenPin.profile?.sourceRevision ?? '')
   || !/^[a-f0-9]{40}$/u.test(sharedTokenPin.profile?.registryRevision ?? '')
+  || sharedTokenPin.profile?.registryRevision !== designSystemRevision
   || sharedTokenPin.profile?.projectionPath !== 'site/vendor/shared-ui-profile.css'
   || sharedTokenPin.profile?.projectionSha256 !== `sha256:${digest(sharedTokenCss)}`) {
   fail('the shared token stylesheet must remain the byte-exact pinned Design System projection')
 }
 
 const controls = JSON.parse(await readFile(join(root, controlIconsPath), 'utf8'))
+const iconPin = JSON.parse(await readFile(join(root, iconPinPath), 'utf8'))
 const controlButton = await readFile(join(root, controlPath), 'utf8')
 const controlGroup = await readFile(join(root, groupPath), 'utf8')
 const controlRuntime = await readFile(join(root, runtimePath), 'utf8')
@@ -77,7 +82,26 @@ const closeButton = await readFile(join(root, closePath), 'utf8')
 const floatingShell = await readFile(join(sourceRoot, 'panels/FloatingPanelShell.tsx'), 'utf8')
 const floatingContract = await readFile(join(sourceRoot, 'panels/floatingPanelContract.d.ts'), 'utf8')
 const roleNames = ['search', 'pin', 'apply', 'reset', 'minimize', 'restore', 'close']
-if (JSON.stringify(Object.keys(controls.panelControls ?? {}).sort()) !== JSON.stringify([...roleNames].sort())
+const expectedPanelControls = {
+  search: { icon: 'Search', label: 'Search' },
+  pin: { icon: 'Pin', label: 'Pin' },
+  apply: { icon: 'Check', label: 'Apply' },
+  reset: { icon: 'RotateCcw', label: 'Reset' },
+  minimize: { icon: 'Minimize2', label: 'Minimize panel' },
+  restore: { icon: 'Maximize2', label: 'Restore panel' },
+  close: { icon: 'X', label: 'Close' },
+}
+if (iconPin.schema !== 'agentic-design-system/icon-library-pin/v1'
+  || iconPin.owner !== 'github.com/huijoohwee/agentic-design-system'
+  || iconPin.path !== 'site/icons.json'
+  || !/^[a-f0-9]{40}$/u.test(iconPin.revision ?? '')
+  || iconPin.revision !== designSystemRevision
+  || !/^[a-f0-9]{64}$/u.test(iconPin.sha256 ?? '')
+  || iconPin.sha256 !== digest(await readFile(join(root, controlIconsPath)))) {
+  fail('the panel-control registry must remain the byte-exact pinned Design System projection')
+}
+if (JSON.stringify(controls.panelControls) !== JSON.stringify(expectedPanelControls)
+  || JSON.stringify(Object.keys(controls.panelControls ?? {}).sort()) !== JSON.stringify([...roleNames].sort())
   || digest(controlRuntime) !== toolbarPin.iconsSha256
   || !controlRuntime.toString('utf8').includes('export function resolvePanelControlRoles')
   || !controlRuntime.toString('utf8').includes('export function updatePanelControlGroup')
