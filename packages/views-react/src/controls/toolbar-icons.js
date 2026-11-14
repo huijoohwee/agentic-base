@@ -65,7 +65,7 @@ export function applyPanelControl(button, control) {
   }
   for (const attribute of ['aria-label', 'title']) {
     const existing = button.getAttribute(attribute)
-    if (button.hasAttribute(attribute) && existing !== definition.label) {
+    if (button.hasAttribute(attribute) && existing !== '' && existing !== definition.label) {
       throw new TypeError(`Panel control ${control} cannot override its canonical ${attribute}`)
     }
   }
