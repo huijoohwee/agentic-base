@@ -25,7 +25,7 @@ import { DashboardPrimitive, DashboardBarChart, DashboardCanvasLayout, Dashboard
 import { FieldWorkbench, FieldWorkbenchGroup, FieldWorkbenchItem, FieldWorkbenchSearch, SettingsPanelShell, ViewSettingsPanel, type SavedViewOption, type ViewLayout } from '../src/settings'
 import { SettingsHostProvider } from '../src/settings/SettingsHostContext'
 import { graphSettingsHost } from './GraphSettingsHost'
-import { FloatingPanelCloseButton, FloatingPanelShell } from '../src/panels'
+import { FloatingPanelShell, PanelControlGroup } from 'agentic-design-system/react/panels'
 import { KanbanHostProvider, type KanbanHostAdapter, type ViewModel, type ViewRow } from '../src/kanban/KanbanHostContext'
 import { KanbanView } from '../src/kanban/KanbanView'
 import { CalendarView } from '../src/calendar'
@@ -396,13 +396,19 @@ function WorkflowManagerPreview() {
 function FloatingPanelPreview() {
   const [open, setOpen] = React.useState(true)
   const [pinned, setPinned] = React.useState(true)
+  const [minimized, setMinimized] = React.useState(false)
   if (!open) return <button type="button" onClick={() => setOpen(true)}>Open View panel</button>
   return <section className="relative min-h-[32rem] overflow-hidden rounded border border-[color:var(--kg-border)] bg-[color:var(--kg-app-bg)]" aria-label="Floating panel preview surface">
-    <FloatingPanelShell ariaLabel="View floating panel" rootClassName="absolute inset-2 z-10"
-      panelStyle={{ width: 'min(28rem, 100%)', height: '100%' }} pinned={pinned}
+    <FloatingPanelShell ariaLabel="View floating panel" rootStyle={{ position: 'absolute', inset: 8, zIndex: 10 }}
+      minimized={minimized} pinned={pinned}
       header={<><div className="min-w-0"><strong className="block truncate text-sm">View</strong><span className="block truncate text-xs text-[color:var(--kg-text-secondary)]">Markdown YAML Frontmatter</span></div>
-        <div className="flex shrink-0 items-center gap-1"><button type="button" aria-pressed={pinned} onClick={() => setPinned(value => !value)}>{pinned ? 'Unpin' : 'Pin'}</button>
-          <FloatingPanelCloseButton onClose={() => setOpen(false)} /></div></>}>
+        <PanelControlGroup actions={{
+          pin: () => setPinned(value => !value),
+          minimize: () => setMinimized(true),
+          restore: () => setMinimized(false),
+          close: () => setOpen(false),
+        }} minimized={minimized} pinned={pinned} />
+      </>}>
       <section className="min-h-0 flex-1 overflow-y-auto rounded border border-[color:var(--kg-border)] bg-white p-3" aria-label="View settings content">
         <p className="m-0 text-sm">Shared FloatingPanel shell</p>
         <p className="text-xs text-[color:var(--kg-text-secondary)]">Placement, pin state, and view content are supplied by the consumer.</p>
