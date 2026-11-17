@@ -38,3 +38,5 @@ renderers and their exports are removed from Base; hosts use `PanelDisclosure`
 from Design System and retain their expansion state and callbacks.
 
 Dashboard multiline editing consumes `agentic-design-system/react/rich-text` directly. Its toolbar, source transforms and color controls share the native owner; widget data and save/cancel callbacks remain Base-owned. No Base rich-text adapter entry point is provided.
+
+Dashboard card bodies consume Design System Viewer surfaces directly. Product renderers supply content; Base adds no view/edit lifecycle or replacement renderer.
