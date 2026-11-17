@@ -1,6 +1,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { NativeTitleTooltip } from 'agentic-design-system/react/hover'
+import { KeyTypeValueRows } from 'agentic-design-system/react/ktv'
+import { DesignIcon } from '../src/controls'
 import { DataViewStatusChip, DataViewTagChip } from '@/features/markdown/ui/MarkdownDataViewChips'
 import { WorkspaceDataViewNewRecordButton } from '@/features/markdown-workspace/main/viewer/WorkspaceDataViewNewRecordButton'
 import { MARKDOWN_DATA_VIEW_COPY } from '@/lib/config-copy/markdownDataViewCopy'
@@ -385,12 +387,13 @@ function WorkflowManagerPreview() {
       listContent={<>{groups.map(group => <FieldWorkbenchGroup key={group} title={group} count={visible.filter(field => field.group === group).length}>
         {visible.filter(field => field.group === group).map(field => <FieldWorkbenchItem key={field.label} label={field.label} type={field.type} selected={selected === field.label} onSelect={() => setSelected(field.label)} />)}
       </FieldWorkbenchGroup>)}</>}
-      detailLabel="Field Settings" detailContent={<div className="space-y-3">
-        <label className="grid gap-1 text-xs">Name<input className="rounded border border-[color:var(--kg-border)] bg-white px-2 py-2 text-sm" value={selected} readOnly /></label>
-        <label className="grid gap-1 text-xs">Type<select className="rounded border border-[color:var(--kg-border)] bg-white px-2 py-2 text-sm" defaultValue="Single line text"><option>Single line text</option><option>Multiple select</option><option>Number</option></select></label>
-        <label className="grid gap-1 text-xs">Description<textarea className="min-h-24 rounded border border-[color:var(--kg-border)] bg-white p-2 text-sm" placeholder="Host-provided field description" /></label>
-        <section className="space-y-2 rounded border border-[color:var(--kg-border)] p-3"><strong className="text-sm">Schema</strong><p className="m-0 text-xs text-[color:var(--kg-text-secondary)]">Node type · constraints are provided by the consumer.</p><label className="flex gap-2 text-xs"><input type="checkbox" /> Required</label><label className="flex gap-2 text-xs"><input type="checkbox" /> Unique</label></section>
-      </div>} />
+      detailLabel="Field Settings" detailContent={<KeyTypeValueRows rows={[
+        { id: 'preview-field-name-row', keyNode: <label htmlFor="preview-field-name">Name</label>, typeNode: <DesignIcon name="Type" label="Text" />, valueNode: <input id="preview-field-name" className="agentic-form-control" value={selected} readOnly /> },
+        { id: 'preview-field-type-row', keyNode: <label htmlFor="preview-field-type">Type</label>, typeNode: <DesignIcon name="Type" label="Choice" />, valueNode: <select id="preview-field-type" className="agentic-form-control" defaultValue="Single line text"><option>Single line text</option><option>Multiple select</option><option>Number</option></select> },
+        { id: 'preview-field-description-row', keyNode: <label htmlFor="preview-field-description">Description</label>, typeNode: <DesignIcon name="Type" label="Text" />, valueNode: <textarea id="preview-field-description" className="agentic-form-control" placeholder="Host-provided field description" /> },
+        { id: 'preview-field-required-row', keyNode: <label htmlFor="preview-field-required">Required</label>, typeNode: <DesignIcon name="CircleCheck" label="Boolean" />, valueNode: <input id="preview-field-required" type="checkbox" /> },
+        { id: 'preview-field-unique-row', keyNode: <label htmlFor="preview-field-unique">Unique</label>, typeNode: <DesignIcon name="CircleCheck" label="Boolean" />, valueNode: <input id="preview-field-unique" type="checkbox" /> },
+      ]} />} />
   </SettingsPanelShell>
 }
 

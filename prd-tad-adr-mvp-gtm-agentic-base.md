@@ -1,18 +1,18 @@
 ---
 title: "agentic-base: Headless Data and Views"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.45"
-revision: "0.9.45"
+version: "0.9.46"
+revision: "0.9.46"
 date: "2026-10-23"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "headless-data-base"
-prd_revision: "0.9.45"
-tad_revision: "0.9.45"
-adr_revision: "0.9.45"
-mvp_revision: "0.9.45"
-gtm_revision: "0.9.45"
+prd_revision: "0.9.46"
+tad_revision: "0.9.46"
+adr_revision: "0.9.46"
+mvp_revision: "0.9.46"
+gtm_revision: "0.9.46"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -43,17 +43,11 @@ source_docs:
 One joined specification for a portable structured-data base that owns versioned base/table/field contracts, persistence for explicitly assigned datasets, and deterministic Table, Multi-dimensional Table, Kanban, and Calendar projections. It also owns folder/file/document metadata and a future sync contract; bytes pass through one replaceable adapter. This canonical repository is the sole source for Graph's shared Table, Multi-dimensional Table, Kanban, Calendar, Dashboard primitives, settings, and FloatingPanel shell. Graph imports Base React modules at exact commit `529f1d866974453327977595a457d5065a8dbc45`; Graph retains its schemas, data, actions, and host lifecycle. Shoply in `agentic-commerce-os` consumes the bounded Base browser Table artifact, pinned to Base commit `093d2592449d19892170eac928606cd5d5da58b8`; Commerce retains its schemas, data, actions, and offline lifecycle. Table and Multi-dimensional Table share one Base grid. No competing renderer is maintained.
 
 **Recommendation:** keep `agentic-base` canonical and maintain one view implementation. MIT for Base-owned source is merged by PR #9 at `becd35bdfef0c65510ba9b47ecc481b63313163d`; the repository is public, and GitHub `main` requires the `check` status context (strict=false), verified on 2026-10-23. This supersedes ADR-2's private-only release decision for this repository. The grant does not change another repository's license, publish a package, move consumer data, or authorize deployment. Base PRs #1–#6 are merged, including the React view package, bounded offline browser artifact, Table host provider, dashboard host-attribute contract, and Graph cutover record. Graph's shared-view imports are integrated on canonical `main` at `b8d18db618d596f5138dbb03020cf04be7d839fa`; `canvas/package.json` pins Base commit `529f1d866974453327977595a457d5065a8dbc45`. Graph release run #39095055299 attempted the exact source candidate but failed the isolated Dev root check (404); Production and mirror publication were skipped. PRs #1719–#1721 completed renderer/package integration and continuity fixes; the protected Integration Gate passed. Shoply's Base browser artifact cutover is integrated by Commerce PR #136 at `b6867b2a79fd609eb4c43df7eeda7fb9f704d616`; its `config/agentic-base-data-view.json` binds Base commit `093d2592449d19892170eac928606cd5d5da58b8` and manifest SHA-256 `befc1d95fc407c39bbdde91cbe4e70c56d6b2676c8f686d4de74e40838497a2b`. Both consumers retain their schemas, records, authorization, actions, persistence policy, and outer lifecycle; no customer dataset moved. Keep GitHub for source, exact pins, and CI evidence, never customer file bytes. For future cross-repository folder/file/document storage, recommend one Cloudflare Worker owner endpoint with D1 metadata and R2 objects behind scoped authorization, verified backup/restore, and a mechanically enforced $0 ceiling. Two view consumers do not prove a shared data-store need or satisfy those gates. No remote store or Production deployment is authorized.
-
 ## PRD — purpose, users, and pain
-
 **Context C-1:** products that manage structured records need a small durable base and several ways to inspect the same data. Product-specific record schemas, stores, and projections can drift; a shared contract can remove repeated infrastructure while leaving domain authority at each consumer.
-
 **Intent I-1:** define one headless contract for explicit base/table/field schemas, durable record operations, file/folder/document metadata, and four view projections, then move the existing presentation components into this same repository without creating alternate implementations. The contract is runtime-neutral; first-party persistence runs locally and offline in a mobile browser. Future command, mention, semantic, MCP, and WebMCP surfaces call the same owner handlers rather than forking storage, sync, query, or view behavior.
-
 **User story:** As a product developer, I want one portable contract for opted-in structured data and documents, so clients can use the same folder/file metadata, offline records, and four views without copying storage or sync logic into each product.
-
 **Zero:** Base PRs #1–#6 provide the headless core, local adapters, shared React views/settings, and bounded offline browser artifact. Graph imports its shared renderers and settings from Base at an exact pin; Shoply embeds the Base browser Table artifact from an exact commit pin. Their wrappers supply host data and actions. FloatingPanel behavior parity, full accessibility parity, broader Shoply view parity, shared data-store demand, and cross-product savings remain unproven.
-
 **One:** a developer creates a typed base/table, writes and reopens records after a reload while offline, and obtains deterministic results in all four view kinds through one contract in a local demonstration of at most three minutes.
 
 **Users and jobs:** product developers integrate a common record and view contract; operators manage authorized datasets and inspect records through their chosen interface; end users review work by columns, dimensions, lanes, or dates. The likely buyer is a product team that pays to reduce duplicated integration and maintenance. Buyer frequency, willingness to pay, and market size are hypotheses, not established facts.
@@ -597,3 +591,9 @@ Design System `b8b8c0624b9f5d378fa1a54ea32c52f867f3ad6d` owns hover panels, inve
 3. Shoply in `agentic-commerce-os` is the second UI consumer. Its exact Base browser-artifact pin and PR #136 integration are complete; maintain Commerce ownership of its schema, actions, records, and persistence. No dataset migration is included.
 4. Completed for `agentic-base`: PR #9 merged the owner-authorized MIT license at `becd35b`; GitHub visibility is `PUBLIC`, and main's protected required status context is `check` (`strict=false`), confirmed by provider readback and `npm run doctor`. This grant does not alter another repository's license or authorize package publication. Use GitHub for code and CI, not customer records or file bytes. For future shared folder/file/document sync, recommend one Cloudflare Worker + D1 metadata + R2 object adapter only after scoped authorization, backup/restore proof, and an enforceable $0 ceiling. Two UI consumers do not satisfy data-store demand or deployment gates.
 5. Finish FloatingPanel lifecycle and accessibility parity, then evaluate consumer effort and buyer pain. Any package publication, remote store, Dev deployment, Prod promotion, or consumer cutover requires its own exact candidate, checks, recovery target, and authority receipt.
+
+## One independent value per shared KTV row — 0.9.46
+
+PRD: distinguish each editable field and amount endpoint in the existing inspector. TAD/ADR: consume the exact integrated Design System row owner at `98807b856ab35bac53c54987d4340cd37982d3ec` (PR #58); its native/React group APIs compose existing rows with stable IDs. The Workflow Manager preview uses that API directly for Name, Type, Description, Required and Unique, with separate controls and associated labels. Base adds no renderer, forwarding API or layout override.
+
+MVP acceptance: one value per row, stable control identity/state, accessible key labels, no duplicate IDs, responsive owner layout. Verify through `npm run check` and native React preview. GTM: improve the existing free/local settings path; buyer WTP remains unmeasured. No new dependency/module, provider call, persistence change or production activation. Restore the predecessor dependency pin and preview source together for rollback; preserve unrelated drafts.

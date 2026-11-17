@@ -31,7 +31,7 @@ export default defineConfig({
   cacheDir: path.join(os.tmpdir(), 'agentic-base-views-react-vite'),
   plugins: [sourcePathPlugin, tailwindcss()],
   esbuild: { jsx: 'automatic' },
-  optimizeDeps: { include: ['agentic-design-system/react/hover', 'agentic-design-system/hover', 'agentic-design-system/hover/text'], entries: [path.resolve(baseRoot, 'packages/views-react/dev/index.html')] },
+  optimizeDeps: { include: ['agentic-design-system/react/hover', 'agentic-design-system/hover', 'agentic-design-system/hover/text', 'agentic-design-system/react/ktv'], entries: [path.resolve(baseRoot, 'packages/views-react/dev/index.html')] },
   resolve: {
     alias: {
       '@': path.join(graphRoot, 'canvas/src'),
