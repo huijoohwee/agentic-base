@@ -1,18 +1,18 @@
 ---
 title: "agentic-base: Headless Data and Views"
 doc_type: "PRD-TAD-ADR-MVP-GTM"
-version: "0.9.44"
-revision: "0.9.44"
+version: "0.9.45"
+revision: "0.9.45"
 date: "2026-10-23"
 lang: "en-US"
 frontmatter_contract: "required"
 owner: "Portable structured-data and file product function"
 continuity_id: "headless-data-base"
-prd_revision: "0.9.44"
-tad_revision: "0.9.44"
-adr_revision: "0.9.44"
-mvp_revision: "0.9.44"
-gtm_revision: "0.9.44"
+prd_revision: "0.9.45"
+tad_revision: "0.9.45"
+adr_revision: "0.9.45"
+mvp_revision: "0.9.45"
+gtm_revision: "0.9.45"
 local_rung: "dev-proven"
 delivered_rung: "undocumented"
 lane: "authoring"
@@ -491,7 +491,7 @@ This specification grants no deployment, public package publication, or producti
 
 ## MVP — smallest dependency-closed slice
 
-**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, MIT-licensed React package, bounded offline browser artifact, and one evidence workflow · ADR-1–7 at headless-data-base@0.9.44. R11/R12 and any remote host remain gated.
+**Join:** PRD requirements R1–R10 · TAD Base/schema, operations, storage/query adapters, four projections, MIT-licensed React package, bounded offline browser artifact, and one evidence workflow · ADR-1–7 at headless-data-base@0.9.45. R11/R12 and any remote host remain gated.
 
 | Must slice | VCC | Evidence reference | Local / delivered rung |
 |---|---|---|---|
@@ -537,7 +537,6 @@ This specification grants no deployment, public package publication, or producti
 **Argumentation:** the supporting claim is proximity to the existing integration work; the counterclaim is that no reachable buyer, price, or payment is evidenced. The choice remains unresolved until a buyer interview and priced offer produce evidence. No price or revenue forecast is selected.
 
 **Roadmap owner:** this joined artifact owns the product roadmap at continuity ID and revision above. Consumer backlogs may reference it but do not restate its product decisions.
-
 ## GTM — evidence and learning
 
 | Stream | Segment exists now | Distance to first dollar | Mechanism | Demand | Collected revenue |
@@ -546,13 +545,10 @@ This specification grants no deployment, public package publication, or producti
 | Ongoing maintenance/support | Candidate adopters; repeat need unverified | After first successful integration | Unproven | Unvalidated | None evidenced |
 | Paid hosted service or core paywall | Excluded by zero-spend/FOSS posture | Not applicable this increment | Not offered | Not tested | None |
 **Learn loop:** each completed consumer integration records time, failed/repeated actions, support cost, and outcome; a priced offer records acceptance or refusal; only a confirmed payment records revenue. Feed results into a successor Context, not a backward edit of this revision.
-
 ## PRD-TAD-ADR-MVP-GTM coverage record
 
 **Join:** headless-data-base@0.9.39 · **As of:** 2026-10-18 · **Owner:** Portable structured-data and file product function
-
 **0:** A portable record store and view contract is a grounded technical opportunity; external pain, reach, and WTP are unknown. **1:** One developer creates and reopens an authorized dataset offline, then projects the same records into four views; observe two consumer integrations, data recovery, and time-to-first-view after an authorized package release.
-
 | Domain | Decision | Source section | Evidence or gap | Owner | Next check |
 |---|---|---|---|---|---|
 | C01 Purpose, customer, pain | covered | PRD purpose | Existing application capability; external pain and WTP unvalidated | Product function | Interview two consumer teams |
@@ -571,8 +567,7 @@ This specification grants no deployment, public package publication, or producti
 | C14 ADLC execution | covered | Deploy Boundary Register | `check` is the declared required context; public visibility and provider policy readback are separate release effects. This source-only change has no DEPLOY receipt | Delivery function | Read back main's `check` policy after visibility change; no production claim |
 | C15 Audience projections | deferred | Coverage record | No deck, business plan, or financial model evidence | Product function | Create only for a named audience |
 | C16 Learning and next increment | covered | GTM | Successor Context and stop conditions defined | Product function | Review after two consumer observations |
-**Coverage:** headless-data-base@0.9.44 · 2026-10-23; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
-
+**Coverage:** headless-data-base@0.9.45 · 2026-10-23; 16/16 domains dispositioned, 11 covered, 5 deferred, 0 N/A. Coverage is not product readiness.
 ## Planning record
 
 ### 2026-10-16
@@ -590,8 +585,11 @@ This specification grants no deployment, public package publication, or producti
 | headless-data-base@0.9.35 | C: consumers need stable React entry points to reuse Base-owned Graph views · I: export the existing Table host provider through the established package subpath and pin consumers to an exact merged revision · D: keep Base private; Graph and Shoply consume one owner without local visual variants | R: user-directed private repository and read-only consumer access; latest request authorizes conflict resolution, Integration Gate, and merge of the preserved Graph branch · A: Base owns shared view presentation; consumers keep their domain models, data, authorization, actions, persistence policy, and outer shell lifecycle · O: PR #3 exact source/artifact remains merged at `815a57e`; Table host provider export is added here; Graph renderer cutover and Shoply exact pin are still open; no public release, remote storage, or deployment | 2026-10-16 |
 | headless-data-base@0.9.36 → 0.9.37 | C: Graph host adapters needed stable dashboard markers and the private shared-view cutover needed an exact consumer status · I: retain consumer-owned `data-*` semantics and record the verified Base-to-Graph transfer · D: Base owns shared visuals; Graph owns domain state; Shoply remains an uncut consumer | R: authorized private extraction and protected integration · A: Base owns the shared views/settings; consumers own schema, data, actions, and lifecycle · O: Base #1–#5 are merged at `529f1d8`; Graph #1749 is merged at `5a1a29f` with green `docs-contract` and `Integration Gate`; Graph pins exact Base `529f1`; local view smoke passed. Shoply read-only CI access is present, with product import/pin still unverified. Graph predecessors #1745–#1748 closed and all branches retained. Canonical sync receipts are recorded; no public release or production deployment | 2026-10-17 |
 | headless-data-base@0.9.38 | C: record both exact UI consumer cutovers and keep the headless data owner separate from consumer datasets · I: refresh the joined PRD after Graph React imports and Shoply's bounded browser artifact integrate · D: Base remains private and sole visual source; Graph and Commerce retain schemas, records, actions, and persistence boundaries; defer remote sync behind a hard $0 and recovery gate | R: previously authorized private centralization, consumer cutovers, and exact Commerce sync plan · A: Base owns shared neutral UI/contracts; Graph and Shoply own their current datasets and product effects · O: Base main `093d259`; Graph main `b8d18db` pins Base `529f1d8`; authorized run #39095055299 candidate `a177af53` failed the isolated Dev root check (404), so Production and mirror publication were skipped; Commerce PR #136 merged at `b6867b2`, pins Base `093d259`, manifest digest `befc1d95…`, and Integration Gate run `39082863655` passed. Mobile Base preview showed the shared layouts, Dashboard and settings; Graph consumer showed the shared Multi-dimensional Table controls with empty-state data and its original Storyboard mode was restored. Production deployment, shared data-store/sync, public licensing, FloatingPanel lifecycle parity, and full accessibility parity remain open | 2026-10-18 |
-| headless-data-base@0.9.38 | C: record both exact UI consumer cutovers and keep the headless data owner separate from consumer datasets · I: refresh the joined PRD after Graph React imports and Shoply's bounded browser artifact integrate · D: Base remains private and sole visual source; Graph and Commerce retain schemas, records, actions, and persistence boundaries; defer remote sync behind a hard $0 and recovery gate | R: previously authorized private centralization, consumer cutovers, and exact Commerce sync plan · A: Base owns shared neutral UI/contracts; Graph and Shoply own their current datasets and product effects · O: Base main `093d259`; Graph main `b8d18db` pins Base `529f1d8`; authorized run #39095055299 candidate `a177af53` failed the isolated Dev root check (404), so Production and mirror publication were skipped; Commerce PR #136 merged at `b6867b2`, pins Base `093d259`, manifest digest `befc1d95…`, and Integration Gate run `39082863655` passed. Mobile Base preview showed the shared layouts, Dashboard and settings; Graph consumer showed the shared Multi-dimensional Table controls with empty-state data and its original Storyboard mode was restored. Production deployment, shared data-store/sync, public licensing, FloatingPanel lifecycle parity, and full accessibility parity remain open | 2026-10-18 |
 | headless-data-base@0.9.41 | C: provenance review and an owner-selected FOSS grant clear Base source publication · I: license owner-authored Base material under MIT, make this repository public, and require GitHub main's `check` status context · D: license and visibility cover Base only; no npm release, consumer data move, or deployment · R: explicit owner authorization · A: Base owner controls this repository; Graph and Shoply keep data/domain effects · O: 48/48 mapped source files attribute to the owner; 248 reachable Git objects, pull-request text/reviews, and 24/24 available Actions logs had no high-confidence credential findings. Candidate `058e2bc` passed local `npm run check`; PR #9 merged at `becd35bdfef0c65510ba9b47ecc481b63313163d`, with both Integration Gate `check` runs passing. GitHub reports repository `PUBLIC`; `main` protection requires `check` (`strict=false`); provider readback and `npm run doctor` pass. No npm publication, consumer-data move, or deployment · 2026-10-23 |
+## Shared hover adoption · 2026-11-17
+
+Design System `b8b8c0624b9f5d378fa1a54ea32c52f867f3ad6d` owns hover panels, inverse colors, labels, key/value formatting and lifecycle. Base chart data and SVG hit targets remain here; their former SVG tooltip is removed in favor of the direct React bridge. The preview delegates native titles once at its application root. No forwarding export, local hover palette, storage change or provider deployment is introduced. The local `npm run check` passes. Live chart pointer/focus displays one black/white shared tooltip; Escape dismisses it and the console has no errors. Mobile containment is verified at the shared owner; product-wide parity remains unclaimed. Exact dependency/projection checks pass. Rollback restores the prior Design System pin and generated assets together, preserving browser data.
+
 ## Open decisions and gates
 
 1. Keep Graph's migration manifest aligned with Base source changes; the exact Graph package pin and first cutover are integrated.
