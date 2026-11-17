@@ -1,5 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { NativeTitleTooltip } from 'agentic-design-system/react/hover'
 import { DataViewStatusChip, DataViewTagChip } from '@/features/markdown/ui/MarkdownDataViewChips'
 import { WorkspaceDataViewNewRecordButton } from '@/features/markdown-workspace/main/viewer/WorkspaceDataViewNewRecordButton'
 import { MARKDOWN_DATA_VIEW_COPY } from '@/lib/config-copy/markdownDataViewCopy'
@@ -530,4 +531,4 @@ function Preview() {
   </main>
 }
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><Preview /></React.StrictMode>)
+createRoot(document.getElementById('root')!).render(<React.StrictMode><NativeTitleTooltip fallbackAttribute="data-kg-inline-invocation-markdown" /><Preview /></React.StrictMode>)

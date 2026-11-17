@@ -1,14 +1,15 @@
 import React from 'react'
 import * as d3 from 'd3'
+import Tooltip from 'agentic-design-system/react/hover'
+import { HOVER_PARTS, buildHoverKeyValueText } from 'agentic-design-system/hover/text'
 import type { DashboardSeriesPoint, DashboardTone } from './dashboardTypes'
 
 const CHART_WIDTH = 360
 const CHART_HEIGHT = 178
 const CHART_PADDING = { top: 18, right: 18, bottom: 28, left: 34 }
-const CHART_TOOLTIP_WIDTH = 156
-const CHART_TOOLTIP_HEIGHT = 54
 type DashboardChartTooltipState = {
   point: DashboardSeriesPoint
+  anchor: SVGElement
   x: number
   y: number
 }
@@ -53,55 +54,13 @@ const clampLabel = (label: string): string => {
   return `${label.slice(0, 13)}…`
 }
 
-const clampTooltipText = (label: string, maxLength: number): string => {
-  if (label.length <= maxLength) return label
-  return `${label.slice(0, Math.max(0, maxLength - 1))}…`
-}
-
-function DashboardChartTooltipOverlay(props: {
-  tooltip: DashboardChartTooltipState | null
-  tone: DashboardTone
-}) {
-  if (!props.tooltip) return null
-  const colors = DASHBOARD_CHART_TONE_COLORS[props.tone]
-  const x = Math.min(
-    CHART_WIDTH - CHART_TOOLTIP_WIDTH - 4,
-    Math.max(4, props.tooltip.x + 10),
-  )
-  const preferredY = props.tooltip.y - CHART_TOOLTIP_HEIGHT - 10
-  const y = preferredY >= 4
-    ? preferredY
-    : Math.min(CHART_HEIGHT - CHART_TOOLTIP_HEIGHT - 4, props.tooltip.y + 12)
-  const detail = String(props.tooltip.point.detail || '').trim()
-  return (
-    <g
-      transform={`translate(${x},${y})`}
-      data-agentic-base-dashboard-chart-tooltip="1"
-      pointerEvents="none"
-      aria-hidden="true"
-    >
-      <rect
-        width={CHART_TOOLTIP_WIDTH}
-        height={CHART_TOOLTIP_HEIGHT}
-        rx={6}
-        fill="var(--agentic-base-dashboard-panel-bg, #fff)"
-        stroke={colors.stroke}
-        strokeOpacity={0.78}
-        filter="drop-shadow(0 8px 18px rgba(15,23,42,0.16))"
-      />
-      <text x={9} y={17} fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="10" fontWeight={600}>
-        {clampTooltipText(props.tooltip.point.label, 24)}
-      </text>
-      <text x={9} y={34} fill="var(--agentic-base-dashboard-text-primary, #111827)" fontSize="14" fontWeight={700}>
-        {formatNumber(props.tooltip.point.value)}
-      </text>
-      {detail ? (
-        <text x={9} y={48} fill="var(--agentic-base-dashboard-text-secondary, #4b5563)" fontSize="9">
-          {clampTooltipText(detail, 28)}
-        </text>
-      ) : null}
-    </g>
-  )
+function DashboardChartTooltipOverlay({ tooltip }: { tooltip: DashboardChartTooltipState | null }) {
+  if (!tooltip) return null
+  return <Tooltip anchorElement={tooltip.anchor} open interactive={false} content={<>
+    <div className={HOVER_PARTS.label}>{tooltip.point.label}</div>
+    <div className={HOVER_PARTS.value}>{formatNumber(tooltip.point.value)}</div>
+    {tooltip.point.detail ? <div className={HOVER_PARTS.text}>{tooltip.point.detail}</div> : null}
+  </>} />
 }
 
 const readYDomain = (series: readonly DashboardSeriesPoint[]): [number, number] => {
@@ -168,13 +127,13 @@ export function DashboardLineAreaChart(props: {
     ? Math.abs(x(1) - x(0))
     : CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right
   const hitWidth = Math.max(22, hitStep)
-  const readTooltip = (point: DashboardSeriesPoint, index: number): DashboardChartTooltipState => ({
-    point,
+  const readTooltip = (point: DashboardSeriesPoint, index: number, anchor: SVGElement): DashboardChartTooltipState => ({
+    point, anchor,
     x: x(index),
     y: y(point.value),
   })
-  const showTooltip = (point: DashboardSeriesPoint, index: number) => {
-    setTooltip(current => current?.point === point ? current : readTooltip(point, index))
+  const showTooltip = (point: DashboardSeriesPoint, index: number, anchor: SVGElement) => {
+    setTooltip(current => current?.point === point ? current : readTooltip(point, index, anchor))
   }
 
   return (
@@ -184,6 +143,7 @@ export function DashboardLineAreaChart(props: {
       role="img"
       aria-label="Dashboard line chart"
       onMouseLeave={() => setTooltip(null)}
+      onKeyDown={event => { if (event.key === 'Escape') setTooltip(null) }}
     >
       <ChartGridLines y={y} gridEnabled={props.gridEnabled} />
       {props.area ? <path d={areaPath} fill={colors.fill} /> : null}
@@ -208,9 +168,7 @@ export function DashboardLineAreaChart(props: {
           cy={y(point.value)}
           r={tooltip?.point === point ? 4 : 2.8}
           fill={colors.stroke}
-        >
-          <title>{`${point.label}: ${formatNumber(point.value)}${point.detail ? ` · ${point.detail}` : ''}`}</title>
-        </circle>
+        />
       ))}
       {series.map((point, index) => (
         <rect
@@ -222,11 +180,11 @@ export function DashboardLineAreaChart(props: {
           fill="transparent"
           tabIndex={0}
           role="button"
-          aria-label={`${point.label}: ${formatNumber(point.value)}${point.detail ? `, ${point.detail}` : ''}`}
+          aria-label={buildHoverKeyValueText(point.label, formatNumber(point.value)) + (point.detail ? `, ${point.detail}` : '')}
           data-agentic-base-dashboard-chart-hit="1"
-          onMouseEnter={() => showTooltip(point, index)}
-          onMouseMove={() => showTooltip(point, index)}
-          onFocus={() => showTooltip(point, index)}
+          onMouseEnter={event => showTooltip(point, index, event.currentTarget)}
+          onMouseMove={event => showTooltip(point, index, event.currentTarget)}
+          onFocus={event => showTooltip(point, index, event.currentTarget)}
           onBlur={() => setTooltip(null)}
         />
       ))}
@@ -240,7 +198,7 @@ export function DashboardLineAreaChart(props: {
           {clampLabel(point.label)}
         </text>
       ))}
-      <DashboardChartTooltipOverlay tooltip={tooltip} tone={props.tone} />
+      <DashboardChartTooltipOverlay tooltip={tooltip} />
     </svg>
   )
 }
@@ -272,6 +230,7 @@ export function DashboardBarChart(props: {
       role="img"
       aria-label="Dashboard bar chart"
       onMouseLeave={() => setTooltip(null)}
+      onKeyDown={event => { if (event.key === 'Escape') setTooltip(null) }}
     >
       <ChartGridLines y={y} gridEnabled={props.gridEnabled} />
       {series.map(point => {
@@ -279,12 +238,12 @@ export function DashboardBarChart(props: {
         const yValue = y(point.value)
         const yPos = y(Math.max(0, point.value))
         const height = Math.max(2, Math.abs(zeroY - yPos))
-        const tooltipState = {
-          point,
-          x: xPos + x.bandwidth() / 2,
-          y: Math.min(zeroY, yValue),
-        } satisfies DashboardChartTooltipState
-        const showTooltip = () => {
+        const showTooltip = (event: React.MouseEvent<SVGGElement> | React.FocusEvent<SVGGElement>) => {
+          const tooltipState = {
+            point, anchor: event.currentTarget,
+            x: xPos + x.bandwidth() / 2,
+            y: Math.min(zeroY, yValue),
+          } satisfies DashboardChartTooltipState
           setTooltip(current => current?.point === point ? current : tooltipState)
         }
         return (
@@ -292,16 +251,14 @@ export function DashboardBarChart(props: {
             key={point.label}
             tabIndex={0}
             role="button"
-            aria-label={`${point.label}: ${formatNumber(point.value)}${point.detail ? `, ${point.detail}` : ''}`}
+            aria-label={buildHoverKeyValueText(point.label, formatNumber(point.value)) + (point.detail ? `, ${point.detail}` : '')}
             data-agentic-base-dashboard-chart-hit="1"
             onMouseEnter={showTooltip}
             onMouseMove={showTooltip}
             onFocus={showTooltip}
             onBlur={() => setTooltip(null)}
           >
-            <rect x={xPos} y={Math.min(zeroY, yPos)} width={x.bandwidth()} height={height} rx={4} fill={colors.bar}>
-              <title>{`${point.label}: ${formatNumber(point.value)}${point.detail ? ` · ${point.detail}` : ''}`}</title>
-            </rect>
+            <rect x={xPos} y={Math.min(zeroY, yPos)} width={x.bandwidth()} height={height} rx={4} fill={colors.bar} />
             <rect
               x={xPos}
               y={CHART_PADDING.top}
@@ -316,7 +273,7 @@ export function DashboardBarChart(props: {
           </g>
         )
       })}
-      <DashboardChartTooltipOverlay tooltip={tooltip} tone={props.tone} />
+      <DashboardChartTooltipOverlay tooltip={tooltip} />
     </svg>
   )
 }
