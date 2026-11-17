@@ -7,8 +7,6 @@ export { DashboardBarChart, DashboardLineAreaChart, DASHBOARD_CHART_TONE_COLORS 
 export type { DashboardSeriesPoint, DashboardTone } from './dashboardTypes'
 export { DashboardWidgetBoard } from './DashboardWidgetBoard'
 export type { DashboardWidgetBoardItem, DashboardWidgetBoardProps } from './DashboardWidgetBoard'
-export { DashboardWidgetDisclosure } from './DashboardWidgetDisclosure'
-export type { DashboardWidgetDisclosureProps } from './DashboardWidgetDisclosure'
 export { DashboardWidgetFrame } from './DashboardWidgetFrame'
 export type { DashboardWidgetFrameProps, DashboardWidgetFrameToolbarState } from './DashboardWidgetFrame'
 export { DashboardWidgetSection } from './DashboardWidgetSection'

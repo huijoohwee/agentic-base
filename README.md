@@ -31,3 +31,8 @@ This implementation does not provide file storage, remote sync, an edge database
 Graph PR #1470 was closed as superseded by merged successor #1471, which includes the same functional view changes and later Calendar refinements. Graph's current `main` passed its protected Integration Gate. Graph imports the shared React views from Base, while Shoply embeds the bounded browser Table artifact; both keep their schemas, data, authorization, actions, persistence, and host lifecycle. This repository change does not migrate consumer data or deploy either product.
 
 The local Base demo uses port 4174 so it has a separate service-worker and IndexedDB origin from the Design System catalog. Existing data at an older origin stays intact. Native demo fields opt into the same generated shared control geometry as packaged table and panel fields.
+
+Settings frames and field workbenches consume section headers and scroll regions
+directly from `agentic-design-system/react/panels`. Generic section/disclosure
+renderers and their exports are removed from Base; hosts use `PanelDisclosure`
+from Design System and retain their expansion state and callbacks.
