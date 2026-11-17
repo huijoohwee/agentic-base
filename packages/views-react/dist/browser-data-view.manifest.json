@@ -44,7 +44,7 @@
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 1024,
-      "sha256": "250bbdc01e310a9a689de7b1bfe90f988e66a9990af462d8461e62146a7723bd"
+      "sha256": "08c6b685305daf72cb7174cad95258b1fefcbc3a690bc188a2028c4a1ed6b451"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
@@ -64,7 +64,7 @@
     {
       "path": "packages/views-react/src/controls/icons.pin.json",
       "bytes": 285,
-      "sha256": "20311336063d1b80a3fd557686f5f3a323b7cf59d82cd4b0de941cd5556020af"
+      "sha256": "f862548f39a7154aa39c5b4ac22437b812ced52391fd2c142ad85f08d89100f5"
     },
     {
       "path": "packages/views-react/src/controls/nativeSelect.ts",
@@ -136,7 +136,7 @@
     {
       "path": "browser-data-view.js",
       "bytes": 241601,
-      "sha256": "3b942a6de70fb9743a06ab07e2bd8de10ffd5e362ae4cc1e2ce767e0aa8535a9"
+      "sha256": "43c553b79c27a2e3c6052ad86d68116d2827ecc88aa2fe6e61e26aeea4e87ae1"
     },
     {
       "path": "dropdown-menus.js",

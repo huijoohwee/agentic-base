@@ -1,3 +1,4 @@
+import { ViewerSurface } from 'agentic-design-system/react/viewer'
 import React from 'react'
 import type { KanbanCardDragProps, KanbanCardDropProps } from '../kanban/kanbanReorder'
 import { getKanbanCardDragVisualState } from '../kanban/kanbanDragVisualState'
@@ -53,7 +54,7 @@ export function DashboardWidgetCard({
       <section className="min-w-0" data-agentic-base-dashboard-card-title>{title}</section>
       {subtitle ? <section className="agentic-base-dashboard-card-subtitle" data-agentic-base-dashboard-card-subtitle>{subtitle}</section> : null}
     </header>
-    <section className="agentic-base-dashboard-card-body" data-agentic-base-dashboard-card-body>{children}</section>
+    <ViewerSurface as="section" editable={false} className="agentic-base-dashboard-card-body" data-agentic-base-dashboard-card-body>{children}</ViewerSurface>
     {footnote || canEditFootnote ? <section className="agentic-base-dashboard-card-footnote" data-agentic-base-dashboard-card-footnote>{footnote}</section> : null}
   </article>
 }
