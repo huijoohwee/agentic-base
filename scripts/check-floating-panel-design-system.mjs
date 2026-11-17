@@ -142,3 +142,13 @@ for (const file of files) {
 }
 if (violations.length) fail(violations.join('\n- '))
 console.log(`PASS direct Design System panel consumer · ${designSystemCommit.slice(0, 9)} · ${files.length} CSS files scanned.`)
+
+for (const removed of ['settings/SettingsSectionHeader.tsx', 'dashboard/DashboardWidgetDisclosure.tsx']) {
+  try { await access(join(sourceRoot, removed)); fail(`duplicate section renderer: ${removed}`) }
+  catch (error) { if (error.code !== 'ENOENT') throw error }
+}
+for (const file of ['settings/SettingsPanelShell.tsx', 'settings/FieldWorkbench.tsx']) {
+  const source = (await read(`packages/views-react/src/${file}`)).toString('utf8')
+  if (!source.includes("from 'agentic-design-system/react/panels'") || !source.includes('<PanelScrollRegion'))
+    fail(`${file} must consume the shared section header and scrolling owner`)
+}

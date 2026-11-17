@@ -1,6 +1,6 @@
 import React from 'react'
 import { Search } from 'lucide-react'
-import { SettingsSectionHeader } from './SettingsSectionHeader'
+import { SettingsSectionHeader, PanelScrollRegion } from 'agentic-design-system/react/panels'
 import './fieldWorkbench.css'
 
 export type FieldWorkbenchProps = {
@@ -21,15 +21,15 @@ export function FieldWorkbench({
   return <section aria-label={ariaLabel} className={['agentic-base-field-workbench', className].filter(Boolean).join(' ')}>
     {toolbar ? <div className="agentic-base-field-workbench-toolbar">{toolbar}</div> : null}
     <div className="agentic-base-field-workbench-split">
-      <section className="agentic-base-field-workbench-list" aria-label={listLabel}>
-        <SettingsSectionHeader className="agentic-base-field-workbench-list-header" title={listLabel}
+      <PanelScrollRegion className="agentic-base-field-workbench-list" aria-label={listLabel}>
+        <SettingsSectionHeader stickyHeader className="agentic-base-field-workbench-list-header" title={listLabel}
           actions={listSummary != null ? <span className="agentic-base-field-workbench-list-summary">{listSummary}</span> : undefined} />
         <div className="agentic-base-field-workbench-list-content">{listContent}</div>
-      </section>
-      <section className="agentic-base-field-workbench-detail" aria-label={detailLabel}>
-        <SettingsSectionHeader className="agentic-base-field-workbench-detail-header" title={detailLabel} />
+      </PanelScrollRegion>
+      <PanelScrollRegion className="agentic-base-field-workbench-detail" aria-label={detailLabel}>
+        <SettingsSectionHeader stickyHeader className="agentic-base-field-workbench-detail-header" title={detailLabel} />
         <div className="agentic-base-field-workbench-detail-content">{detailContent}</div>
-      </section>
+      </PanelScrollRegion>
     </div>
   </section>
 }
