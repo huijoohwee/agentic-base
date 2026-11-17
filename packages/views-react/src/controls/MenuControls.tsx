@@ -23,21 +23,6 @@ export function DesignIcon({ name, label, className = '', ...props }: DesignIcon
 export const DESIGN_ICONS = Object.fromEntries(Object.keys(SHARED_ICON_NODES).map(name => [name,
   (props: Omit<DesignIconProps, 'name'>) => <DesignIcon {...props} name={name as SharedIconName} />,
 ])) as Record<SharedIconName, React.ComponentType<Omit<DesignIconProps, 'name'>>>
-export type KeyTypeValueRowProps = {
-  keyNode: React.ReactNode; typeNode?: React.ReactNode; valueNode: React.ReactNode
-  align?: 'center' | 'start'; className?: string; keyClassName?: string; typeClassName?: string; valueClassName?: string
-  id?: string; dataKgAnchor?: string; onClick?: () => void
-}
-/** One semantic KTV structure. Layout and typography come from the central CSS projection. */
-export function KeyTypeValueRow({ keyNode, typeNode, valueNode, align = 'center', className = '', keyClassName = '', typeClassName = '', valueClassName = '', id, dataKgAnchor, onClick }: KeyTypeValueRowProps) {
-  return <section className="agentic-ktv-container"><dl id={id} data-panel-field-row="true" data-kg-anchor={dataKgAnchor} data-align={align}
-    className={`agentic-ktv-row ${className}`} onClick={onClick}>
-    <dt className={`agentic-ktv-key ${keyClassName}`}>{keyNode}</dt>
-    <dd className={`agentic-ktv-type ${typeClassName}`}>{typeNode ?? <DesignIcon name="Type" label="Text" />}</dd>
-    <dd className={`agentic-ktv-value ${valueClassName}`}>{valueNode}</dd>
-  </dl></section>
-}
-
 export type SemanticSelectOption = { value: string; label: string; disabled: boolean; group?: string }
 function textContent(node: React.ReactNode): string {
   return React.Children.toArray(node).map(child => React.isValidElement<{ children?: React.ReactNode }>(child)

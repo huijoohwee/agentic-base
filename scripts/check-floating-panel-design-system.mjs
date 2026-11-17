@@ -87,6 +87,11 @@ if (tokenPin.schema !== 'agentic-design-system/consumer-pin/v1'
   fail('the shared token projection must exactly match the direct Design System pin')
 }
 
+const ktvSource = (await read('packages/views-react/src/controls/MenuControls.tsx')).toString('utf8')
+const ktvIndex = (await read('packages/views-react/src/controls/index.ts')).toString('utf8')
+if (/KeyTypeValueRow|agentic-ktv-row/u.test(ktvSource) || /KeyTypeValueRow/u.test(ktvIndex)) fail('Base cannot implement or forward the Design System KTV API')
+await access(join(designSystemRoot, 'site/key-type-value.js'))
+await access(join(designSystemRoot, 'packages/react-ktv/src/index.tsx'))
 const controlIndex = (await read('packages/views-react/src/controls/index.ts')).toString('utf8')
 const panelDemo = (await read('packages/views-react/dev/main.tsx')).toString('utf8')
 const iconRuntime = await read('packages/views-react/src/controls/toolbar-icons.js')
