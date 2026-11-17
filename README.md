@@ -40,3 +40,9 @@ from Design System and retain their expansion state and callbacks.
 Dashboard multiline editing consumes `agentic-design-system/react/rich-text` directly. Its toolbar, source transforms and color controls share the native owner; widget data and save/cancel callbacks remain Base-owned. No Base rich-text adapter entry point is provided.
 
 Dashboard card bodies consume Design System Viewer surfaces directly. Product renderers supply content; Base adds no view/edit lifecycle or replacement renderer.
+
+## Agentic Sheets local workbook
+
+Run `npm run dev:sheets` and open `http://127.0.0.1:4176/agentic-sheets/` (Node.js 22+, no dependency install needed for this runner). Create the sample, change B2 from 2 to 4 and read total 130. The independent `./sheets` and `./sheets/storage` exports implement the bounded workbook contract without importing Base's record engine. One active 32×16 worksheet supports scalar cells, arithmetic and SUM ranges, revisioned IndexedDB persistence, explicit snapshot download/restore/clone, and a product-scoped offline shell. This is not Excel file or formula compatibility.
+
+`npm run check:sheets` runs the workbook suite and checks the generated static artifact. The real-browser storage fixture is `/test-browser/sheets-check.mjs` on the same local server. Build output is `sheets/dist/`, with exact source/profile/output digests and license notices; it is prepared for the source-owned site controller, not a deployment instruction. [Product specification](https://github.com/huijoohwee/huijoohwee.github.io/blob/main/docs/documents/prd-tad-adr-mvp-gtm-agentic-sheets.md).

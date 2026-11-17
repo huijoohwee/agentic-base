@@ -18,25 +18,31 @@
     "./dashboard": "./packages/views-react/src/dashboard/index.ts",
     "./toolbar-icons": "./packages/views-react/src/controls/toolbar-icons.js",
     "./toolbar.css": "./packages/views-react/src/controls/toolbar.css",
-    "./controls": "./packages/views-react/src/controls/index.ts"
+    "./controls": "./packages/views-react/src/controls/index.ts",
+    "./sheets": "./sheets/core.mjs",
+    "./sheets/storage": "./sheets/storage.mjs"
   },
   "files": [
     "src/**/*.mjs",
     "packages/views-react/src/**/*",
     "packages/views-react/dist/**/*",
-    "README.md"
+    "README.md",
+    "sheets/**/*"
   ],
   "scripts": {
     "setup": "agentic-os setup",
     "doctor": "agentic-os doctor",
     "lane": "agentic-os start",
     "release:common": "agentic-os release-common",
-    "check": "node scripts/check-syntax.mjs && node scripts/check-demo-design-tokens.mjs && node scripts/check-floating-panel-design-system.mjs && node scripts/compact-json.mjs --check && tsc --noEmit -p packages/views-react/tsconfig.json && node scripts/build-browser-data-view.mjs --check && node --test && node scripts/evidence.mjs && npm --prefix node_modules/agentic-os run evals",
+    "check": "node scripts/check-syntax.mjs && node scripts/check-demo-design-tokens.mjs && node scripts/check-floating-panel-design-system.mjs && node scripts/compact-json.mjs --check && tsc --noEmit -p packages/views-react/tsconfig.json && node scripts/build-browser-data-view.mjs --check && node scripts/build-sheets.mjs --check && node --test && node scripts/evidence.mjs && npm --prefix node_modules/agentic-os run evals",
     "build:browser-data-view": "node scripts/build-browser-data-view.mjs --write",
     "check:browser-data-view": "node scripts/build-browser-data-view.mjs --check",
     "check:demo-design-tokens": "node scripts/check-demo-design-tokens.mjs",
     "check:floating-panel-design-system": "node scripts/check-floating-panel-design-system.mjs",
-    "dev": "node scripts/dev-server.mjs"
+    "dev": "node scripts/dev-server.mjs",
+    "build:sheets": "node scripts/build-sheets.mjs --write",
+    "check:sheets": "node --test test/sheets.test.mjs && node scripts/build-sheets.mjs --check",
+    "dev:sheets": "node scripts/build-sheets.mjs --write && node scripts/dev-server.mjs --sheets"
   },
   "peerDependencies": {
     "@types/d3": "^7.4.3",
