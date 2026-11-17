@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:,">
+  <title>Agentic Sheets — local workbook</title>
+  <link rel="stylesheet" href="./shared-ui-profile.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body class="agentic-form-controls">
+  <main>
+    <header><div><h1>Agentic Sheets</h1><p>A small workbook, saved on this device.</p></div><output id="connection" aria-live="polite">Preparing offline access…</output></header>
+    <nav class="sheet-toolbar" aria-label="Workbook actions">
+      <button id="sample" type="button">Create sample</button>
+      <button id="blank" type="button">Create blank</button>
+      <button id="download" type="button" disabled>Download snapshot</button>
+      <button id="reload" type="button">Discard draft &amp; reload</button>
+    </nav>
+    <p id="status" role="status" aria-live="polite">Loading accepted workbook…</p>
+    <p id="error" role="alert" hidden></p>
+    <form id="editor-form" aria-label="Cell editor">
+      <fieldset id="editor-fieldset" disabled>
+        <legend>Cell editor</legend>
+        <label for="cell-input"><output id="address">A1</output><span id="cell-kind">Empty cell</span></label>
+        <input id="cell-input" name="cell" aria-label="Cell value or formula" aria-describedby="syntax draft" autocomplete="off" spellcheck="false">
+        <div class="editor-actions"><button id="commit" type="submit">Commit cell</button><button id="cancel" type="button">Cancel edit</button></div>
+        <output id="draft">Accepted value</output>
+      </fieldset>
+    </form>
+    <p id="syntax">Numbers, text, TRUE/FALSE, or formulas with + − × ÷ and SUM(A1:B2). Start literal text with an apostrophe. Enter/F2 edits a cell; Escape cancels.</p>
+    <section aria-label="Workbook grid" id="grid-section">
+      <div class="grid-scroll" tabindex="0" aria-label="Scrollable worksheet"><table role="grid" aria-label="Worksheet 1" aria-rowcount="33" aria-colcount="17"><thead id="column-head"></thead><tbody id="grid-body"></tbody></table></div>
+    </section>
+    <section aria-labelledby="snapshot-title" class="snapshot-controls">
+      <h2 id="snapshot-title">Restore a snapshot</h2>
+      <p>Download the accepted workbook before replacing it. Restore keeps its identity; an imported clone replaces the active workbook with a new identity. No automatic upload or sync.</p>
+      <label for="snapshot-file">Local JSON snapshot</label><input id="snapshot-file" type="file" accept="application/json,.json">
+      <div class="snapshot-actions"><button id="restore" type="button" disabled>Restore current workbook</button><button id="clone" type="button" disabled>Replace with imported clone</button></div>
+      <output id="import-summary">No snapshot selected</output>
+    </section>
+    <footer><span>32 × 16 cells · one worksheet · bounded formulas · no Excel file compatibility</span><output id="identity"></output></footer>
+  </main>
+</body>
+</html>

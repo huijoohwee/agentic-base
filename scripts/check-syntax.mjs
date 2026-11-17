@@ -4,7 +4,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const roots = ['src', 'demo', 'scripts', 'test', 'test-support', 'test-browser'];
+const roots = ['src', 'demo', 'sheets', 'scripts', 'test', 'test-support', 'test-browser'];
 const files = [];
 
 function visit(directory) {

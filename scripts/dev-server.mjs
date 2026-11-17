@@ -20,6 +20,7 @@ const demoReportOnlyCsp = [
   "frame-ancestors 'none'",
 ].join('; ');
 const allowed = ['/demo/', '/src/', '/test-browser/'];
+const sheetsMode = process.argv.includes('--sheets');
 const mimeTypes = new Map([
   ['.css', 'text/css; charset=utf-8'],
   ['.html', 'text/html; charset=utf-8'],
@@ -30,6 +31,8 @@ const mimeTypes = new Map([
 ]);
 
 function safePath(urlPath) {
+  if (urlPath === '/agentic-sheets/') return resolve(root, 'sheets/dist/index.html');
+  if (urlPath.startsWith('/agentic-sheets/') && !urlPath.includes('..')) return resolve(root, 'sheets/dist', urlPath.slice('/agentic-sheets/'.length));
   if (urlPath === '/' || urlPath === '/demo' || urlPath === '/demo/') return resolve(root, 'demo/index.html');
   if (urlPath === '/demo/dropdown-menus.js') return resolve(root, 'packages/views-react/dist/dropdown-menus.js');
   if (urlPath === '/demo/browser-data-view.js') return resolve(root, 'packages/views-react/dist/browser-data-view.js');
@@ -47,6 +50,8 @@ const server = createServer(async (request, response) => {
   }
   let path;
   try {
+    const pathname = new URL(request.url, 'http://localhost').pathname;
+    if (pathname === '/agentic-sheets' || (sheetsMode && pathname === '/')) { response.writeHead(308, { location: '/agentic-sheets/' }).end(); return; }
     path = safePath(decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
     if (!path) throw new Error('path is outside the local demo');
     const actual = await realpath(path);
@@ -58,10 +63,12 @@ const server = createServer(async (request, response) => {
       'x-content-type-options': 'nosniff',
       'content-length': body.byteLength,
     };
+    if (actual === resolve(root, 'sheets/dist/index.html')) headers['content-security-policy'] = demoReportOnlyCsp;
     if (actual === resolve(root, 'demo/index.html')) {
       headers['content-security-policy-report-only'] = demoReportOnlyCsp;
     }
-    if (actual.endsWith(`${sep}sw.js`)) headers['service-worker-allowed'] = '/';
+    if (actual === resolve(root, 'sw.js')) headers['service-worker-allowed'] = '/';
+    if (actual === resolve(root, 'sheets/dist/sw.js')) headers['service-worker-allowed'] = '/agentic-sheets/';
     response.writeHead(200, headers);
     response.end(request.method === 'HEAD' ? undefined : body);
   } catch {
@@ -71,7 +78,7 @@ const server = createServer(async (request, response) => {
 });
 
 const host = process.env.HOST ?? '127.0.0.1';
-const port = Number(process.env.PORT ?? 4174);
+const port = Number(process.env.PORT ?? (sheetsMode ? 4176 : 4174));
 if (!Number.isInteger(port) || port < 1 || port > 65_535) throw new TypeError('PORT must be between 1 and 65535');
 server.listen(port, host, () => process.stdout.write(`Local demo: http://${host}:${port}/\n`));
 server.on('error', error => {
