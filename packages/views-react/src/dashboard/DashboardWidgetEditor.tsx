@@ -1,3 +1,4 @@
+import { MarkdownEditor } from 'agentic-design-system/react/rich-text'
 import React from 'react'
 import { CheckboxGroup, CheckboxOption } from '../controls/CheckboxGroup'
 import {
@@ -55,7 +56,7 @@ export function DashboardWidgetEditor({
     <form aria-label="Widget configuration" className="space-y-3" onSubmit={event => { event.preventDefault(); onSave() }}>
       {fields.map(field => <React.Fragment key={field.id}>
         {field.type === 'text' || field.type === 'number' || field.type === 'textarea' ? <label className={`block text-xs ${theme.text.primary}`}>{field.label}
-          {field.type === 'textarea' ? <textarea aria-label={field.label} className={inputClassName} value={field.value} maxLength={field.maxLength}
+          {field.type === 'textarea' ? <MarkdownEditor aria-label={field.label} className={inputClassName} value={field.value} maxLength={field.maxLength}
             onChange={event => onFieldChange(field.id, event.target.value)} /> : <WorkspaceDataViewComfortableTextInput aria-label={field.label} className={inputClassName}
             type={field.type} value={field.value} maxLength={field.type === 'text' ? field.maxLength : undefined}
             min={field.type === 'number' ? field.min : undefined} max={field.type === 'number' ? field.max : undefined}
