@@ -1,5 +1,5 @@
+import 'agentic-design-system/profile.css'
 import React from 'react'
-import '../browser/shared-ui-profile.css'
 
 /** React adapter for the Design System's native dashboard attributes. */
 type Content = { children: React.ReactNode }

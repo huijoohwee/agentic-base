@@ -1,15 +1,15 @@
 {
   "schema": "sheets/artifact/v1",
   "contract": "sheets/workbook/v1",
-  "sourceDigest": "25dc9f8a9ec17556e572f8f4df1dbf1f0c67a5a0b804d23cd7045d2f42e32c6e",
+  "sourceDigest": "ac5b02da3d332e410d5a8162656d3effa1ee898ad6dcc090de3c947aa6893e00",
   "designSystem": {
-    "revision": "7672dcb14dff7011c4107f7afea19885329402a3",
-    "profileSource": "e52a52111f52b6af85f99195ec9e59a490548575",
-    "profileSha256": "c3068c9a0087aa0dda0a7c420f306f1c080a75021253352e9dde13ef9758d051",
+    "revision": "9a1ec581124c9fb7868903c0d42581e151c59fe6",
+    "profileSource": "0e1a21ff98a02604b7f733c6705380133c3d7d1c",
+    "profileSha256": "cb69acc13a7a9e9687675b354abd0bbc860ce68bbbb50e4f68d9efa2dbbbacfd",
     "licenseSha256": "b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
   },
-  "artifactDigest": "ea9702867be15474016855aae627722987ca9778966131d21f4c4b8f477b7f3f",
-  "totalBytes": 67212,
+  "artifactDigest": "09035dba14da3a8c3f04da40c34443482808d8cf8cced91ae41b949ae9a96671",
+  "totalBytes": 67366,
   "inputs": [
     {
       "path": "LICENSE",
@@ -18,18 +18,18 @@
     },
     {
       "path": "package.json",
-      "bytes": 3229,
-      "sha256": "ef2c3fa6b609545ec754d93e5de79c97ac4786154c50cf4cfd20b2ea9a7899b1"
+      "bytes": 3353,
+      "sha256": "9edf89f97ef6bbc0a41c7808675ef64351a5982cbb6ccec213b293a1fb2ba19a"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 24199,
-      "sha256": "c3068c9a0087aa0dda0a7c420f306f1c080a75021253352e9dde13ef9758d051"
+      "bytes": 24353,
+      "sha256": "cb69acc13a7a9e9687675b354abd0bbc860ce68bbbb50e4f68d9efa2dbbbacfd"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 1024,
-      "sha256": "546cbcb7aa0656f687de37ac9de53ef5b4ce8e4a855463b225451fba8ac7c5c5"
+      "sha256": "9f25048d0e31412166333e5393d00a052de36e3eb1c9ef2807c55bdb3e7fa112"
     },
     {
       "path": "sheets/app.mjs",
@@ -125,8 +125,8 @@
     },
     {
       "path": "shared-ui-profile.css",
-      "bytes": 24199,
-      "sha256": "c3068c9a0087aa0dda0a7c420f306f1c080a75021253352e9dde13ef9758d051"
+      "bytes": 24353,
+      "sha256": "cb69acc13a7a9e9687675b354abd0bbc860ce68bbbb50e4f68d9efa2dbbbacfd"
     },
     {
       "path": "storage.mjs",
@@ -141,7 +141,7 @@
     {
       "path": "sw.js",
       "bytes": 1286,
-      "sha256": "dbf1e985c3973baf68ad784120ed5aa7b500e1ce58461227f2e8dd1063748820"
+      "sha256": "8c2e105e40ebfc624e6ce15316ad7f3ff782e1f34e9a39de4a1e0d09e27ac5ec"
     }
   ]
 }

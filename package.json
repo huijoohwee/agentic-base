@@ -11,6 +11,7 @@
     "./table": "./packages/views-react/src/table/TableView.tsx",
     "./table/multi-dimensional": "./packages/views-react/src/table/MultiDimTableView.tsx",
     "./browser": "./packages/views-react/src/browser/index.ts",
+    "./browser-components.css": "./packages/views-react/src/browser/components.css",
     "./browser.css": "./packages/views-react/dist/browser-data-view.css",
     "./kanban": "./packages/views-react/src/kanban/KanbanView.tsx",
     "./calendar": "./packages/views-react/src/calendar/index.ts",
@@ -45,6 +46,7 @@
     "dev:sheets": "node scripts/build-sheets.mjs --write && node scripts/dev-server.mjs --sheets"
   },
   "peerDependencies": {
+    "agentic-design-system": "^0.6.0",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "lucide-react": "^0.562.0",
@@ -63,7 +65,7 @@
     "@types/d3": "7.4.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "agentic-design-system": "github:huijoohwee/agentic-design-system#7672dcb14dff7011c4107f7afea19885329402a3",
+    "agentic-design-system": "github:huijoohwee/agentic-design-system#9a1ec581124c9fb7868903c0d42581e151c59fe6",
     "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/a6d6f9d3d58a6c6c134dd6056295a1bef04b5769",
     "d3": "7.9.0",
     "esbuild": "0.25.12",
