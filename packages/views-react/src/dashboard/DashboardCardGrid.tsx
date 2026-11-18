@@ -1,5 +1,5 @@
+import 'agentic-design-system/profile.css'
 import React from 'react'
-import '../browser/shared-ui-profile.css'
 import 'agentic-design-system/collection-layout.css'
 
 export type DashboardCardAccent = 'primary' | 'secondary' | 'success' | 'warning' | 'neutral'

@@ -3,6 +3,7 @@
 .agentic-panel-surface,
 .agentic-base-floating-panel {
   --agentic-panel-frame-stroke-width: 1px;
+  --agentic-panel-control-border: var(--agentic-panel-border);
   position: relative; display: flex; box-sizing: border-box; min-width: 0; min-height: 0;
   max-width: calc(100vw - 2 * var(--agentic-menu-edge-gap)); max-height: calc(100dvh - 2 * var(--agentic-menu-edge-gap));
   overflow: hidden; pointer-events: auto; border: var(--agentic-panel-border);

@@ -1,3 +1,4 @@
+import 'agentic-design-system/profile.css'
 import React from 'react'
 import type { DashboardWidgetDataAttributes } from './DashboardWidgetCards'
 import './dashboardCanvasLayout.css'

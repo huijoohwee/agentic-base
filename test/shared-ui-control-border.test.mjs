@@ -42,7 +42,7 @@ test('native form fields and enhanced selects use one shared border declaration'
   assert.ok(start >= 0 && end > start, 'common control rule exists');
   const commonRule = css.slice(start, end);
   assert.match(commonRule, /\.agentic-select-trigger/u);
-  assert.match(commonRule, /border:\s*var\(--agentic-control-border\)/u);
+  assert.ok(commonRule.includes("border: var(--agentic-panel-control-border, var(--agentic-control-border))"));
   const selectRule = css.match(/\n\.agentic-select-trigger \{[^}]+\}/u)?.[0] ?? '';
   assert.ok(selectRule, 'enhanced select presentation rule exists');
   assert.doesNotMatch(selectRule, /\bborder(?:-color)?\s*:/u);

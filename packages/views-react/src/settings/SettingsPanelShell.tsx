@@ -1,3 +1,4 @@
+import 'agentic-design-system/profile.css'
 import React from 'react'
 import { SettingsSectionHeader, PanelScrollRegion } from 'agentic-design-system/react/panels'
 import './settingsPanelShell.css'
