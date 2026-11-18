@@ -1,3 +1,4 @@
+import 'agentic-design-system/collection-layout.css'
 import { ViewerSurface } from 'agentic-design-system/react/viewer'
 import React from 'react'
 import type { KanbanCardDragProps, KanbanCardDropProps } from '../kanban/kanbanReorder'
@@ -43,8 +44,8 @@ export function DashboardWidgetCard({
   const dragging = draggingId === id, dropTarget = dragOverId === id
   const visual = getKanbanCardDragVisualState({ hasActiveDrag: draggingId !== null, isDragging: dragging,
     isDropTarget: dropTarget, isCommitFlash: commitFlashId === id, indicatorColor })
-  return <article className={['agentic-base-dashboard-card', selectionSurfaceClassName, visual.className, className].filter(Boolean).join(' ')}
-    style={visual.style} ref={element => registerElement(id, element)} data-agentic-base-dashboard-card={id}
+  return <article className={['agentic-collection-item agentic-base-dashboard-card', selectionSurfaceClassName, visual.className, className].filter(Boolean).join(' ')}
+    data-layout="card" style={visual.style} ref={element => registerElement(id, element)} data-agentic-base-dashboard-card={id}
     data-agentic-base-dashboard-card-draggable={cardDragProps.draggable ? 'true' : undefined}
     tabIndex={0} role="group" aria-label={label} aria-grabbed={cardDragProps.draggable ? dragging : undefined}
     {...dataAttributes}
@@ -75,8 +76,8 @@ export function DashboardMetricTile({
   const dragging = draggingId === id, dropTarget = dragOverId === id
   const visual = getKanbanCardDragVisualState({ hasActiveDrag: draggingId !== null, isDragging: dragging,
     isDropTarget: dropTarget, isCommitFlash: commitFlashId === id, indicatorColor })
-  return <section className={['agentic-base-dashboard-metric', toneClassName, selectionSurfaceClassName, visual.className].filter(Boolean).join(' ')}
-    style={visual.style} data-agentic-base-dashboard-metric={id}
+  return <section className={['agentic-collection-item agentic-base-dashboard-metric', toneClassName, selectionSurfaceClassName, visual.className].filter(Boolean).join(' ')}
+    data-layout="card" style={visual.style} data-agentic-base-dashboard-metric={id}
     data-agentic-base-dashboard-metric-draggable={cardDragProps.draggable ? 'true' : undefined}
     ref={element => registerElement(id, element)} role="group" tabIndex={0} aria-label={label}
     aria-grabbed={cardDragProps.draggable ? dragging : undefined} {...cardDropProps} draggable={cardDragProps.draggable}
