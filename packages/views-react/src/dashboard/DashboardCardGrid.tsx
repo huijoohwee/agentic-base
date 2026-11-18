@@ -1,5 +1,6 @@
 import React from 'react'
 import '../browser/shared-ui-profile.css'
+import 'agentic-design-system/collection-layout.css'
 
 export type DashboardCardAccent = 'primary' | 'secondary' | 'success' | 'warning' | 'neutral'
 export type DashboardCard = {
@@ -38,9 +39,9 @@ export function DashboardCardGrid({
   accentClassNameByRole = {},
 }: DashboardCardGridProps) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3'
-  return <section className="agentic-dashboard-region"><ol aria-label={ariaLabel} data-columns={columns} className={['agentic-dashboard-grid', className].filter(Boolean).join(' ')}>
-    {cards.map(card => <li key={card.id} data-accent={card.accent} className={[
-      'agentic-dashboard-card',
+  return <section className="agentic-dashboard-region"><ol aria-label={ariaLabel} data-columns={columns} data-layout="grid" className={['agentic-collection', className].filter(Boolean).join(' ')}>
+    {cards.map(card => <li key={card.id} data-accent={card.accent} data-layout="grid" className={[
+      'agentic-collection-item agentic-dashboard-card',
       accentClassNameByRole[card.accent || 'neutral'] || '',
       cardClassName,
     ].filter(Boolean).join(' ')}>
