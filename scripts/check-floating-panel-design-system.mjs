@@ -143,7 +143,7 @@ for (const file of files) {
 if (violations.length) fail(violations.join('\n- '))
 console.log(`PASS direct Design System panel consumer · ${designSystemCommit.slice(0, 9)} · ${files.length} CSS files scanned.`)
 
-for (const removed of ['settings/SettingsSectionHeader.tsx', 'dashboard/DashboardWidgetDisclosure.tsx']) {
+for (const removed of ['settings/SettingsSectionHeader.tsx', 'settings/settingsPanelShell.css', 'dashboard/DashboardWidgetDisclosure.tsx']) {
   try { await access(join(sourceRoot, removed)); fail(`duplicate section renderer: ${removed}`) }
   catch (error) { if (error.code !== 'ENOENT') throw error }
 }
