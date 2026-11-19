@@ -1,14 +1,14 @@
 {
   "schema": "sheets/artifact/v1",
   "contract": "sheets/workbook/v1",
-  "sourceDigest": "50df64e1c6a899ed254e49c29443b913499063cb128f09438310753b8f8965ee",
+  "sourceDigest": "e3ad3819b32283e25bee24a4f21f6196595f3fd8a30c3a77392412ae6e2e3125",
   "designSystem": {
-    "revision": "fd18c30f7820bace18b450f9fc40206392c0de28",
+    "revision": "55af790e365915fe1bde17ea8d4d887f80365f1a",
     "profileSource": "0e1a21ff98a02604b7f733c6705380133c3d7d1c",
     "profileSha256": "cb69acc13a7a9e9687675b354abd0bbc860ce68bbbb50e4f68d9efa2dbbbacfd",
     "licenseSha256": "b2e476300173b31043c1222c840b5cd3a8c234d50ffc5f44f104fcbf66fc5ffe"
   },
-  "artifactDigest": "a824804966bd81529fa1e5a731f23cd5a998325dff06249aa4bc4630e35c0b0e",
+  "artifactDigest": "1e35497bed22d271659fca135a435ccc0461f95c4d67f391f665338e8fa18bb3",
   "totalBytes": 67366,
   "inputs": [
     {
@@ -19,7 +19,7 @@
     {
       "path": "package.json",
       "bytes": 3353,
-      "sha256": "72487072a0025bb902763c8cef54e3c4af69bc4ce5cd14dc59c8344c602f6dd3"
+      "sha256": "b4bf5f313da915c484e2b405d8a399f80cd11e079712618ea41f0ecb174333e6"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
@@ -29,7 +29,7 @@
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 1024,
-      "sha256": "74e5af9c08d906f01adce5552a5317f979fd0b8bfbce22793517f4ff6ee778ce"
+      "sha256": "8fa8af657c6fd7cface73c5ffede26891d901af5e41f508cd8f8606c956fa7a3"
     },
     {
       "path": "sheets/app.mjs",
@@ -141,7 +141,7 @@
     {
       "path": "sw.js",
       "bytes": 1286,
-      "sha256": "409b86d2fdd3760877e15341170f244ac4e14e0f481835ac651fe3f0bb74589c"
+      "sha256": "cf6e123b844e603b4d98ffadeb87c5b232e5deefe2ae015bcc5a038de914f818"
     }
   ]
 }
