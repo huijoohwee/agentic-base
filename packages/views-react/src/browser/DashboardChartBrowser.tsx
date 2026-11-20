@@ -15,11 +15,12 @@ function snapshot(state: DashboardChartState): DashboardChartState {
     || typeof state.gridEnabled !== 'boolean' || !Array.isArray(state.series) || !state.series.length || state.series.length > 1000)
     throw new TypeError('Invalid dashboard chart settings or series length.')
   const labels = new Set<string>()
-  const series = state.series.map(({ label, value, detail }) => {
+  const series = state.series.map(({ label, tickLabel, value, detail }) => {
     if (typeof label !== 'string' || !label.trim() || label.length > 256 || labels.has(label) || !Number.isFinite(value)
+      || (tickLabel !== undefined && (typeof tickLabel !== 'string' || tickLabel.length > 256))
       || (detail !== undefined && (typeof detail !== 'string' || detail.length > 4096))) throw new TypeError('Invalid dashboard chart point.')
     labels.add(label)
-    return { label, value, detail }
+    return { label, tickLabel, value, detail }
   })
   return { ...state, series }
 }

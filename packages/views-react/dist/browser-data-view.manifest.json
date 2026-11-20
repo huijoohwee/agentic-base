@@ -13,8 +13,8 @@
   "inputs": [
     {
       "path": "packages/views-react/src/browser/DashboardChartBrowser.tsx",
-      "bytes": 1755,
-      "sha256": "34bbf7ae076900b1a051b40037d2a566fc90e8f34d6c61a7b36c6ea34c960875"
+      "bytes": 1873,
+      "sha256": "f228f47d59d60ce1091f23c81c64f8cf2198a82f236a439c34171f12aa0132fc"
     },
     {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
@@ -83,8 +83,8 @@
     },
     {
       "path": "packages/views-react/src/dashboard/DashboardCharts.tsx",
-      "bytes": 9989,
-      "sha256": "5aad7c836661f1542a97c78bab5f768400da6f028ad76e6e5a61b4fb02444560"
+      "bytes": 10564,
+      "sha256": "7e6f252084cfb288bf599b728ed039920a8221a58f36ffe0863ccfbb7f7c10e9"
     },
     {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
@@ -150,8 +150,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 335258,
-      "sha256": "2a9bd6b1de4d92b37c90afe6076509e12e77cb672ecb5e46b9db6414fbaf1302"
+      "bytes": 335678,
+      "sha256": "98f581f15f6bbc44eacd61e79fbb803c05b8544e99c3af5069bac88c3a7fc3ea"
     },
     {
       "path": "dropdown-menus.js",

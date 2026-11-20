@@ -74,21 +74,17 @@ function ChartGridLines(props: {
   y: d3.ScaleLinear<number, number>
   gridEnabled: boolean
 }) {
-  if (!props.gridEnabled) return null
   const ticks = props.y.ticks(4)
   return (
     <g aria-hidden="true">
       {ticks.map(tick => (
-        <line
-          key={tick}
-          x1={CHART_PADDING.left}
-          x2={CHART_WIDTH - CHART_PADDING.right}
-          y1={props.y(tick)}
-          y2={props.y(tick)}
-          stroke="var(--agentic-base-dashboard-border, #d1d5db)"
-          strokeOpacity={0.62}
-          strokeWidth={0.8}
-        />
+        <g key={tick}>
+          {props.gridEnabled && <line x1={CHART_PADDING.left} x2={CHART_WIDTH - CHART_PADDING.right}
+            y1={props.y(tick)} y2={props.y(tick)} stroke="var(--agentic-base-dashboard-border, #d1d5db)"
+            strokeOpacity={0.62} strokeWidth={0.8} />}
+          <text x={CHART_PADDING.left - 4} y={props.y(tick)} dy="0.32em" textAnchor="end"
+            fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="9">{formatNumber(tick)}</text>
+        </g>
       ))}
     </g>
   )
@@ -100,7 +96,7 @@ export function DashboardLineAreaChart(props: {
   gridEnabled: boolean
   area?: boolean
 }) {
-  const series = props.series.length ? props.series : [{ label: '0', value: 0 }]
+  const series: readonly DashboardSeriesPoint[] = props.series.length ? props.series : [{ label: '0', value: 0 }]
   const [tooltip, setTooltip] = React.useState<DashboardChartTooltipState | null>(null)
   const x = d3
     .scaleLinear()
@@ -190,12 +186,12 @@ export function DashboardLineAreaChart(props: {
       ))}
       {series.slice(0, 1).map(point => (
         <text key="start" x={CHART_PADDING.left} y={CHART_HEIGHT - 8} fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="10">
-          {clampLabel(point.label)}
+          {clampLabel(point.tickLabel ?? point.label)}
         </text>
       ))}
-      {series.slice(-1).map(point => (
+      {series.length > 1 && series.slice(-1).map(point => (
         <text key="end" x={CHART_WIDTH - CHART_PADDING.right} y={CHART_HEIGHT - 8} textAnchor="end" fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="10">
-          {clampLabel(point.label)}
+          {clampLabel(point.tickLabel ?? point.label)}
         </text>
       ))}
       <DashboardChartTooltipOverlay tooltip={tooltip} />
@@ -208,7 +204,7 @@ export function DashboardBarChart(props: {
   tone: DashboardTone
   gridEnabled: boolean
 }) {
-  const series = props.series.length ? props.series : [{ label: '0', value: 0 }]
+  const series: readonly DashboardSeriesPoint[] = props.series.length ? props.series : [{ label: '0', value: 0 }]
   const [tooltip, setTooltip] = React.useState<DashboardChartTooltipState | null>(null)
   const x = d3
     .scaleBand<string>()
@@ -222,6 +218,9 @@ export function DashboardBarChart(props: {
     .range([CHART_HEIGHT - CHART_PADDING.bottom, CHART_PADDING.top])
   const colors = DASHBOARD_CHART_TONE_COLORS[props.tone]
   const zeroY = y(0)
+  const longest = series.reduce((max, point) => Math.max(max, clampLabel(point.tickLabel ?? point.label).length), 1)
+  const labelSlots = Math.max(1, Math.floor((CHART_WIDTH - CHART_PADDING.left - CHART_PADDING.right) / (longest * 5.5 + 8)))
+  const labelStep = Math.ceil(series.length / labelSlots)
 
   return (
     <svg
@@ -233,11 +232,10 @@ export function DashboardBarChart(props: {
       onKeyDown={event => { if (event.key === 'Escape') setTooltip(null) }}
     >
       <ChartGridLines y={y} gridEnabled={props.gridEnabled} />
-      {series.map(point => {
+      {series.map((point, index) => {
         const xPos = x(point.label) ?? CHART_PADDING.left
         const yValue = y(point.value)
-        const yPos = y(Math.max(0, point.value))
-        const height = Math.max(2, Math.abs(zeroY - yPos))
+        const height = Math.abs(zeroY - yValue)
         const showTooltip = (event: React.MouseEvent<SVGGElement> | React.FocusEvent<SVGGElement>) => {
           const tooltipState = {
             point, anchor: event.currentTarget,
@@ -258,7 +256,7 @@ export function DashboardBarChart(props: {
             onFocus={showTooltip}
             onBlur={() => setTooltip(null)}
           >
-            <rect x={xPos} y={Math.min(zeroY, yPos)} width={x.bandwidth()} height={height} rx={4} fill={colors.bar} />
+            <rect x={xPos} y={Math.min(zeroY, yValue)} width={x.bandwidth()} height={height} rx={4} fill={colors.bar} />
             <rect
               x={xPos}
               y={CHART_PADDING.top}
@@ -267,9 +265,9 @@ export function DashboardBarChart(props: {
               fill="transparent"
               aria-hidden="true"
             />
-            <text x={xPos + x.bandwidth() / 2} y={CHART_HEIGHT - 8} textAnchor="middle" fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="9">
-              {clampLabel(point.label)}
-            </text>
+            {index % labelStep === 0 && <text x={xPos + x.bandwidth() / 2} y={CHART_HEIGHT - 8} textAnchor="middle" fill="var(--agentic-base-dashboard-text-tertiary, #6b7280)" fontSize="9">
+              {clampLabel(point.tickLabel ?? point.label)}
+            </text>}
           </g>
         )
       })}
