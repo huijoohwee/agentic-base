@@ -1,4 +1,4 @@
-html { color-scheme: light dark; font: var(--agentic-font-size-body)/var(--agentic-line-height-body) var(--agentic-font-sans); color: var(--agentic-panel-foreground); background: var(--agentic-panel-background); }
+html { color-scheme: light dark; color: var(--agentic-panel-foreground); background: var(--agentic-panel-background); }
 * { box-sizing: border-box; }
 body { margin: 0; }
 main { max-width: var(--agentic-dashboard-max-width); margin-inline: auto; padding: var(--agentic-dashboard-inset); min-width: 0; }

@@ -22,12 +22,13 @@ for (const [, value] of css.matchAll(/(?:font-size|border-radius)\s*:\s*([^;\s]+
 }
 
 for (const token of [
-  '--agentic-font-sans', '--agentic-font-size-body', '--agentic-line-height-body',
   '--agentic-base-text-primary', '--agentic-base-text-secondary', '--agentic-base-border',
   '--agentic-dashboard-primary', '--agentic-dashboard-card-gap', '--agentic-dashboard-max-width',
   '--agentic-control-height', '--agentic-control-radius', '--agentic-control-focus-width',
 ]) require(css.includes(`var(${token}`), `demo does not consume ${token}`)
 
+require(html.includes('<body data-agentic-typography') && html.includes('view-picker-label agentic-fact-label'), 'demo must consume shared body and fact label typography')
+require(!/\b(?:font(?:-size|-family)?|line-height)\s*:/u.test(css.match(/:root\s*\{([^}]*)/u)?.[1] ?? ''), 'root font sizing would rescale the shared rem tokens')
 require(html.includes('href="/demo/browser-data-view.css?v=31"'), 'shared offline projection stylesheet is not loaded')
 require(html.includes('class="shell agentic-dashboard-layout"'), 'demo shell does not use the shared dashboard layout')
 require((html.match(/class="panel agentic-dashboard-card"/gu) ?? []).length >= 3, 'demo panels do not use the shared dashboard card')
