@@ -1,5 +1,5 @@
 import React from 'react'
-import { createRoot } from 'react-dom/client'
+import { mountBrowserView } from './mountBrowserView'
 import { TableHostProvider } from '../table/TableHostContext'
 import { TableView } from '../table/TableView'
 import { MultiDimTableView } from '../table/MultiDimTableView'
@@ -31,7 +31,6 @@ export type DataViewBrowserState = {
 }
 export type DataViewBrowserHandle = { update: (next: DataViewBrowserState) => void; destroy: () => void }
 
-const mountedTargets = new WeakSet<HTMLElement>()
 function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   if (!input || typeof input !== 'object') throw new TypeError('Data view state must be an object.')
   const string = (value: unknown, max: number, label: string, nonempty = false): string => {
@@ -163,25 +162,5 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
 
 /** Mount one bounded, offline table surface into a consumer-owned element. Cells are always text. */
 export function mountDataView(target: HTMLElement, initial: DataViewBrowserState): DataViewBrowserHandle {
-  const state = snapshot(initial)
-  const ElementClass = target?.ownerDocument?.defaultView?.HTMLElement
-  if (!ElementClass || !(target instanceof ElementClass)) throw new TypeError('Data view target must be an HTML element.')
-  if (mountedTargets.has(target)) throw new Error('Data view target is already mounted.')
-  const root = createRoot(target)
-  mountedTargets.add(target)
-  let destroyed = false
-  const render = (next: DataViewBrowserState) => root.render(<BrowserDataView key={`${next.layout ?? 'table'}:${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} />)
-  render(state)
-  return {
-    update(next) {
-      if (destroyed) throw new Error('Data view is destroyed.')
-      render(snapshot(next))
-    },
-    destroy() {
-      if (destroyed) return
-      destroyed = true
-      root.unmount()
-      mountedTargets.delete(target)
-    },
-  }
+  return mountBrowserView(target, initial, snapshot, next => <BrowserDataView key={`${next.layout ?? 'table'}:${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} />)
 }
