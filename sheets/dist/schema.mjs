@@ -1,5 +1,6 @@
 export const CONTRACT = 'sheets/workbook/v1';
-export const LIMITS = Object.freeze({ rows: 32, columns: 16, formulas: 64, textBytes: 1024,
+export const STARTER_GRID = Object.freeze({ rows: 32, columns: 16 });
+export const LIMITS = Object.freeze({ rows: 512, columns: 128, gridCells: 4096, populatedCells: 512, formulas: 64, textBytes: 1024,
   formulaBytes: 256, bytes: 262144, tokens: 128, depth: 16, edges: 512, steps: 4096, operations: 64 });
 export class SheetsError extends Error {
   constructor(code, message) { super(message); this.name = 'SheetsError'; this.code = code; }
@@ -20,12 +21,29 @@ export function identifier(value) {
   requireValue(typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/.test(value), 'INVALID_ID', 'Invalid identity');
   return value;
 }
-export function coordinate(address) {
-  const match = typeof address === 'string' && /^([A-P])([1-9]|[12][0-9]|3[0-2])$/.exec(address);
-  requireValue(match, 'REFERENCE', 'Cell address must be A1 through P32');
-  return { row: Number(match[2]) - 1, column: match[1].charCodeAt(0) - 65 };
+export function fitsGrid(rows, columns) {
+  return Number.isSafeInteger(rows) && rows > 0 && rows <= LIMITS.rows
+    && Number.isSafeInteger(columns) && columns > 0 && columns <= LIMITS.columns
+    && rows * columns <= LIMITS.gridCells;
 }
-export const addressOf = (row, column) => `${String.fromCharCode(65 + column)}${row + 1}`;
+export function coordinate(address, bounds = LIMITS) {
+  const match = typeof address === 'string' && /^([A-Z]{1,2})([1-9][0-9]{0,2})$/.exec(address);
+  requireValue(match, 'REFERENCE', 'Invalid worksheet address');
+  let column = 0;
+  for (const letter of match[1]) column = column * 26 + letter.charCodeAt(0) - 64;
+  const row = Number(match[2]);
+  requireValue(row <= bounds.rows && column <= bounds.columns, 'REFERENCE', 'Address outside worksheet bounds');
+  return { row: row - 1, column: column - 1 };
+}
+export function columnLabel(index) {
+  requireValue(Number.isInteger(index) && index >= 0 && index < LIMITS.columns, 'REFERENCE', 'Invalid column index');
+  let label = '';
+  for (let n = index + 1; n > 0; n = Math.floor((n - 1) / 26)) {
+    label = String.fromCharCode(65 + (n - 1) % 26) + label;
+  }
+  return label;
+}
+export const addressOf = (row, column) => columnLabel(column) + (row + 1);
 export function canonical(value) {
   let nodes = 0, bytes = 0;
   const charge = count => { bytes += count; requireValue(bytes <= LIMITS.bytes, 'LIMIT', 'Snapshot or command exceeds 256 KiB'); };
@@ -69,12 +87,12 @@ export function validateWorkbook(input) {
   identifier(input.workbookId); identifier(input.sheetId);
   requireValue(typeof input.name === 'string' && input.name.trim() && byteLength(input.name) <= 80, 'INVALID', 'Workbook name must contain 1–80 bytes');
   requireValue(Number.isSafeInteger(input.revision) && input.revision >= 1, 'INVALID_REVISION', 'Invalid workbook revision');
-  requireValue(input.rows === LIMITS.rows && input.columns === LIMITS.columns, 'LIMIT', 'Workbook dimensions must be 32 × 16');
+  requireValue(fitsGrid(input.rows, input.columns), 'LIMIT', 'Workbook dimensions exceed the local grid limit');
   record(input.cells, 'Cells');
-  requireValue(Object.keys(input.cells).length <= 512, 'LIMIT', 'Cell limit exceeded');
+  requireValue(Object.keys(input.cells).length <= LIMITS.populatedCells, 'LIMIT', 'Cell limit exceeded');
   let formulas = 0;
   for (const [address, cell] of Object.entries(input.cells)) {
-    coordinate(address); validateCell(cell);
+    coordinate(address, input); validateCell(cell);
     if (cell.type === 'formula') formulas++;
   }
   requireValue(formulas <= LIMITS.formulas, 'LIMIT', 'Formula cell limit exceeded');

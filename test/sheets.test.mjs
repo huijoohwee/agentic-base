@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CONTRACT, LIMITS, executeWorkbook, prepareCommand, applyPrepared, calculate, encodeSnapshot, decodeSnapshot, sampleCells } from '../sheets/core.mjs';
-import { parseInput, inputOf } from '../sheets/schema.mjs';
+import { parseInput, inputOf } from '../sheets/dist/schema.mjs';
 let seq = 0;
 const command = (operation, revision, payload, operationId = `op_${++seq}`) => ({ contract: CONTRACT, operationId, operation, expectedRevision: revision, payload });
 const create = cells => executeWorkbook(null, command('create', 0, { workbookId: 'book_1', sheetId: 'sheet_1', name: 'Local workbook', cells: cells ?? sampleCells() }));
@@ -38,7 +38,7 @@ test('stale revisions, unknown fields, invalid cell coordinates/types and ID reu
   assert.equal(replay.workbook.revision, first.workbook.revision);
   await assert.rejects(executeWorkbook(first.workbook, { ...edit, payload: { ...edit.payload, changes: [{ address: 'A5', cell: cell(6) }] } }), { code: 'OPERATION_REUSE' });
   await assert.rejects(executeWorkbook(first.workbook, change(workbook, [{ address: 'A5', cell: null }], 'another')), { code: 'CONFLICT' });
-  for (const changes of [[{ address: 'Z1', cell: cell(1) }], [{ address: 'A1', cell: { type: 'number', value: Infinity } }], [{ address: 'A1', cell: cell(1) }, { address: 'A1', cell: null }]]) await assert.rejects(executeWorkbook(workbook, change(workbook, changes)));
+  for (const changes of [[{ address: 'XFE1', cell: cell(1) }], [{ address: 'A1', cell: { type: 'number', value: Infinity } }], [{ address: 'A1', cell: cell(1) }, { address: 'A1', cell: null }]]) await assert.rejects(executeWorkbook(workbook, change(workbook, changes)));
   await assert.rejects(executeWorkbook(workbook, { ...change(workbook, [{ address: 'A1', cell: null }]), unexpected: true }), { code: 'INVALID' });
 });
 test('prepared commands capture private nested bytes before the caller can mutate them', async () => {
