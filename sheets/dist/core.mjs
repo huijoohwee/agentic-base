@@ -1,5 +1,6 @@
-import { CONTRACT, LIMITS, SheetsError, requireValue, keys, identifier, coordinate, canonical, validateCell, validateWorkbook, decodeSnapshot } from './schema.mjs';
+import { CONTRACT, LIMITS, STARTER_GRID, SheetsError, requireValue, keys, identifier, coordinate, canonical, validateCell, validateWorkbook, decodeSnapshot } from './schema.mjs';
 import { calculate as calculateCells } from './formula.mjs';
+export { inspectFormulaDraft, listFunctions } from './formula.mjs';
 export { CONTRACT, LIMITS, SheetsError, validateWorkbook, decodeSnapshot };
 export function calculate(input) { return calculateCells(validateWorkbook(input)); }
 export function encodeSnapshot(input) { return canonical(validateWorkbook(input)); }
@@ -18,10 +19,17 @@ export async function prepareCommand(input) {
   preparedCommands.set(prepared, command);
   return prepared;
 }
+function extendTo(shape, { row, column }) {
+  shape.rows = Math.max(shape.rows, row + 1);
+  shape.columns = Math.max(shape.columns, column + 1);
+}
 function empty(payload) {
-  keys(payload, ['workbookId', 'sheetId', 'name', 'cells'], ['workbookId', 'sheetId', 'name']);
+  keys(payload, ['workbookId', 'sheetId', 'name', 'cells', 'fitToCells'], ['workbookId', 'sheetId', 'name']);
+  requireValue(payload.fitToCells === undefined || typeof payload.fitToCells === 'boolean', 'INVALID', 'fitToCells must be boolean');
+  const shape = payload.fitToCells ? { rows: 1, columns: 1 } : { ...STARTER_GRID };
+  for (const address of Object.keys(payload.cells ?? {})) extendTo(shape, coordinate(address));
   return { contract: CONTRACT, schemaVersion: 1, workbookId: identifier(payload.workbookId), sheetId: identifier(payload.sheetId),
-    name: payload.name, revision: 1, rows: LIMITS.rows, columns: LIMITS.columns, cells: payload.cells ?? {}, operations: [] };
+    name: payload.name, revision: 1, ...shape, cells: payload.cells ?? {}, operations: [] };
 }
 export function applyPrepared(currentInput, prepared) {
   requireValue(preparedCommands.has(prepared), 'INVALID', 'Command must be captured by prepareCommand');
@@ -48,13 +56,13 @@ export function applyPrepared(currentInput, prepared) {
     if (operation === 'setCells') {
       keys(payload, ['workbookId', 'sheetId', 'changes']);
       requireValue(payload.sheetId === current.sheetId, 'CONFLICT', 'Worksheet identity changed');
-      requireValue(Array.isArray(payload.changes) && payload.changes.length > 0 && payload.changes.length <= 512, 'LIMIT', 'Expected 1–512 changes');
+      requireValue(Array.isArray(payload.changes) && payload.changes.length > 0 && payload.changes.length <= LIMITS.populatedCells, 'LIMIT', 'Expected 1–512 changes');
       const seen = new Set();
       for (const change of payload.changes) {
-        keys(change, ['address', 'cell']); coordinate(change.address);
+        keys(change, ['address', 'cell']); const position = coordinate(change.address);
         requireValue(!seen.has(change.address), 'INVALID', 'Duplicate edited cell'); seen.add(change.address);
         if (change.cell === null) delete next.cells[change.address];
-        else next.cells[change.address] = validateCell(change.cell);
+        else { next.cells[change.address] = validateCell(change.cell); extendTo(next, position); }
       }
     } else {
       keys(payload, ['workbookId', 'snapshot', 'mode', 'newWorkbookId', 'newSheetId'], ['workbookId', 'snapshot', 'mode']);
