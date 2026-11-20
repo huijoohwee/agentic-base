@@ -12,9 +12,14 @@
   },
   "inputs": [
     {
+      "path": "packages/views-react/src/browser/DashboardChartBrowser.tsx",
+      "bytes": 1755,
+      "sha256": "34bbf7ae076900b1a051b40037d2a566fc90e8f34d6c61a7b36c6ea34c960875"
+    },
+    {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
-      "bytes": 11072,
-      "sha256": "2b98fb8076ff3bcac36c8de5c353f5cfa775d3772d2e26f2da1f524d679064aa"
+      "bytes": 10344,
+      "sha256": "b39b13d6389d14bb57fa6977f0947d3a415036314f1ac6a972a38771f5cbf77c"
     },
     {
       "path": "packages/views-react/src/browser/base-profile.css",
@@ -33,8 +38,13 @@
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
-      "bytes": 175,
-      "sha256": "38310e61f58a6cbec4ddc354e6bcda4319602df70886980226e86c456c8effa6"
+      "bytes": 263,
+      "sha256": "02a7f7edfa723d2726b87908e2c00bb54ec71e25af378bb0cfac8b8374107c1f"
+    },
+    {
+      "path": "packages/views-react/src/browser/mountBrowserView.ts",
+      "bytes": 985,
+      "sha256": "6cb3f7701026c5ec6de8f2863f9781295620b148cd0acd84d6f813e72fb03056"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
@@ -70,6 +80,11 @@
       "path": "packages/views-react/src/controls/nativeSelect.ts",
       "bytes": 8852,
       "sha256": "5e0c64e5d53ecd4778d5553d02a71dd87cc1be915be94abf3f32c53814cfae78"
+    },
+    {
+      "path": "packages/views-react/src/dashboard/DashboardCharts.tsx",
+      "bytes": 9989,
+      "sha256": "5aad7c836661f1542a97c78bab5f768400da6f028ad76e6e5a61b4fb02444560"
     },
     {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
@@ -135,8 +150,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 241765,
-      "sha256": "c8ca1341293ad4e1ac4983071063796cc44fee4b56de32dd247292f9205f47b2"
+      "bytes": 335258,
+      "sha256": "2a9bd6b1de4d92b37c90afe6076509e12e77cb672ecb5e46b9db6414fbaf1302"
     },
     {
       "path": "dropdown-menus.js",
@@ -145,8 +160,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 40794,
-      "sha256": "d76509e46e3a05395021aeff2b8af03874305678f22683a29a50330ed53e61a0"
+      "bytes": 42517,
+      "sha256": "f5a0dff85b1633d11e42e63e17814df500faf1e1ef99b87278e67494b141b267"
     }
   ]
 }

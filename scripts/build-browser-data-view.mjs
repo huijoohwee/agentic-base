@@ -37,6 +37,10 @@ const built = await build({
   platform: 'browser',
   target: 'es2022',
   jsx: 'automatic',
+  // The consumer profile is already pinned and embedded below. Keep the chart's hover CSS.
+  plugins: [{ name: 'existing-shared-profile', setup(plugin) {
+    plugin.onLoad({ filter: /agentic-design-system[/\\]site[/\\]vendor[/\\]shared-ui-profile\.css$/ }, () => ({ contents: '', loader: 'css' }))
+  } }],
   minify: true,
   alias: {
     react: path.join(root, 'node_modules/react'),
@@ -47,7 +51,9 @@ const built = await build({
   define: { 'process.env.NODE_ENV': '"production"' },
   metafile: true,
 })
-if (built.outputFiles.length !== 1) throw new Error('Expected one browser JavaScript bundle.')
+const js = built.outputFiles.find(file => file.path.endsWith('.js'))
+const css = built.outputFiles.find(file => file.path.endsWith('.css'))
+if (!js || !css || built.outputFiles.length !== 2) throw new Error('Expected dashboard JavaScript and hover CSS.')
 const outputMetadata = Object.values(built.metafile.outputs).find(output => output.entryPoint === `${sourceRoot}/browser/index.ts`)
 if (!outputMetadata || outputMetadata.imports.length) throw new Error('Browser artifact must contain no external imports.')
 const dropdown = await build({ absWorkingDir: root, entryPoints: [sourceRoot + '/controls/nativeSelect.ts'], bundle: true, write: false, format: 'esm', platform: 'browser', target: 'es2022', minify: true, metafile: true })
@@ -61,12 +67,22 @@ const inputRows = [...Object.keys(built.metafile.inputs), ...Object.keys(dropdow
     const bytes = fs.readFileSync(path.join(root, relative))
     return { path: relative, bytes: bytes.length, sha256: digest(bytes) }
   })
+// Retain redistributable notices for every third-party package contributing executable bytes.
+const packages = new Set(Object.entries(outputMetadata.inputs).filter(([, input]) => input.bytesInOutput > 0)
+  .map(([file]) => file.match(/(?:^|\/)node_modules\/((?:@[^/]+\/)?[^/]+)\//)?.[1]).filter(Boolean))
+const notices = [...packages].sort().map(name => {
+  const dir = path.join(root, 'node_modules', name)
+  const file = fs.readdirSync(dir).find(file => /^LICEN[SC]E(?:\.md|\.txt)?$/i.test(file))
+  if (!file) throw new Error('Missing package license: ' + name)
+  return name + '\n' + fs.readFileSync(path.join(dir, file), 'utf8').replaceAll('*/', '* /')
+}).join('\n')
 const files = new Map([
-  ['browser-data-view.js', built.outputFiles[0].contents],
+  ['browser-data-view.js', Buffer.concat([js.contents, Buffer.from('\n/*!\n' + notices + '\n*/\n')])],
   ['dropdown-menus.js', dropdown.outputFiles[0].contents],
   ['browser-data-view.css', Buffer.concat([
     sharedUi.css,
     baseProfile.css,
+    css.contents,
     Buffer.from('\n'),
     Buffer.from((await transform(fs.readFileSync(path.join(root, `${sourceRoot}/browser/browserDataView.css`), 'utf8'), {
       loader: 'css', minifyWhitespace: true, legalComments: 'inline',
