@@ -1,8 +1,5 @@
 :root {
   color-scheme: light;
-  font-family: var(--agentic-font-sans);
-  font-size: var(--agentic-font-size-body);
-  line-height: var(--agentic-line-height-body);
   color: var(--agentic-base-text-primary);
   background: Canvas;
   font-synthesis: none;

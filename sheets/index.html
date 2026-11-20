@@ -12,7 +12,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <script type="module" src="./app.mjs"></script>
 </head>
-<body class="agentic-form-controls">
+<body data-agentic-typography class="agentic-form-controls">
   <main>
     <header><div><h1>Agentic Sheets</h1><p>A small workbook, saved on this device.</p></div><output id="connection" aria-live="polite">Preparing offline access…</output></header>
     <nav class="sheet-toolbar" aria-label="Workbook actions">
@@ -26,7 +26,7 @@
     <form id="editor-form" aria-label="Cell editor">
       <fieldset id="editor-fieldset" disabled>
         <legend>Cell editor</legend>
-        <label for="cell-input"><output id="address">A1</output><span id="cell-kind">Empty cell</span></label>
+        <label class="agentic-fact-label" for="cell-input"><output id="address">A1</output><span id="cell-kind">Empty cell</span></label>
         <input id="cell-input" name="cell" aria-label="Cell value or formula" aria-describedby="syntax draft" autocomplete="off" spellcheck="false">
         <div class="editor-actions"><button id="commit" type="submit">Commit cell</button><button id="cancel" type="button">Cancel edit</button></div>
         <output id="draft">Accepted value</output>

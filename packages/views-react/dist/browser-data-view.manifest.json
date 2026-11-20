@@ -38,13 +38,13 @@
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.css",
-      "bytes": 25018,
-      "sha256": "d649b23f9b0fcf4ed0e4a16b8d12f94bb418a3fe58dc0d0bb37db7fdffcf9de1"
+      "bytes": 25314,
+      "sha256": "ba95bb2de809f84c35aec409c89f305442b536741cbd0987d43ff8ecc6bf9e17"
     },
     {
       "path": "packages/views-react/src/browser/shared-ui-profile.pin.json",
       "bytes": 1024,
-      "sha256": "5ade6e602fce4f002ae27c6b681f555251c8f41f3485337d944a88774af72612"
+      "sha256": "7d9bacb2cdf27eef8467034f9a35c8e5f7330bb7440451a5838e71199b8bc142"
     },
     {
       "path": "packages/views-react/src/controls/MenuControls.tsx",
@@ -64,7 +64,7 @@
     {
       "path": "packages/views-react/src/controls/icons.pin.json",
       "bytes": 285,
-      "sha256": "04cac28ed4e5292a769287231314699bdc93df365cb442c0dc5f2b9cf5bde3a8"
+      "sha256": "52d08a9146b2b7c6c708141665ba631c7818f6c40b6901ae407e837fda6a3196"
     },
     {
       "path": "packages/views-react/src/controls/nativeSelect.ts",
@@ -136,7 +136,7 @@
     {
       "path": "browser-data-view.js",
       "bytes": 241765,
-      "sha256": "bc865aaab335855897f74119598ac100df224d448a9d6c53e5211bc4f2594eed"
+      "sha256": "c8ca1341293ad4e1ac4983071063796cc44fee4b56de32dd247292f9205f47b2"
     },
     {
       "path": "dropdown-menus.js",
@@ -145,8 +145,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 40498,
-      "sha256": "1da7685bae171e2bd21c2ea7d8a4948a7487d7e66a549eba8802b8d8f3800c6d"
+      "bytes": 40794,
+      "sha256": "d76509e46e3a05395021aeff2b8af03874305678f22683a29a50330ed53e61a0"
     }
   ]
 }
