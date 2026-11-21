@@ -35,7 +35,7 @@ export function ColumnsTableView(props: {
   hasNestedRowHierarchy: boolean
   areAllNestedRowsCollapsed: boolean
   collapsedNestedRowIds: ReadonlySet<string>
-  tableFit: 'container' | 'content'
+  tableFit?: 'container' | 'content'
   columnTypesById?: Record<string, ViewColumnType> | null
   canConfigure: boolean
   canMutate: boolean
@@ -63,8 +63,6 @@ export function ColumnsTableView(props: {
     TagChip, ColumnTypeMenu, ColumnHeaderPropertyTypeMenu, ColumnHeaderMenu,
     HierarchyCell, InlineTextCellEditor, NestedRowsBulkToggle, ColumnResizeHandle,
   } = components
-  const tableWidth = props.readColumnWidth(TABLE_FIELD_COLUMN_ID, 168)
-    + props.visibleNestedRowStates.reduce((sum, { row }) => sum + props.readColumnWidth(`row:${row.id}`), 0)
   return (
     <TableCore
       columns={[
@@ -74,8 +72,7 @@ export function ColumnsTableView(props: {
       frameClassName={styles.dataViewTableFrameClass}
       headerClassName={`${styles.stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
       bodyClassName={themeTokens.table.text}
-      tableClassName={props.tableFit === 'container' ? 'min-w-full w-full agentic-base-data-table' : 'min-w-max w-max agentic-base-data-table'}
-      tableStyle={props.tableFit === 'container' ? { minWidth: tableWidth, width: '100%' } : { width: tableWidth }}
+      tableFit={props.tableFit}
       ariaLabel="Table view"
       header={(
         <tr>

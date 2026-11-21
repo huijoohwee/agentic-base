@@ -285,16 +285,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     return index >= 0 ? index : 0
   }, [view.columns, view.titleColumnId])
   const hierarchyColumnWidthPx = TABLE_HIERARCHY_COLUMN_WIDTH_PX
-  const rowRecordTableWidth = (hasNestedRowHierarchy ? hierarchyColumnWidthPx : 0)
-    + visibleColumnMeta.reduce((sum, { col }) => sum + readColumnWidth(col.id, readDefaultColumnWidth(col.name)), 0)
-    + (canMutate && props.onAddColumn ? 52 : 0)
-  const tableFit = props.tableFit === 'container' ? 'container' : 'content'
-  const tableSizeClassName = tableFit === 'container'
-    ? 'min-w-full w-full agentic-base-data-table'
-    : 'min-w-max w-max agentic-base-data-table'
-  const tableStyle: React.CSSProperties = tableFit === 'container'
-    ? { minWidth: rowRecordTableWidth, width: '100%', '--agentic-base-data-tree-cell-width': `${TABLE_HIERARCHY_COLUMN_WIDTH_PX}px` } as React.CSSProperties
-    : { width: rowRecordTableWidth, '--agentic-base-data-tree-cell-width': `${TABLE_HIERARCHY_COLUMN_WIDTH_PX}px` } as React.CSSProperties
   if (orientation === 'columns') {
     return (
       <ColumnsTableView
@@ -310,7 +300,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         columnTypesById={columnTypesById}
         canConfigure={canConfigure}
         canMutate={canMutate}
-        tableFit={tableFit}
+        tableFit={props.tableFit}
         editing={editing}
         cellPaddingClassName={cellPaddingClassName}
         headerPaddingClassName={headerPaddingClassName}
@@ -342,8 +332,8 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       frameClassName={dataViewTableFrameClass}
       headerClassName={`${stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
       bodyClassName={themeTokens.table.text}
-      tableClassName={tableSizeClassName}
-      tableStyle={tableStyle}
+      tableFit={props.tableFit}
+      tableStyle={{ '--agentic-base-data-tree-cell-width': `${hierarchyColumnWidthPx}px` } as React.CSSProperties}
       ariaLabel={props.ariaLabel ?? 'Table view'}
       header={(
         <TableViewHeader tableProps={props} visibleColumnMeta={visibleColumnMeta}

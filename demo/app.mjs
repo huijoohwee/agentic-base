@@ -1,5 +1,5 @@
 import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
-import { mountDataView } from './browser-data-view.js?v=31';
+import { mountDataView } from './browser-data-view.js?v=33';
 import { enhanceSelects } from './dropdown-menus.js?v=31';
 enhanceSelects(document);
 
