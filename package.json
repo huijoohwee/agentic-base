@@ -65,7 +65,7 @@
     "@types/d3": "7.4.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "agentic-design-system": "github:huijoohwee/agentic-design-system#e7e3616cefe0931f8cdba21c4791f3d9ddd4f453",
+    "agentic-design-system": "github:huijoohwee/agentic-design-system#5e3b04e8510d05923d43a0ebac40a583544ec857",
     "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/a6d6f9d3d58a6c6c134dd6056295a1bef04b5769",
     "d3": "7.9.0",
     "esbuild": "0.25.12",

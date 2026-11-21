@@ -1,4 +1,5 @@
 import React from 'react'
+import 'agentic-design-system/collection-layout.css'
 import { bindStickyHierarchy } from './stickyHierarchy'
 
 export type TableCoreColumn = { id: string; width: number }
@@ -11,7 +12,7 @@ export function TableCore<Row>(props: {
   frameClassName: string
   headerClassName: string
   bodyClassName: string
-  tableClassName?: string
+  tableFit?: 'content' | 'container'
   tableStyle?: React.CSSProperties
   ariaLabel?: string
   beforeRows?: React.ReactNode
@@ -19,11 +20,14 @@ export function TableCore<Row>(props: {
   children?: React.ReactNode
 }) {
   const label = props.ariaLabel ?? 'Table view'
+  const contentWidth = props.columns.reduce((sum, column) => sum + column.width, 0)
+  const tableStyle = { ...props.tableStyle, '--agentic-table-content-size': `${contentWidth}px` } as React.CSSProperties
   const frameRef = React.useRef<HTMLElement>(null)
   React.useLayoutEffect(() => frameRef.current ? bindStickyHierarchy(frameRef.current) : undefined, [])
   return (
-    <section ref={frameRef} className={`${props.frameClassName} isolate`} aria-label={label}>
-      <table aria-label={label} className={`${props.tableClassName ?? 'min-w-max w-max'} table-fixed border-separate border-spacing-0 text-xs`} style={props.tableStyle}>
+    <section ref={frameRef} className={`agentic-table-frame ${props.frameClassName} isolate`} aria-label={label}>
+      <table aria-label={label} data-agentic-table-fit={props.tableFit ?? 'content'}
+        className="agentic-base-data-table table-fixed border-separate border-spacing-0 text-xs" style={tableStyle}>
         <colgroup>{props.columns.map(column => <col key={column.id} style={{ width: column.width }} />)}</colgroup>
         <thead className={`${props.headerClassName} sticky top-0 z-30 isolate`} style={{ position: 'sticky', top: 0, zIndex: 30 }}>
           {props.header}
