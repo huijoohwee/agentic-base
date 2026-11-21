@@ -11,6 +11,8 @@ npm run check:browser-data-view
 npm run dev
 ```
 
+On pull requests, the required `check` job also packs the candidate Base package and runs Graph's adapter tests against its public browser export. The workflow pins the Graph suite to a reviewed commit. When advancing the pin, align the sparse checkout and the `tsx` and `jsdom` development dependencies with that revision.
+
 `npm run check` parses the modules, runs the built-in Node suite, writes bounded source evidence, and runs the pinned Agentic OS evaluations. For the React Table and Multi-dimensional Table composition fixture, run Vite with `packages/views-react/dev/vite.config.mjs`; it uses the adjacent Graph checkout for surrounding host controls and binds to `127.0.0.1:5176` with strict port selection. The root browser demo starts on `127.0.0.1:4173`, mounts the generated Base browser artifact, and caches its bounded JS/CSS for offline reload. The service worker requires a secure context, which includes localhost. The browser can evict origin storage; this MVP is not a backup service.
 
 The root workflow demo's IndexedDB check is at `http://127.0.0.1:4173/test-browser/idb-atomicity.html`; it injects a write failure against a temporary database, verifies the committed revision remains intact, and deletes the temporary database.

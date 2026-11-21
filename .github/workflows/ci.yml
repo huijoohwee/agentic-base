@@ -25,3 +25,29 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Verify source and contract
         run: npm run check
+      - name: Check out the Graph adapter suite
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: huijoohwee/agentic-graph
+          ref: d1ceb971168ce8dad819e3bcce27280297f830ee
+          path: graph-consumer
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /canvas/package.json
+            /canvas/tsconfig.json
+            /canvas/src/__tests__/dataViewBrowserAdapter.test.tsx
+            /canvas/src/features/markdown/ui/dataViewBrowserAdapter.tsx
+            /canvas/src/features/sequence/
+            /canvas/src/tests/lib/
+      - name: Run the Graph adapter suite against the Base candidate
+        if: github.event_name == 'pull_request'
+        run: |
+          archive=$(npm pack --silent --ignore-scripts --pack-destination "$RUNNER_TEMP")
+          package_name=$(node -p "require('./package.json').name")
+          package_dir="graph-consumer/node_modules/$package_name"
+          mkdir -p "$package_dir"
+          tar -xzf "$RUNNER_TEMP/$archive" --strip-components=1 -C "$package_dir"
+          cd graph-consumer
+          TSX_TSCONFIG_PATH=canvas/tsconfig.json node --import tsx --test canvas/src/__tests__/dataViewBrowserAdapter.test.tsx
