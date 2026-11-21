@@ -362,6 +362,18 @@ details[data-agentic-section]:not([open]) > summary.agentic-panel-section-header
 }
 
 /* Collection geometry, item visuals and interaction states for all hosts. */
+.agentic-table-frame {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: auto;
+}
+table[data-agentic-table-fit] {
+  inline-size: var(--agentic-table-content-size, max-content);
+}
+table[data-agentic-table-fit="container"] {
+  min-inline-size: 100%;
+}
+
 .agentic-collection {
   display: grid;
   min-inline-size: 0;
@@ -494,10 +506,9 @@ body {
 
 #grid-section {
   max-block-size: 58vh;
-  overflow: auto;
   border: var(--agentic-panel-border);
 }
-#grid-section table { border-collapse: separate; border-spacing: 0; table-layout: fixed; inline-size: max-content; min-inline-size: 100%; }
+#grid-section table { border-collapse: separate; border-spacing: 0; table-layout: fixed; }
 #grid-section :is(th, td) {
   box-sizing: border-box;
   inline-size: 8rem;
