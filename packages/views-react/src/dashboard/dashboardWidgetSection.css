@@ -5,5 +5,5 @@
   margin: .25rem 0 0;
   font-size: .875rem;
   line-height: 1.25rem;
-  color: var(--agentic-base-dashboard-text-secondary, #4b5563);
+  color: var(--agentic-base-dashboard-text-secondary);
 }
