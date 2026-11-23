@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: huijoohwee/agentic-graph
-          ref: d1ceb971168ce8dad819e3bcce27280297f830ee
+          ref: efa485ec970250b19ac24d19a2b36286d5668b20
           path: graph-consumer
           persist-credentials: false
           sparse-checkout-cone-mode: false
