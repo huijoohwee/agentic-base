@@ -1,5 +1,5 @@
-const CACHE = 'agentic-sheets-static-3c83da8e84331052e5d63537';
-const ASSETS = ["./index.html","./app.mjs","./styles.css","./core.mjs","./schema.mjs","./formula.mjs","./storage.mjs","./manifest.webmanifest","./shared-ui-profile.css","./floating-panel.mjs","./LICENSE","./LICENSE.design-system","./artifact-manifest.json"];
+const CACHE = 'agentic-sheets-static-40e738332d4c492b01ea7e17';
+const ASSETS = ["./index.html","./app.mjs","./styles.css","./core.mjs","./schema.mjs","./formula.mjs","./storage.mjs","./manifest.webmanifest","./shared-ui-profile.css","./floating-panel.js","./panel-section.js","./collection-layout.js","./skills-commands.js","./toolbar-icons.js","./icons.json","./floating-panel.mjs","./LICENSE","./LICENSE.design-system","./artifact-manifest.json"];
 const scope = new URL(self.registration.scope);
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

@@ -1,4 +1,5 @@
 import React from 'react'
+import { TableColumnHeader } from 'agentic-design-system/react/viewer'
 import { Type } from 'lucide-react'
 import { useTableHost } from './TableHostContext'
 import { defaultColumnTypeForInferredKind, labelForViewColumnType, type ViewColumnType } from './ViewColumnType'
@@ -10,7 +11,6 @@ export function TableViewHeader(args: {
   visibleColumnMeta: { col: TableViewProps['view']['columns'][number]; index: number }[]
   hasNestedRowHierarchy: boolean
   hierarchyColumnWidthPx: number
-  headerPaddingClassName: string
   areAllNestedRowsCollapsed: boolean
   toggleAllNestedRows: () => void
   multiRowSelectionEnabled: boolean
@@ -29,19 +29,19 @@ export function TableViewHeader(args: {
   const { NestedRowsBulkToggle, ColumnHeaderPropertyTypeMenu, ColumnHeaderMenu, ColumnTypeMenu, ColumnResizeHandle, AddColumnMenu } = components
   const { readDefaultColumnWidth } = helpers
   const { iconByColumnType } = icons
-  const { visibleColumnMeta, hasNestedRowHierarchy, hierarchyColumnWidthPx, headerPaddingClassName,
+  const { visibleColumnMeta, hasNestedRowHierarchy, hierarchyColumnWidthPx,
     areAllNestedRowsCollapsed, toggleAllNestedRows, multiRowSelectionEnabled, allRowsSelected,
     someRowsSelected, toggleAllRows, readColumnWidth, previewColumnResize, commitColumnResize } = state
   return (
         <tr>
             {hasNestedRowHierarchy ? (
-              <th aria-label="Nested row hierarchy" className={`${headerPaddingClassName} relative z-[31] border-b text-left ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`} style={{ width: hierarchyColumnWidthPx }}>
+              <TableColumnHeader aria-label="Nested row hierarchy" style={{ width: hierarchyColumnWidthPx }}>
                 <NestedRowsBulkToggle
                   collapsed={areAllNestedRowsCollapsed}
                   onToggle={toggleAllNestedRows}
                   selection={multiRowSelectionEnabled ? { checked: allRowsSelected, mixed: someRowsSelected, onChange: toggleAllRows } : undefined}
                 />
-              </th>
+              </TableColumnHeader>
             ) : null}
             {visibleColumnMeta.map(({ col: c }) => {
               const type = (columnTypesById && columnTypesById[c.id]) || defaultColumnTypeForInferredKind(c.kind)
@@ -54,9 +54,8 @@ export function TableViewHeader(args: {
                   ? [{ key: 'equals', label: 'equals' }, { key: 'contains', label: 'contains' }]
                   : [{ key: 'contains', label: 'contains' }, { key: 'equals', label: 'equals' }]
               return (
-              <th
+              <TableColumnHeader
                 key={c.id}
-                className={`${headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}
               >
                 <section className="flex min-w-0 items-center gap-2 overflow-hidden">
                   <ColumnHeaderPropertyTypeMenu
@@ -114,12 +113,11 @@ export function TableViewHeader(args: {
                   />
                 </section>
                 <ColumnResizeHandle columnId={c.id} width={readColumnWidth(c.id, readDefaultColumnWidth(c.name))} onPreview={previewColumnResize} onCommit={commitColumnResize} />
-              </th>
+              </TableColumnHeader>
               )
             })}
             {canMutate && props.onAddColumn ? (
-              <th
-                className={`${headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}
+              <TableColumnHeader
               >
                 <AddColumnMenu
                   ariaLabel="Add column"
@@ -129,7 +127,7 @@ export function TableViewHeader(args: {
                   summaryClassName={['list-none', menuIconActionClass, 'rounded border cursor-pointer', themeTokens.panel.border, themeTokens.button.hoverBg].join(' ')}
                   menuPositionClassName={`kg-data-view-add-column-menu absolute right-0 mt-2 ${dataViewMenuPanelClass}`}
                 />
-              </th>
+              </TableColumnHeader>
             ) : null}
         </tr>
   )

@@ -1,4 +1,5 @@
 import React from 'react'
+import { TableColumnHeader } from 'agentic-design-system/react/viewer'
 import { Type } from 'lucide-react'
 import type { ViewModel } from '../kanban/KanbanHostContext'
 import type { ViewColumnType } from './ViewColumnType'
@@ -41,7 +42,6 @@ export function ColumnsTableView(props: {
   canMutate: boolean
   editing: EditingState
   cellPaddingClassName: string
-  headerPaddingClassName: string
   fieldLineClassName: string
   fieldLineMode: DataViewFieldLineMode
   readColumnWidth: (columnId: string, fallback?: number) => number
@@ -70,24 +70,23 @@ export function ColumnsTableView(props: {
         ...props.visibleNestedRowStates.map(({ row }) => ({ id: `row:${row.id}`, width: props.readColumnWidth(`row:${row.id}`) })),
       ]}
       frameClassName={styles.dataViewTableFrameClass}
-      headerClassName={`${styles.stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
       bodyClassName={themeTokens.table.text}
       tableFit={props.tableFit}
       ariaLabel="Table view"
       header={(
         <tr>
-            <th className={`${props.headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}>
+            <TableColumnHeader>
               Field
               <ColumnResizeHandle columnId={TABLE_FIELD_COLUMN_ID} width={props.readColumnWidth(TABLE_FIELD_COLUMN_ID, 168)} onPreview={props.previewColumnResize} onCommit={props.commitColumnResize} />
-            </th>
+            </TableColumnHeader>
             {props.visibleNestedRowStates.map(({ row }, rowIndex) => {
               const label = String(row.cells[props.titleColumnIndex] ?? '').trim() || `Row ${rowIndex + 1}`
               const columnId = `row:${row.id}`
               return (
-                <th key={row.id} className={`${props.headerPaddingClassName} relative z-[31] text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}>
+                <TableColumnHeader key={row.id}>
                   <span className={[styles.textTruncateClass, 'block max-w-[14rem]'].join(' ')}>{helpers.readCellPreviewText(label)}</span>
                   <ColumnResizeHandle columnId={columnId} width={props.readColumnWidth(columnId)} onPreview={props.previewColumnResize} onCommit={props.commitColumnResize} />
-                </th>
+                </TableColumnHeader>
               )
             })}
         </tr>
@@ -96,9 +95,9 @@ export function ColumnsTableView(props: {
         <>
           {props.hasNestedRowHierarchy ? (
             <tr data-agentic-base-column-record-hierarchy-row="1">
-              <th className={`${props.headerPaddingClassName} text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}>
+              <TableColumnHeader scope="row">
                 <span className={`${styles.inlineElementRowClass} gap-1`}><NestedRowsBulkToggle collapsed={props.areAllNestedRowsCollapsed} onToggle={props.toggleAllNestedRows} /><span>Hierarchy</span></span>
-              </th>
+              </TableColumnHeader>
               {props.visibleNestedRowStates.map(({ row, depth, childCount }) => (
                 <HierarchyCell key={`column-record-hierarchy:${row.id}`} cellPaddingClassName={props.cellPaddingClassName} depth={depth} childCount={childCount} collapsed={props.collapsedNestedRowIds.has(row.id)} scope="columnRecord" onToggle={() => props.toggleNestedRow(row.id)} />
               ))}
@@ -115,7 +114,7 @@ export function ColumnsTableView(props: {
                 : [{ key: 'contains', label: 'contains' }, { key: 'equals', label: 'equals' }]
             return (
               <tr key={column.id} className={`${themeTokens.table.rowHoverHighlight} transition-colors`}>
-                <th className={`${props.headerPaddingClassName} text-left font-semibold border-b ${themeTokens.table.cellBorder} ${themeTokens.table.headerBg}`}>
+                <TableColumnHeader scope="row">
                   <ColumnHeaderPropertyTypeMenu ariaLabel={`Column type: ${column.name}`} label={column.name} Icon={Icon} portal portalPlacement="bottom-start" toggleTargets="icon+chevron" menu={({ close }: { close: () => void }) => (
                     <ColumnHeaderMenu
                       ariaLabel={`Column menu: ${column.name}`} closeMenu={close} typeSummaryLabel="Type" typeValueLabel={labelForViewColumnType(type)} disableTypeChange={!allowTypeEdit}
@@ -125,7 +124,7 @@ export function ColumnsTableView(props: {
                       disableSort disableInsert disableDuplicate disableDelete disableMoveLeft disableMoveRight
                     />
                   )} />
-                </th>
+                </TableColumnHeader>
                 {props.visibleNestedRowStates.map(({ row }) => {
                   const value = String(row.cells[colIndex] ?? '')
                   const uiType = (props.columnTypesById && props.columnTypesById[column.id]) || defaultColumnTypeForInferredKind(column.kind)

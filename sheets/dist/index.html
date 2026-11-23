@@ -32,7 +32,7 @@
         <label class="agentic-fact-label" for="cell-input"><output id="address">A1</output> · <span id="cell-kind">Empty cell</span></label>
         <input id="cell-input" class="agentic-form-control" name="cell" aria-label="Cell value or formula" aria-describedby="syntax draft" autocomplete="off" spellcheck="false">
         <button id="open-functions" class="agentic-form-control" type="button" aria-haspopup="dialog" aria-controls="workbook-panel" aria-expanded="false">Functions</button>
-        <section id="cell-actions" class="agentic-dashboard-actions" aria-label="Cell actions">
+        <section id="cell-actions" role="toolbar" class="agentic-table-toolbar" aria-label="Cell actions">
           <button id="commit" class="agentic-form-control" type="submit">Commit cell</button>
           <button id="cancel" class="agentic-form-control" type="button">Cancel edit</button>
         </section>
@@ -44,7 +44,7 @@
     </form>
     <section id="grid-section" class="agentic-table-frame" tabindex="0" aria-label="Scrollable workbook grid">
       <table role="grid" data-agentic-table-fit="container" aria-label="Worksheet 1">
-        <thead id="column-head"></thead><tbody id="grid-body"></tbody>
+        <thead id="column-head" class="agentic-table-head"></thead><tbody id="grid-body"></tbody>
       </table>
     </section>
     <section id="snapshots" class="agentic-dashboard-card" aria-labelledby="snapshot-title">

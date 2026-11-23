@@ -65,7 +65,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
     actionRowClass, compactGlyphClass, dataViewTableFrameClass,
     dataViewTableProgressClass, dataViewTableValueClass, elementRowClass,
     inlineElementRowClass, textTruncateClass, toolbarRowScrollClass,
-    stickyHeaderClass,
   } = styles
   const {
     TagChip, HierarchyCell, InlineTextCellEditor, CellSelectPopover,
@@ -303,7 +302,6 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         tableFit={props.tableFit}
         editing={editing}
         cellPaddingClassName={cellPaddingClassName}
-        headerPaddingClassName={headerPaddingClassName}
         fieldLineClassName={fieldLineClassName}
         readColumnWidth={readColumnWidth}
         previewColumnResize={previewColumnResize}
@@ -330,7 +328,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         ...(canMutate && props.onAddColumn ? [{ id: '__add', width: 52 }] : []),
       ]}
       frameClassName={dataViewTableFrameClass}
-      headerClassName={`${stickyHeaderClass} ${themeTokens.table.headerBg} ${themeTokens.table.text}`}
+
       bodyClassName={themeTokens.table.text}
       tableFit={props.tableFit}
       tableStyle={{ '--agentic-base-data-tree-cell-width': `${hierarchyColumnWidthPx}px` } as React.CSSProperties}
@@ -338,7 +336,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
       header={(
         <TableViewHeader tableProps={props} visibleColumnMeta={visibleColumnMeta}
           hasNestedRowHierarchy={hasNestedRowHierarchy} hierarchyColumnWidthPx={hierarchyColumnWidthPx}
-          headerPaddingClassName={headerPaddingClassName} areAllNestedRowsCollapsed={areAllNestedRowsCollapsed}
+          areAllNestedRowsCollapsed={areAllNestedRowsCollapsed}
           toggleAllNestedRows={toggleAllNestedRows} multiRowSelectionEnabled={multiRowSelectionEnabled}
           allRowsSelected={allRowsSelected} someRowsSelected={someRowsSelected} toggleAllRows={toggleAllRows}
           readColumnWidth={readColumnWidth} previewColumnResize={previewColumnResize} commitColumnResize={commitColumnResize} />
