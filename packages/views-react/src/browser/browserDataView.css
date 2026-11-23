@@ -42,7 +42,6 @@
 .agentic-base-data-view .agentic-base-menu-panel { color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); border: 1px solid var(--agentic-base-border); border-radius: 6px; box-shadow: var(--agentic-base-shadow-overlay); }
 .agentic-base-data-view .agentic-base-button-hover:hover { background: var(--agentic-base-action-hover); }
 .base-multi-dimensional-table { box-sizing: border-box; min-width: 0; }
-.base-multi-dimensional-table-toolbar { display: flex; justify-content: flex-end; min-width: 0; margin-bottom: 0.5rem; }
 .base-multi-dimensional-table-pivot { box-sizing: border-box; min-height: 44px; padding: 0.55rem 0.8rem; border: 1px solid var(--agentic-base-border); border-radius: 0.65rem; color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); font: inherit; font-size: var(--agentic-font-size-body); font-weight: 600; cursor: pointer; }
 .base-multi-dimensional-table-pivot:hover { background: var(--agentic-base-action-hover); }
 .base-multi-dimensional-table-pivot:focus-visible { outline: 3px solid var(--agentic-base-focus); outline-offset: 2px; }
@@ -149,31 +148,6 @@
 }
 .agentic-base-data-table th:last-child,
 .agentic-base-data-table td:last-child { border-right: 0; }
-.agentic-base-data-table thead {
-  position: sticky;
-  z-index: 1;
-  top: 0;
-  color: var(--agentic-base-text-secondary);
-  background: var(--agentic-base-table-header-bg);
-}
-.agentic-base-data-table-sticky-header {
-  background-color: var(--agentic-base-data-table-sticky-header-bg);
-}
-.agentic-base-data-table-sticky-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-color: var(--agentic-base-data-table-sticky-header-bg);
-  box-shadow: inset 0 -1px 0 var(--agentic-base-border);
-  pointer-events: none;
-}
-.agentic-base-data-table-sticky-header > tr > th {
-  position: relative;
-  z-index: 1;
-  background-color: var(--agentic-base-data-table-sticky-header-bg);
-  background-clip: padding-box;
-}
 .agentic-base-data-tree-cell {
   color: var(--agentic-base-text-secondary);
   width: var(--agentic-base-data-tree-cell-width, 5.5rem);
@@ -329,14 +303,6 @@
 .agentic-base-row-select:focus-visible {
   outline: 2px solid var(--agentic-base-focus);
   outline-offset: 1px;
-}
-.agentic-base-data-table thead th,
-.agentic-base-data-table tbody th {
-  font-weight: 600;
-}
-.agentic-base-data-table thead th {
-  position: relative;
-  z-index: 31;
 }
 .agentic-base-data-row[aria-selected="true"] { background: var(--agentic-base-selected); }
 .agentic-base-data-row-activatable { cursor: pointer; }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { TableToolbar } from 'agentic-design-system/react/viewer'
 import type { ReactNode } from 'react'
 import { TableView, type TableViewProps } from './TableView'
 
@@ -16,7 +17,7 @@ export const MultiDimTableView = React.memo(function MultiDimTableView(props: Mu
   const orientation = tableProps.orientation ?? 'rows'
   const orientationLabel = orientation === 'columns' ? 'columns as records' : 'rows as records'
   return <section className="base-multi-dimensional-table min-w-0">
-    {showPivotControl && onOrientationChange ? <div className="base-multi-dimensional-table-toolbar">
+    {showPivotControl && onOrientationChange ? <TableToolbar label="Table orientation">
       <button
         type="button"
         className="base-multi-dimensional-table-pivot"
@@ -24,7 +25,7 @@ export const MultiDimTableView = React.memo(function MultiDimTableView(props: Mu
         aria-pressed={orientation === 'columns'}
         onClick={() => onOrientationChange(orientation === 'columns' ? 'rows' : 'columns')}
       >Pivot: {orientationLabel}</button>
-    </div> : null}
+    </TableToolbar> : null}
     {overlay ? <section className="base-multi-dimensional-table-overlay" aria-label="Table overlay">{overlay}</section> : null}
     <TableView {...tableProps} tableFit={tableProps.tableFit ?? 'container'} />
   </section>

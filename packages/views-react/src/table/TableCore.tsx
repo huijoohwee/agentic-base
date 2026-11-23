@@ -10,7 +10,6 @@ export function TableCore<Row>(props: {
   header: React.ReactNode
   rows: React.ReactNode
   frameClassName: string
-  headerClassName: string
   bodyClassName: string
   tableFit?: 'content' | 'container'
   tableStyle?: React.CSSProperties
@@ -29,7 +28,7 @@ export function TableCore<Row>(props: {
       <table aria-label={label} data-agentic-table-fit={props.tableFit ?? 'content'}
         className="agentic-base-data-table table-fixed border-separate border-spacing-0 text-xs" style={tableStyle}>
         <colgroup>{props.columns.map(column => <col key={column.id} style={{ width: column.width }} />)}</colgroup>
-        <thead className={`${props.headerClassName} sticky top-0 z-30 isolate`} style={{ position: 'sticky', top: 0, zIndex: 30 }}>
+        <thead className="agentic-table-head">
           {props.header}
         </thead>
         <tbody className={props.bodyClassName}>
