@@ -4,7 +4,7 @@ One portable, headless contract for explicitly base-owned records and determinis
 
 ## Linked records
 
-Import `createRecordRelation` and `createRecordLinkCodec` from `@agentic-base/views-react/record-links` in a headless service or from the offline browser data-view bundle in a UI. The host supplies two collections of stable string IDs and one list of directed links. Both lookups return the same immutable edges in declaration order. IDs belong to their respective collections. An optional label preserves a source spelling or describes the link.
+Import `createRecordRelation` and `createRecordLinkCodec` from `@agentic-base/views-react/record-links` in a headless service or from the offline browser data-view bundle in a UI. The headless import installs without UI peers. Hosts using the React source entries supply React, React DOM, Lucide and Agentic Design System. The host supplies two collections of stable string IDs and one list of directed links. Both lookups return the same immutable edges in declaration order. IDs belong to their respective collections. An optional label preserves a source spelling or describes the link.
 
 ```js
 const membership = createRecordRelation({
