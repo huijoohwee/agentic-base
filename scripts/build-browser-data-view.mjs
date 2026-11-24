@@ -59,7 +59,7 @@ if (!outputMetadata || outputMetadata.imports.length) throw new Error('Browser a
 const dropdown = await build({ absWorkingDir: root, entryPoints: [sourceRoot + '/controls/nativeSelect.ts'], bundle: true, write: false, format: 'esm', platform: 'browser', target: 'es2022', minify: true, metafile: true })
 if (dropdown.outputFiles.length !== 1 || Object.values(dropdown.metafile.outputs).some(output => output.imports.length)) throw new Error('Dropdown browser artifact must be self-contained.')
 const inputRows = [...Object.keys(built.metafile.inputs), ...Object.keys(dropdown.metafile.inputs)]
-  .filter(relative => relative.startsWith(`${sourceRoot}/`))
+  .filter(relative => relative.startsWith(`${sourceRoot}/`) || relative.startsWith('src/'))
   .concat(iconPath, iconPinPath, `${sourceRoot}/browser/browserDataView.css`, sharedUi.cssPath, sharedUi.pinPath, baseProfile.cssPath, baseProfile.pinPath)
   .filter((relative, index, inputs) => inputs.indexOf(relative) === index)
   .sort()

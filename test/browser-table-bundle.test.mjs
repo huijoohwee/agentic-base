@@ -2,6 +2,36 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { build } from 'esbuild'
+import { createRecordRelation, createRecordLinkCodec } from '@agentic-base/views-react/record-links'
+
+test('one declared link supplies both directions with exact collection-local identities', () => {
+  const sources = ['same', 'A/B', 'unused'], targets = ['same', 'A/B', '__proto__']
+  const links = [{ source: 'same', target: 'A/B', label: 'Alias /+' },
+    { source: 'A/B', target: 'A/B' }, { source: 'same', target: '__proto__' }]
+  const relation = createRecordRelation({ sources, targets, links: [...links, links[0]] })
+  assert.deepEqual(relation.from('same'), [links[0], links[2]])
+  assert.deepEqual(relation.to('A/B'), links.slice(0, 2))
+  assert.equal(relation.from('same')[0], relation.to('A/B')[0])
+  links[0].target = 'other'
+  assert.equal(relation.to('A/B')[0].target, 'A/B')
+  assert.deepEqual(relation.from('unused'), [])
+  assert.deepEqual(relation.to('same'), [])
+  assert.throws(() => relation.from('unknown'), /endpoint/)
+  assert.throws(() => relation.to('A/B').pop(), TypeError)
+  assert.throws(() => createRecordRelation({ sources, targets, links }), /endpoint/)
+  assert.throws(() => createRecordRelation({ sources: [...sources, 'same'], targets, links: [] }), /Duplicate/)
+})
+
+test('record bookmarks round-trip host keys and reject ambiguous or malformed destinations', () => {
+  const codec = createRecordLinkCodec({ fragment: 'records', views: [{ view: 'entry' }, { view: 'cell', group: 'sheet' }] })
+  for (const dest of [{ view: 'entry', record: 'x/# +&?%=Ω' }, { view: 'cell', group: '甲' }, { view: 'cell', group: '甲', record: '__proto__' }]) {
+    assert.deepEqual(codec.parse(new URL(codec.href(dest), 'https://example.test/').hash), dest)
+  }
+  for (const hash of ['#else?entry=x', '#records?', '#records?sheet=', '#records?entry=a&entry=b',
+    '#records?cell=x&entry=y', '#records?missing=a', '#records?cell=%ff', '#records?cell=%']) assert.equal(codec.parse(hash), null)
+  assert.throws(() => codec.href({ view: 'entry', group: 'other' }), /destination/)
+  assert.throws(() => createRecordLinkCodec({ fragment: 'records', views: [{ view: 'entry', group: 'entry' }] }), /Ambiguous/)
+})
 
 test('a table-only browser consumer retains responsive styles and omits the chart runtime', async () => {
   const root = fileURLToPath(new URL('..', import.meta.url))
@@ -85,6 +115,9 @@ test('the offline board and layout toolbar use the shared owners', async () => {
     handle.update({ layout: 'table', columns, rows })
     const heading = await until(() => root.querySelector('th button'))
     assert.equal(heading.style.color, 'inherit', 'column controls inherit the table header contrast')
+    handle.update({ layout: 'table', columns, rows, selectedRowId: rows.at(-1).id, revealSelection: true, onActivateRow() {} })
+    await until(() => shadow.activeElement?.matches('tr[aria-selected="true"]'))
+    assert.equal(shadow.activeElement, root.querySelector('tbody tr:last-child'))
     handle.destroy()
     const toolbar = mountRecordViewToolbar(root, { label: 'Record views', layout: 'table', onLayoutChange: value => { selected = value }, actions: [] })
     const select = await until(() => root.querySelector('select'))

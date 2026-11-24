@@ -2,6 +2,21 @@
 
 One portable, headless contract for explicitly base-owned records and deterministic Table, Multi-dimensional Table, Kanban, and Calendar projections. The first adapter stores data in the current browser origin with IndexedDB. The core has no runtime dependencies and makes no network requests.
 
+## Linked records
+
+Import `createRecordRelation` and `createRecordLinkCodec` from `@agentic-base/views-react/record-links` in a headless service or from the offline browser data-view bundle in a UI. The host supplies two collections of stable string IDs and one list of directed links. Both lookups return the same immutable edges in declaration order. IDs belong to their respective collections. An optional label preserves a source spelling or describes the link.
+
+```js
+const membership = createRecordRelation({
+  sources: ['a', 'b'], targets: ['x'], links: [{ source: 'a', target: 'x' }]
+});
+membership.from('a'); // [{ source: 'a', target: 'x' }]
+membership.to('x');   // the same edge
+membership.from('b'); // []
+```
+
+Configure bookmark parameter names with `createRecordLinkCodec({ fragment, views })`. Each view declares `view`, an optional `record` parameter name (defaults to the view name), and an optional `group` parameter name. Use `href({ view, record, group })` to link a record or a group and `parse(location.hash)` to resolve it. The host owns evidence, visibility, history, filtering and pagination. Once the linked row is on the current page, pass `selectedRowId`, `onActivateRow`, and `revealSelection: true` to the table update to move keyboard focus after rendering.
+
 ## Local demo
 
 Requires Node.js 22 or later for the development scripts. No package install is needed.

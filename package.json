@@ -8,6 +8,7 @@
   },
   "exports": {
     ".": "./src/index.mjs",
+    "./record-links": "./src/record-links.mjs",
     "./table": "./packages/views-react/src/table/TableView.tsx",
     "./table/multi-dimensional": "./packages/views-react/src/table/MultiDimTableView.tsx",
     "./browser": "./packages/views-react/src/browser/index.ts",
@@ -25,6 +26,7 @@
   },
   "files": [
     "src/**/*.mjs",
+    "src/**/*.d.mts",
     "packages/views-react/src/**/*",
     "packages/views-react/dist/**/*",
     "README.md",
