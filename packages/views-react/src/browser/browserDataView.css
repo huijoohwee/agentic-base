@@ -326,6 +326,11 @@
   height: var(--agentic-icon-size-default);
 }
 .agentic-base-data-table td > span.agentic-base-data-table-value { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agentic-base-data-table td > span.agentic-base-data-field-wrap {
+  max-block-size: none !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .agentic-base-data-empty { color: var(--agentic-base-muted); }
 .agentic-base-data-more {
   min-height: 44px;

@@ -19,8 +19,9 @@ export const DATA_VIEW_BROWSER_LIMITS = Object.freeze({
 })
 
 export type DataViewBrowserState = {
-  columns: readonly { id: string; name: string; kind?: ViewColumnKind }[]
+  columns: readonly { id: string; name: string; kind?: ViewColumnKind | 'number' }[]
   rows: readonly { id: string; cells: readonly string[]; depth?: number }[]
+  wrapText?: boolean
   selectedRowId?: string | null
   selectedRowIds?: readonly string[]
   onActivateRow?: (rowId: string) => void
@@ -58,7 +59,7 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
     if (fieldIds.has(id)) throw new TypeError('Duplicate data view column ID.')
     fieldIds.add(id)
     const kind = column?.kind ?? 'text'
-    if (kind !== 'text' && kind !== 'select' && kind !== 'multi-select') throw new TypeError('Invalid data view column kind.')
+    if (kind !== 'text' && kind !== 'select' && kind !== 'multi-select' && kind !== 'number') throw new TypeError('Invalid data view column kind.')
     return { id, name: bounded(string(column?.name, limits.labelChars, 'column name', true)), kind }
   })
   const rows = (input.rows as DataViewBrowserState['rows']).map(row => {
@@ -101,7 +102,8 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   }
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
-  const state = { columns, rows, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds }
+  if (input.wrapText !== undefined && typeof input.wrapText !== 'boolean') throw new TypeError('Invalid text wrapping option.')
+  const state = { columns, rows, wrapText: input.wrapText, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
   return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange, onOrientationChange: input.onOrientationChange }
 }
@@ -123,13 +125,13 @@ const browserTableHost = createBaseTableHost({
   helpers: {
     readHeaderPaddingClassName: () => readBaseDataViewHeaderPaddingClassName('comfortable'),
     readTablePaddingClassName: () => readBaseDataViewCellPaddingClassName('comfortable'),
-    readFieldLineClassName: () => 'agentic-base-data-field-text',
+    readFieldLineClassName: (mode: string) => mode === 'flex' ? 'agentic-base-data-field-wrap' : 'agentic-base-data-field-text',
   },
 })
 
 function BrowserDataView({ state }: { state: DataViewBrowserState }) {
   const hasHierarchy = state.rows.some(row => row.depth !== undefined)
-  const columns: ViewModel['columns'] = state.columns.map(column => ({ id: column.id, name: column.name, kind: column.kind ?? 'text' }))
+  const columns: ViewModel['columns'] = state.columns.map(column => ({ id: column.id, name: column.name, kind: column.kind === 'number' ? 'text' : column.kind ?? 'text' }))
   if (hasHierarchy) columns.push({ id: '__agentic_base_level', name: 'Level', kind: 'text' })
   const view: ViewModel = {
     columns,
@@ -142,6 +144,7 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
   }
   const tableProps = {
     view,
+    columnTypesById: Object.fromEntries(state.columns.filter(column => column.kind === 'number').map(column => [column.id, 'number' as const])),
     visibleColumnIds: state.columns.map(column => column.id),
     canMutate: false,
     canConfigure: false,
@@ -156,7 +159,7 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
     orientation: state.orientation ?? 'rows' as const,
     tableFit: 'container' as const,
     rowHeightPreset: 'comfortable' as const,
-    fieldLineMode: 'single' as const,
+    fieldLineMode: state.wrapText ? 'flex' as const : 'single' as const,
   }
   if (state.layout === 'kanban') {
     return <div className="agentic-base-data-view base-browser-kanban" role="region" aria-label={state.ariaLabel}>

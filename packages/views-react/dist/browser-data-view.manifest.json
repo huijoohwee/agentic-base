@@ -23,8 +23,8 @@
     },
     {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
-      "bytes": 11208,
-      "sha256": "de9a4142cc7a176ca3d78b7b9cd475b0c7518c1e99beebd24f5162c2517a89a5"
+      "bytes": 11694,
+      "sha256": "923ffca9e92c451c85f2e1c9fd7511c3ef54da053fec63e331c951f70d4b8c4e"
     },
     {
       "path": "packages/views-react/src/browser/RecordViewToolbar.tsx",
@@ -43,8 +43,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 18577,
-      "sha256": "589b26696d3ec31f47a18a2f532278997ca4644d19707fdc7ee48aa8bd29fb9b"
+      "bytes": 18732,
+      "sha256": "60533fbf1b5993ed95d01b7151e19fe57a369666f46c20276097e207e5e6d7be"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -235,8 +235,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 387053,
-      "sha256": "d7e077e6a765fe0bb9453d94637717046d453b2ecd9b3c01cb6c5bf23a09ae31"
+      "bytes": 387376,
+      "sha256": "71093866e1f377a4aeafbcb19ec95110975fd2c4fdd82f895b4d820f6d86e14a"
     },
     {
       "path": "dropdown-menus.js",
@@ -245,8 +245,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 50993,
-      "sha256": "bc1f7f82de43ef90214ad8d624653133068221cb259e36724699772fa36f64cb"
+      "bytes": 51129,
+      "sha256": "4877d86e6b4fbdef93af2f2d6b17295dfa72ac9ef25b45441473d7465254b077"
     }
   ]
 }

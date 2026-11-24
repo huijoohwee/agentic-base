@@ -48,6 +48,13 @@ test('the offline board and layout toolbar use the shared owners', async () => {
       }
       assert.fail('Expected browser state')
     }
+    const sample = document.createElement('div'); shadow.append(sample)
+    const value = 'read.account-history, '.repeat(8)
+    const grid = mountDataView(sample, { columns: [{ id: 'ops', name: 'Operations' }, { id: 'total', name: 'Reads', kind: 'number' }],
+      rows: [{ id: 'family', cells: [value, '12'] }], wrapText: true })
+    await until(() => sample.querySelector('tbody td .agentic-base-data-field-wrap')?.textContent === value)
+    assert.equal(sample.querySelectorAll('tbody td')[1].textContent, '12')
+    grid.destroy()
     await until(() => root.querySelector('[data-base-card]'))
     assert.equal(root.querySelectorAll('[data-base-card]').length, 12)
     assert.equal(root.querySelector('a'), null)
