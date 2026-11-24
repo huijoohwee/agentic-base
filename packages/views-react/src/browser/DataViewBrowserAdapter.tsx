@@ -23,6 +23,7 @@ export type DataViewBrowserState = {
   rows: readonly { id: string; cells: readonly string[]; depth?: number }[]
   wrapText?: boolean
   selectedRowId?: string | null
+  revealSelection?: boolean
   selectedRowIds?: readonly string[]
   onActivateRow?: (rowId: string) => void
   onDeselectRow?: (rowId: string) => void
@@ -105,7 +106,11 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
   if (input.wrapText !== undefined && typeof input.wrapText !== 'boolean') throw new TypeError('Invalid text wrapping option.')
-  const state = { columns, rows, wrapText: input.wrapText, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds }
+  const revealSelection = input.revealSelection ?? false
+  if (typeof revealSelection !== 'boolean' || (revealSelection && (layout !== 'table' || !selectedRowId || selectedRowIds || !input.onActivateRow))) {
+    throw new TypeError('Revealing a record requires one selected, activatable table row.')
+  }
+  const state = { columns, rows, wrapText: input.wrapText, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds, revealSelection }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
   return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange, onOrientationChange: input.onOrientationChange }
 }
@@ -131,7 +136,13 @@ const browserTableHost = createBaseTableHost({
   },
 })
 
-function BrowserDataView({ state }: { state: DataViewBrowserState }) {
+function BrowserDataView({ state, target }: { state: DataViewBrowserState; target: HTMLElement }) {
+  React.useLayoutEffect(() => {
+    if (!state.revealSelection) return
+    const row = target.querySelector<HTMLElement>('tbody tr[aria-selected="true"]')
+    row?.focus({ preventScroll: true })
+    row?.scrollIntoView?.({ block: 'center' })
+  }, [state, target])
   const hasHierarchy = state.rows.some(row => row.depth !== undefined)
   const columns: ViewModel['columns'] = state.columns.map(column => ({ id: column.id, name: column.name, format: column.format, kind: column.kind === 'number' ? 'text' : column.kind ?? 'text' }))
   if (hasHierarchy) columns.push({ id: '__agentic_base_level', name: 'Level', kind: 'text' })
@@ -180,5 +191,5 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
 
 /** Mount one bounded, offline table surface into a consumer-owned element. Cells are always text. */
 export function mountDataView(target: HTMLElement, initial: DataViewBrowserState): DataViewBrowserHandle {
-  return mountBrowserView(target, initial, snapshot, next => <BrowserDataView key={`${next.layout ?? 'table'}:${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} />)
+  return mountBrowserView(target, initial, snapshot, next => <BrowserDataView key={`${next.layout ?? 'table'}:${next.orientation ?? 'rows'}:${next.rows.map(row => row.id).join('\u0000')}`} state={next} target={target} />)
 }
