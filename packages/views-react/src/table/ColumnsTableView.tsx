@@ -1,4 +1,5 @@
 import React from 'react'
+import { InlineCodeList } from '../InlineCodeList'
 import { TableColumnHeader } from 'agentic-design-system/react/viewer'
 import { Type } from 'lucide-react'
 import type { ViewModel } from '../kanban/KanbanHostContext'
@@ -146,7 +147,9 @@ export function ColumnsTableView(props: {
                   const progressValue = uiType === 'progress' ? Number(value) : NaN
                   return (
                     <td key={`${row.id}:${column.id}`} className={cellBase} onClick={(event) => { const el = event.target as HTMLElement | null; if (el?.closest('a,button,input,select,textarea')) return; event.preventDefault(); event.stopPropagation(); props.startEdit(row.id, column.id, value, event.currentTarget) }} role={props.canMutate ? 'button' : undefined}>
-                      {data.renderRichCell(value, { sourceLineNestedTable: column.name === 'Content' ? props.sourceLineNestedTableCells.get(row.id) : null }) || (uiType === 'checkbox' ? (
+                      {column.format === 'code-list' && value ? (
+                      <InlineCodeList value={value} className={[styles.dataViewTableValueClass, props.fieldLineClassName].join(' ')} />
+                    ) : data.renderRichCell(value, { sourceLineNestedTable: column.name === 'Content' ? props.sourceLineNestedTableCells.get(row.id) : null }) || (uiType === 'checkbox' ? (
                         <input type="checkbox" checked={isTruthy(value)} disabled={!props.canMutate} onChange={event => { if (props.canMutate) props.onUpdateCell({ rowId: row.id, columnId: column.id, nextValue: event.target.checked ? 'true' : '' }) }} />
                       ) : uiType === 'progress' && Number.isFinite(progressValue) ? (
                         <section className={`${styles.elementRowClass} gap-2`}><progress className={styles.dataViewTableProgressClass} value={Math.max(0, Math.min(100, progressValue))} max={100} /><span className={['min-w-0', styles.textTruncateClass, themeTokens.text.secondary].join(' ')}>{`${Math.round(Math.max(0, Math.min(100, progressValue)))}%`}</span></section>

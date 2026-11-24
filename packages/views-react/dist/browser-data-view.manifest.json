@@ -12,6 +12,11 @@
   },
   "inputs": [
     {
+      "path": "packages/views-react/src/InlineCodeList.tsx",
+      "bytes": 417,
+      "sha256": "61162a4e189294e0a93803d0b294b5928999da9382fbb48a67e93ede494973a7"
+    },
+    {
       "path": "packages/views-react/src/browser/BrowserKanbanHost.tsx",
       "bytes": 2723,
       "sha256": "b4ddc6cc1c9653ef0ba1b1b126f61f39c5645a3f06f9204e60a7d5b43ea17ff6"
@@ -23,8 +28,8 @@
     },
     {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
-      "bytes": 11694,
-      "sha256": "923ffca9e92c451c85f2e1c9fd7511c3ef54da053fec63e331c951f70d4b8c4e"
+      "bytes": 11911,
+      "sha256": "0fa9d225e6e85f5b13972e2a5ce567c5a17eaa93a38748db7596933e0a4f9bca"
     },
     {
       "path": "packages/views-react/src/browser/RecordViewToolbar.tsx",
@@ -43,8 +48,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 18732,
-      "sha256": "60533fbf1b5993ed95d01b7151e19fe57a369666f46c20276097e207e5e6d7be"
+      "bytes": 18875,
+      "sha256": "f3b52dd63cffb7b9593eebd2692e6d299e67e5a5bfa3a9eed9fda6ed5106db6d"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -98,8 +103,8 @@
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCard.tsx",
-      "bytes": 21482,
-      "sha256": "98884cd64c1f17a23341459e83f81160249aedbb574d447a05144a69b06f1f19"
+      "bytes": 21866,
+      "sha256": "4166effcb87cd47fe0bac7ca72fb4c13056da828c8dc6e38310066900d18c5fb"
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCell.tsx",
@@ -118,8 +123,8 @@
     },
     {
       "path": "packages/views-react/src/kanban/KanbanHostContext.tsx",
-      "bytes": 3346,
-      "sha256": "065e24c7fda6fad00b31be4347f304a22f99dc94530380b86f8b798ca4234e72"
+      "bytes": 3368,
+      "sha256": "74812fba0863d1fb2276f07b24dfd7c3fc0c1704bd1146efd8822803029afdbc"
     },
     {
       "path": "packages/views-react/src/kanban/KanbanNewRecordDividerRow.tsx",
@@ -183,8 +188,8 @@
     },
     {
       "path": "packages/views-react/src/table/ColumnsTableView.tsx",
-      "bytes": 12664,
-      "sha256": "ea1586e5a1bd873461344984aee29d7a98711dde225e08fa4d30425dae00f41d"
+      "bytes": 12918,
+      "sha256": "955f5535869cc8a39e3579f70188c4b1d64a1a6b9793e819d52891fc7b68c4e8"
     },
     {
       "path": "packages/views-react/src/table/MultiDimTableView.tsx",
@@ -203,8 +208,8 @@
     },
     {
       "path": "packages/views-react/src/table/TableView.tsx",
-      "bytes": 29382,
-      "sha256": "df97f4ab687541c7f00ad0029d2ee652c7667bca4003286720d81f58681ff27c"
+      "bytes": 29618,
+      "sha256": "c4b7d07862c812a4d7e3948a7f00f4e0e191d5a5c37f7626981b7492f6daf117"
     },
     {
       "path": "packages/views-react/src/table/TableViewHeader.tsx",
@@ -235,8 +240,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 387376,
-      "sha256": "71093866e1f377a4aeafbcb19ec95110975fd2c4fdd82f895b4d820f6d86e14a"
+      "bytes": 388160,
+      "sha256": "97501303978f1d50dd8af42f56c8cdf7cfc3de9d6ce80e431405bc42cfc9441c"
     },
     {
       "path": "dropdown-menus.js",
@@ -245,8 +250,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 51129,
-      "sha256": "4877d86e6b4fbdef93af2f2d6b17295dfa72ac9ef25b45441473d7465254b077"
+      "bytes": 51256,
+      "sha256": "cd5e4269145450805a4ce0f5c90833b6e90bfcd3bc7ebb9dafa82866acca9ab3"
     }
   ]
 }

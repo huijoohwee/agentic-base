@@ -19,7 +19,7 @@ export const DATA_VIEW_BROWSER_LIMITS = Object.freeze({
 })
 
 export type DataViewBrowserState = {
-  columns: readonly { id: string; name: string; kind?: ViewColumnKind | 'number' }[]
+  columns: readonly { id: string; name: string; kind?: ViewColumnKind | 'number'; format?: 'code-list' }[]
   rows: readonly { id: string; cells: readonly string[]; depth?: number }[]
   wrapText?: boolean
   selectedRowId?: string | null
@@ -60,7 +60,9 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
     fieldIds.add(id)
     const kind = column?.kind ?? 'text'
     if (kind !== 'text' && kind !== 'select' && kind !== 'multi-select' && kind !== 'number') throw new TypeError('Invalid data view column kind.')
-    return { id, name: bounded(string(column?.name, limits.labelChars, 'column name', true)), kind }
+    const format = column.format
+    if (format !== undefined && (format !== 'code-list' || kind !== 'text')) throw new TypeError('Invalid data view text format.')
+    return { id, name: bounded(string(column?.name, limits.labelChars, 'column name', true)), kind, format }
   })
   const rows = (input.rows as DataViewBrowserState['rows']).map(row => {
     const id = bounded(string(row?.id, limits.idChars, 'row ID', true))
@@ -131,7 +133,7 @@ const browserTableHost = createBaseTableHost({
 
 function BrowserDataView({ state }: { state: DataViewBrowserState }) {
   const hasHierarchy = state.rows.some(row => row.depth !== undefined)
-  const columns: ViewModel['columns'] = state.columns.map(column => ({ id: column.id, name: column.name, kind: column.kind === 'number' ? 'text' : column.kind ?? 'text' }))
+  const columns: ViewModel['columns'] = state.columns.map(column => ({ id: column.id, name: column.name, format: column.format, kind: column.kind === 'number' ? 'text' : column.kind ?? 'text' }))
   if (hasHierarchy) columns.push({ id: '__agentic_base_level', name: 'Level', kind: 'text' })
   const view: ViewModel = {
     columns,
