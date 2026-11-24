@@ -32,7 +32,9 @@ test('the offline board and layout toolbar use the shared owners', async () => {
   globalThis.document = dom.window.document
   try {
     const { mountDataView, mountRecordViewToolbar } = await import('../packages/views-react/dist/browser-data-view.js')
-    const root = document.querySelector('main')
+    dom.window.matchMedia = () => ({ matches: true })
+    const shadow = document.querySelector('main').attachShadow({ mode: 'open' })
+    const root = document.createElement('div'); shadow.append(root)
     const columns = ['Route', 'Status', 'Source'].map(name => ({ id: name, name }))
     const rows = Array.from({ length: 15 }, (_, i) => ({ id: String(i), cells: [`Item ${i}`, 'Mapped', 'https://example.invalid/'] }))
     const board = { layout: 'kanban', groupByColumnId: 'Status', columns, rows }
@@ -51,8 +53,14 @@ test('the offline board and layout toolbar use the shared owners', async () => {
     assert.equal(root.querySelector('a'), null)
     root.querySelector('[aria-label="Show more Mapped records"]').click()
     await until(() => root.querySelectorAll('[data-base-card]').length === 15)
+    root.querySelector('[data-base-card]').click()
+    assert.equal(selected, '0', 'one tap opens a read-only card inside the consumer shadow root')
+    selected = undefined
     root.querySelector('[data-base-card]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     assert.equal(selected, '0')
+    handle.update({ layout: 'table', columns, rows })
+    const heading = await until(() => root.querySelector('th button'))
+    assert.equal(heading.style.color, 'inherit', 'column controls inherit the table header contrast')
     handle.destroy()
     const toolbar = mountRecordViewToolbar(root, { label: 'Record views', layout: 'table', onLayoutChange: value => { selected = value }, actions: [] })
     const select = await until(() => root.querySelector('select'))

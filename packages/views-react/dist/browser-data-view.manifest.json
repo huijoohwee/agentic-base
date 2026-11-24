@@ -98,8 +98,8 @@
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCard.tsx",
-      "bytes": 21471,
-      "sha256": "3a0ce7adb10770b2e3585775446a1ab95384072d34c57cc53521da6eb31c42af"
+      "bytes": 21482,
+      "sha256": "98884cd64c1f17a23341459e83f81160249aedbb574d447a05144a69b06f1f19"
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCell.tsx",
@@ -178,8 +178,8 @@
     },
     {
       "path": "packages/views-react/src/table/BaseTableHost.tsx",
-      "bytes": 30413,
-      "sha256": "1342b0ea92d24a4fd63f93e66781e75b77f12d5d43b709990a455a5a1be7a3a5"
+      "bytes": 30418,
+      "sha256": "7711f52e17712da5d1dd3eb5f3bd445dc05b4d0d8ca9cea84d7d71bec8bedcee"
     },
     {
       "path": "packages/views-react/src/table/ColumnsTableView.tsx",
@@ -235,8 +235,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 387041,
-      "sha256": "a25a70336647a6d23113ca1f85b2b71f9642615b2e11ce71a17bf130a60075da"
+      "bytes": 387053,
+      "sha256": "d7e077e6a765fe0bb9453d94637717046d453b2ecd9b3c01cb6c5bf23a09ae31"
     },
     {
       "path": "dropdown-menus.js",

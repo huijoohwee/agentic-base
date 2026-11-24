@@ -93,9 +93,9 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
   const onActivate = props.onActivateRow
     ? (event: React.MouseEvent<HTMLElement>) => {
         if (isInteractiveEventTarget(event.target, host.interactiveTargetSelector)) return
-        if (isCoarsePointer) {
+        if (props.canMutate && isCoarsePointer) {
           const el = articleRef.current
-          if (el && document.activeElement !== el) {
+          if (el && !el.matches(':focus')) {
             try {
               el.focus()
             } catch {
