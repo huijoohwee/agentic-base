@@ -98,8 +98,8 @@
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCard.tsx",
-      "bytes": 21471,
-      "sha256": "3a0ce7adb10770b2e3585775446a1ab95384072d34c57cc53521da6eb31c42af"
+      "bytes": 21482,
+      "sha256": "98884cd64c1f17a23341459e83f81160249aedbb574d447a05144a69b06f1f19"
     },
     {
       "path": "packages/views-react/src/kanban/KanbanCell.tsx",
@@ -235,8 +235,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 387041,
-      "sha256": "a25a70336647a6d23113ca1f85b2b71f9642615b2e11ce71a17bf130a60075da"
+      "bytes": 387048,
+      "sha256": "4529f72d7a35b722de775fcec8fb2e59926f5026eb464500b131bc3fd9099350"
     },
     {
       "path": "dropdown-menus.js",
