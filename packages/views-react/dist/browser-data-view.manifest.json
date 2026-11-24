@@ -28,8 +28,8 @@
     },
     {
       "path": "packages/views-react/src/browser/DataViewBrowserAdapter.tsx",
-      "bytes": 12569,
-      "sha256": "47c3acde47b25763e5ef74932b2a353edc40c979b392ec83dc162b5ab7bdd464"
+      "bytes": 12816,
+      "sha256": "97dca878075a0e0ca4a051f89ee9f522834cc9d43956a5f3ed060981d6cffcc1"
     },
     {
       "path": "packages/views-react/src/browser/RecordViewToolbar.tsx",
@@ -48,8 +48,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 18732,
-      "sha256": "60533fbf1b5993ed95d01b7151e19fe57a369666f46c20276097e207e5e6d7be"
+      "bytes": 19462,
+      "sha256": "19253613724a24695d0263659a2cc09f74393c3cada11627e94831a42b611bfb"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -178,8 +178,8 @@
     },
     {
       "path": "packages/views-react/src/table/BaseColumnHeaderMenu.tsx",
-      "bytes": 10084,
-      "sha256": "5327956e249fc1e18e0f7a3946870836bbd6e75ce8d47ca81214a6a40f92cab6"
+      "bytes": 10222,
+      "sha256": "3acf43d743e622aaca56786440a9557fb13f28667bbae4ea9e5a934bdf8064e5"
     },
     {
       "path": "packages/views-react/src/table/BaseTableHost.tsx",
@@ -188,8 +188,8 @@
     },
     {
       "path": "packages/views-react/src/table/ColumnsTableView.tsx",
-      "bytes": 12918,
-      "sha256": "955f5535869cc8a39e3579f70188c4b1d64a1a6b9793e819d52891fc7b68c4e8"
+      "bytes": 13068,
+      "sha256": "cb380791c4092908db9d460a2a56e7c1d324c6725dada51bc965103acc0f5bdc"
     },
     {
       "path": "packages/views-react/src/table/MultiDimTableView.tsx",
@@ -208,13 +208,13 @@
     },
     {
       "path": "packages/views-react/src/table/TableView.tsx",
-      "bytes": 29618,
-      "sha256": "c4b7d07862c812a4d7e3948a7f00f4e0e191d5a5c37f7626981b7492f6daf117"
+      "bytes": 29701,
+      "sha256": "638600189722f707266ac099a330c3a07f55299bdbfc39ec91ce1d421ec0efe4"
     },
     {
       "path": "packages/views-react/src/table/TableViewHeader.tsx",
-      "bytes": 7164,
-      "sha256": "4173f28202d6f6c0add0da22d71dbc9951b43215d4022c467b7e66869f37b8ce"
+      "bytes": 7266,
+      "sha256": "0b7b589c4f8be61a07d909025a11ee90f021aabae5caa9532f95ecdaeb3ffaa7"
     },
     {
       "path": "packages/views-react/src/table/ViewColumnType.ts",
@@ -238,15 +238,15 @@
     },
     {
       "path": "src/record-links.mjs",
-      "bytes": 3726,
-      "sha256": "abe47bd1d080c4522b3f3808c724ddaf7283abb75e6499bba213a1cbfb301b1f"
+      "bytes": 4081,
+      "sha256": "6937780170163adee7e2c356a9c7769fb0ddfe206c90497fcaa36e8b97f9f046"
     }
   ],
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 390585,
-      "sha256": "af26f53f4c65b79132d6b43c2c4579e5fae22123f574b7fba34685400b3214b7"
+      "bytes": 391227,
+      "sha256": "aaa10cd2c591857a4c0f07ba9d6c778f4dc3aeeab4998a8e7a6bc67881b34b3e"
     },
     {
       "path": "dropdown-menus.js",
@@ -255,8 +255,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 51129,
-      "sha256": "4877d86e6b4fbdef93af2f2d6b17295dfa72ac9ef25b45441473d7465254b077"
+      "bytes": 51797,
+      "sha256": "9278b684dc4cd55705499c2c229349698921fa2cabff6ec4539ac03ab1c191ba"
     }
   ]
 }

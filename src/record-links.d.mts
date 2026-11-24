@@ -5,5 +5,5 @@ export function createRecordRelation(input: {
 
 export type RecordDestination = { view: string; record?: string; group?: string };
 export function createRecordLinkCodec(input: {
-  fragment: string; views: Iterable<{ view: string; record?: string; group?: string }>;
+  fragment: string; views: Iterable<{ view: string; record?: string; group?: string; requireGroup?: boolean }>;
 }): Readonly<{ href(destination: RecordDestination): string; parse(hash: string): RecordDestination | null }>;

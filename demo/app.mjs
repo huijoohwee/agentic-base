@@ -1,4 +1,4 @@
-import { createBaseEngine, IndexedDBAdapter } from '../src/index.mjs';
+import { createBaseEngine, IndexedDBAdapter, loadRecordWorkspace } from '../src/index.mjs';
 import { mountDataView } from './browser-data-view.js?v=33';
 import { enhanceSelects } from './dropdown-menus.js?v=31';
 enhanceSelects(document);
@@ -52,46 +52,49 @@ function setRevision(revision) {
   dom.revision.textContent = `Base revision ${revision} · ${state.total} records`;
 }
 
+async function ensureSampleTable(tableId, name, fields, samples) {
+  const tables = await execute('table.list', { baseId: BASE_ID });
+  if (!tables.some(table => table.id === tableId)) {
+    const base = await execute('base.get', { baseId: BASE_ID });
+    try {
+      await execute('table.create', { baseId: BASE_ID, expectedRevision: base.revision, id: tableId, name, fields });
+    } catch (error) {
+      if (!error.message.startsWith('CONFLICT:') ||
+        !(await execute('table.list', { baseId: BASE_ID })).some(table => table.id === tableId)) throw error;
+    }
+  }
+  for (const sample of samples) {
+    try {
+      await execute('record.get', { baseId: BASE_ID, tableId, recordId: sample.id });
+      continue;
+    } catch (error) { if (!error.message.startsWith('NOT_FOUND:')) throw error; }
+    const latest = await execute('base.get', { baseId: BASE_ID });
+    try {
+      await execute('record.create', { baseId: BASE_ID, tableId, expectedRevision: latest.revision, ...sample });
+    } catch (error) {
+      if (!error.message.startsWith('CONFLICT:')) throw error;
+      await execute('record.get', { baseId: BASE_ID, tableId, recordId: sample.id });
+    }
+  }
+}
+
 async function createSample() {
   dom['create-sample'].disabled = true;
   try {
-    let base;
-    try {
-      base = await execute('base.create', { id: BASE_ID, name: 'Local tasks' });
-    } catch (error) {
-      if (!error.message.startsWith('CONFLICT:')) throw error;
-      base = await execute('base.get', { baseId: BASE_ID });
-    }
-    let table;
-    try {
-      table = await execute('table.create', { baseId: BASE_ID, expectedRevision: base.revision,
-        id: state.tableId, name: 'Tasks', fields: FIELDS });
-    } catch (error) {
-      if (!error.message.startsWith('CONFLICT:')) throw error;
-      table = (await execute('table.list', { baseId: BASE_ID })).find(item => item.id === state.tableId);
-      if (!table) throw error;
-    }
-    const samples = [
+    try { await execute('base.create', { id: BASE_ID, name: 'Local tasks' }); }
+    catch (error) { if (!error.message.startsWith('CONFLICT:')) throw error; }
+    await ensureSampleTable(state.tableId, 'Tasks', FIELDS, [
       { id: 'demo_record_one', values: { title: 'Plan the first integration', status: 'Todo', due: dueDate(8), points: 2, region: 'APAC' } },
       { id: 'demo_record_two', values: { title: 'Prove offline reload', status: 'Doing', due: dueDate(16), points: 3, region: 'APAC' } },
       { id: 'demo_record_three', values: { title: 'Review the shared contract', status: 'Done', due: null, points: 1, region: 'EMEA' } },
-    ];
-    for (const sample of samples) {
-      try {
-        await execute('record.get', { baseId: BASE_ID, tableId: state.tableId, recordId: sample.id });
-        continue;
-      } catch (error) {
-        if (!error.message.startsWith('NOT_FOUND:')) throw error;
-      }
-      const latest = await execute('base.get', { baseId: BASE_ID });
-      try {
-        await execute('record.create', { baseId: BASE_ID, tableId: state.tableId,
-          expectedRevision: latest.revision, id: sample.id, values: sample.values });
-      } catch (error) {
-        if (!error.message.startsWith('CONFLICT:')) throw error;
-        await execute('record.get', { baseId: BASE_ID, tableId: state.tableId, recordId: sample.id });
-      }
-    }
+    ]);
+    await ensureSampleTable('demo_projects_v1', 'Projects', [
+      { id: 'name', name: 'Project name', type: 'text', required: true },
+      { id: 'area', name: 'Area', type: 'text' },
+    ], [
+      { id: 'demo_project_one', values: { name: 'Local workspace', area: 'Operations' } },
+      { id: 'demo_project_two', values: { name: 'Field review', area: 'Research' } },
+    ]);
     dom.setup.hidden = true;
     dom.workspace.hidden = false;
     await refresh();
@@ -197,6 +200,7 @@ function renderSharedTable() {
     orientation: state.layout === 'multiDimensional' ? state.orientation : 'rows',
     ariaLabel: `${projectionLabels[state.view]} projection in the shared table view`,
   };
+  if (state.view === 'table') view.onEditField = id => openLinks(id);
   const visibleRowIds = new Set(view.rows.map(row => row.id));
   view.selectedRowIds = state.selectedRowIds.filter(id => visibleRowIds.has(id));
   view.onSelectionChange = selectedRowIds => {
@@ -218,7 +222,7 @@ async function refresh() {
   const table = await execute('table.list', { baseId: BASE_ID });
   if (!table.some(item => item.id === state.tableId)) throw new Error('The local demo table is missing');
   const query = { limit: 250, sort: [{ fieldId: 'title', direction: 'asc' }] };
-  const view = state.view === 'table' ? { kind: 'table', columns: FIELDS.map(field => field.id) }
+  const view = state.view === 'table' ? { kind: 'table' }
     : state.view === 'matrix' ? { kind: 'matrix', rowFieldId: 'region', columnFieldId: 'status' }
       : state.view === 'kanban' ? { kind: 'kanban', groupFieldId: 'status', lanes: ['Todo', 'Doing', 'Done'].map(value => ({ value, label: value })) }
         : { kind: 'calendar', dateFieldId: 'due', month: dom.month.value || currentMonth() };
@@ -305,4 +309,28 @@ if ('serviceWorker' in navigator) {
   dom['offline-state'].textContent = 'Service workers are unavailable on this browser';
 }
 
+const linksHost = document.getElementById('linked-workspace');
+const projections = document.getElementById('projections');
+let closeWorkspace, opening = false;
+async function openLinks(fieldId) {
+  if (opening || closeWorkspace) return;
+  opening = true;
+  try {
+    const { mountLinkedWorkspace } = await loadRecordWorkspace();
+    projections.hidden = true; linksHost.hidden = false;
+    function close() {
+      closeWorkspace?.(); closeWorkspace = undefined;
+      linksHost.hidden = true; projections.hidden = false;
+      if (location.hash.startsWith('#records?')) history.replaceState(history.state, '', location.pathname + location.search);
+      refresh().catch(error => message(error.message, true));
+      document.getElementById('open-links').focus();
+    }
+    closeWorkspace = await mountLinkedWorkspace(linksHost, { execute, baseId: BASE_ID, initialTable: state.tableId, editField: fieldId, mountDataView, onClose: close });
+  } catch (error) {
+    projections.hidden = false; linksHost.hidden = true; message(error.message, true);
+  } finally { opening = false; }
+}
+document.getElementById('open-links').onclick = () => openLinks();
+window.addEventListener('hashchange', () => { if (location.hash.startsWith('#records?')) openLinks(); });
 await loadExisting();
+if (!dom.workspace.hidden && location.hash.startsWith('#records?')) await openLinks();

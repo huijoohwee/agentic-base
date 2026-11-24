@@ -1,4 +1,5 @@
 import { BaseOperationError, assert, cloneJson, jsonBytes } from './errors.mjs';
+import { assertLinkSchemas, assertLinkTargets, fieldValue } from './record-fields.mjs';
 import { selectRecords } from './query.mjs';
 import { projectView } from './projectors.mjs';
 import {
@@ -85,13 +86,24 @@ export function createBaseEngine({ adapter, authorize, idFactory = defaultIdFact
   }
 
   async function write(baseId, expected, next, changes, extra = {}) {
+    const receipt = readResult({ ...next.base, ...extra }, bounded);
     try {
       await adapter.commit(baseId, { expectedRevision: expected, snapshot: next, changes });
     } catch (error) {
       if (error instanceof BaseOperationError) throw error;
       throw new BaseOperationError('STORAGE_FAILURE', 'The storage adapter rejected the write');
     }
-    return readResult({ ...next.base, ...extra }, bounded);
+    return receipt;
+  }
+
+  async function checkLinkedRecord(request, table, record, records) {
+    for (const field of table.fields) {
+      if (field.type !== 'recordLink') continue;
+      for (const id of fieldValue(record, field.id) ?? []) {
+        await authorizeRequest(request, 'record.get', record.baseId, field.link.targetTableId, id);
+      }
+    }
+    assertLinkTargets(table, record, records);
   }
 
   async function executeRaw(request) {
@@ -131,9 +143,34 @@ export function createBaseEngine({ adapter, authorize, idFactory = defaultIdFact
         fields: validateFields(payload.fields, bounded), revision: 1, createdAt: now(), updatedAt: now() };
       const next = { ...snapshot, base: nextBase(snapshot, now()) };
       next.tables = [...snapshot.tables, table];
+      assertLinkSchemas(next.tables);
       const changes = EMPTY_CHANGES();
       changes.putTables.push(table);
       return write(snapshot.base.id, payload.expectedRevision, next, changes, { table });
+    }
+
+    if (operation === 'field.set') {
+      allowedKeys(payload, ['baseId', 'tableId', 'expectedRevision', 'field'], ['baseId', 'tableId', 'expectedRevision', 'field']);
+      const snapshot = await loadOwned(request, operation, payload.baseId, payload.tableId);
+      baseRevision(snapshot, payload.expectedRevision);
+      const prior = tableFor(snapshot, payload.tableId);
+      const field = plainObject(payload.field, 'field');
+      const fields = prior.fields.some(item => item.id === field.id)
+        ? prior.fields.map(item => item.id === field.id ? field : item) : [...prior.fields, field];
+      const timestamp = now();
+      const table = { ...prior, fields: validateFields(fields, bounded), revision: prior.revision + 1, updatedAt: timestamp };
+      const tables = snapshot.tables.map(item => item.id === table.id ? table : item);
+      assertLinkSchemas(tables);
+      const previous = prior.fields.find(item => item.id === field.id);
+      for (const record of snapshot.records.filter(item => item.tableId === table.id)) {
+        const value = fieldValue(record, field.id);
+        assert(!value || !previous?.link || previous.link.targetTableId === field.link?.targetTableId,
+          'CONFLICT', 'Clear existing links before changing the target table');
+        validateValues(table.fields, record.values);
+      }
+      const changes = EMPTY_CHANGES();
+      changes.putTables.push(table);
+      return write(snapshot.base.id, payload.expectedRevision, { ...snapshot, base: nextBase(snapshot, timestamp), tables }, changes, { table });
     }
 
     if (operation === 'table.rename') {
@@ -175,6 +212,7 @@ export function createBaseEngine({ adapter, authorize, idFactory = defaultIdFact
       const timestamp = now();
       const record = createRecord(recordId, snapshot.base.id, table.id, values, 1, timestamp);
       const records = [...snapshot.records, record];
+      await checkLinkedRecord(request, table, record, records);
       const bytes = jsonBytes(records);
       assert(bytes <= bounded.maxSerializedBytesPerBase, 'LIMIT_EXCEEDED', 'The base data-size limit was reached');
       const next = { ...snapshot, base: nextBase(snapshot, timestamp, records.length, bytes), records };
@@ -197,6 +235,7 @@ export function createBaseEngine({ adapter, authorize, idFactory = defaultIdFact
       const timestamp = now();
       const record = { ...prior, values: validateValues(table.fields, payload.values), revision: prior.revision + 1, updatedAt: timestamp };
       const records = snapshot.records.map(item => item.id === record.id ? record : item);
+      await checkLinkedRecord(request, table, record, records);
       const bytes = jsonBytes(records);
       assert(bytes <= bounded.maxSerializedBytesPerBase, 'LIMIT_EXCEEDED', 'The base data-size limit was reached');
       const next = { ...snapshot, base: nextBase(snapshot, timestamp, records.length, bytes), records };
@@ -214,6 +253,11 @@ export function createBaseEngine({ adapter, authorize, idFactory = defaultIdFact
       expectedRevision(payload.expectedRecordRevision, 'expectedRecordRevision');
       assert(prior.revision === payload.expectedRecordRevision, 'CONFLICT', 'The record revision changed; reload before deleting');
       const records = snapshot.records.filter(item => item.id !== prior.id);
+      for (const table of snapshot.tables) {
+        const fields = table.fields.filter(field => field.link?.targetTableId === prior.tableId);
+        assert(!records.some(record => record.tableId === table.id && fields.some(field => fieldValue(record, field.id)?.includes(prior.id))),
+          'CONFLICT', 'Remove incoming record links before deleting this record');
+      }
       const bytes = jsonBytes(records);
       const timestamp = now();
       const next = { ...snapshot, base: nextBase(snapshot, timestamp, records.length, bytes), records };

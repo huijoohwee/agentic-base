@@ -67,6 +67,7 @@ export function TableViewHeader(args: {
                     toggleTargets="icon+chevron"
                     menu={({ close }: { close: () => void }) => (
                       <ColumnHeaderMenu
+                        onEditField={props.onEditField ? () => props.onEditField?.(c.id) : undefined}
                         ariaLabel={`Column menu: ${c.name}`}
                         closeMenu={close}
                         typeSummaryLabel="Type"

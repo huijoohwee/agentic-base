@@ -15,7 +15,13 @@ membership.to('x');   // the same edge
 membership.from('b'); // []
 ```
 
-Configure bookmark parameter names with `createRecordLinkCodec({ fragment, views })`. Each view declares `view`, an optional `record` parameter name (defaults to the view name), and an optional `group` parameter name. Use `href({ view, record, group })` to link a record or a group and `parse(location.hash)` to resolve it. The host owns evidence, visibility, history, filtering and pagination. Once the linked row is on the current page, pass `selectedRowId`, `onActivateRow`, and `revealSelection: true` to the table update to move keyboard focus after rendering.
+Configure bookmark parameter names with `createRecordLinkCodec({ fragment, views })`. Each view declares `view`, an optional `record` parameter name (defaults to the view name), and an optional `group` parameter name. Declare `requireGroup: true` when record IDs must be scoped to their table or collection. Use `href({ view, record, group })` to link a record or a group and `parse(location.hash)` to resolve it. The host owns evidence, visibility, history, filtering and pagination. Once the linked row is on the current page, pass `selectedRowId`, `onActivateRow`, and `revealSelection: true` to the table update to move keyboard focus after rendering.
+
+### Record link fields
+
+Use `field.set` with a base revision, table ID and field definition to add or edit a field. A `recordLink` field stores target record IDs. Its `link` settings specify `targetTableId`, `displayFieldId`, `supportingFieldIds` and `multiple`. Single and multiple links use the same array representation. Existing links must fit the new settings. A record with incoming links must be unlinked before deletion.
+
+Use `createRecordFieldIndex(tables, records)` on an authorized snapshot for picker choices and incoming and outgoing links. Load the linked table workspace with `loadRecordWorkspace()`, passing the host’s operation runner and shared table renderer. Load the reusable editor and picker with `loadRecordFieldControls()`. Both accept save callbacks so the host owns persistence. In the local app, open a column menu and choose **Edit field**, or open **Linked records** to add a field and follow links between rows. Bookmarks restore the table and selected record.
 
 ## Local demo
 

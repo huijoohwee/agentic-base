@@ -33,6 +33,7 @@ export type TableViewProps = {
   ariaLabel?: string
   onNewRecord?: () => void
   onAddColumn?: (args: { name: string; columnType: ViewColumnType }) => void
+  onEditField?: (columnId: string) => void
   onChangeColumnType?: (args: { columnId: string; nextType: ViewColumnType }) => void
   onHideColumnInView?: (columnId: string) => void
   onUpsertColumnFilter?: (args: { columnId: string; columnKind: ViewModel['columns'][number]['kind']; op: 'contains' | 'equals' | 'includes'; value: string }) => void
@@ -315,6 +316,7 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
         toggleAllNestedRows={toggleAllNestedRows}
         toggleNestedRow={toggleNestedRow}
         onUpdateCell={onUpdateCell}
+        onEditField={props.onEditField}
         onChangeColumnType={props.onChangeColumnType}
         onHideColumnInView={props.onHideColumnInView}
         onUpsertColumnFilter={props.onUpsertColumnFilter}
