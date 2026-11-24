@@ -28,6 +28,8 @@ export type ViewModel = {
 }
 
 export type KanbanHostAdapter = {
+  literalText?: boolean
+  initialGroupSize?: number
   theme: {
     badge: { chip: string }
     button: { hoverBg: string }

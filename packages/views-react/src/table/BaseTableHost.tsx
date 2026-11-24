@@ -112,7 +112,7 @@ function useDismissableColumnHeaderMenu(args: {
   }, [args.open, args.onClose, args.rootRef, args.triggerRef, args.surfaceRef])
 }
 
-function BaseTagChip({ value }: { value: string }) {
+export function BaseTagChip({ value }: { value: string }) {
   const palette = [
     ['#f3f4f6', '#d1d5db', '#4b5563'], ['#eff6ff', '#bfdbfe', '#1d4ed8'],
     ['#fefce8', '#fde68a', '#a16207'], ['#f0fdf4', '#bbf7d0', '#15803d'],
@@ -123,8 +123,13 @@ function BaseTagChip({ value }: { value: string }) {
   const fixedTone = ({ todo: 0, doing: 1, done: 3, backlog: 0, wip: 1, blocked: 4, '1': 7, '2': 5, '3': 6, scalar: 4, map: 4, list: 4, pending: 7, keep: 3, remove: 4, accessibility: 1, 'brand profile': 0, token: 1, theme: 1, component: 1, guideline: 1, example: 1 } as Record<string, number>)[key]
   let hash = 0
   for (let index = 0; index < key.length; index += 1) hash = (hash * 31 + key.charCodeAt(index)) >>> 0
-  const tone = palette[fixedTone ?? hash % palette.length]!
-  return <span title={value} style={{ display: 'inline-flex', alignItems: 'center', minWidth: 0, maxWidth: '100%', overflow: 'hidden', padding: '2px 8px', border: `1px solid ${tone[1]}`, borderRadius: 4, background: tone[0], color: tone[2], whiteSpace: 'nowrap', fontSize: 12, lineHeight: '15px', fontWeight: 500 }}>
+  const index = fixedTone ?? hash % palette.length
+  const tone = palette[index]!
+  const darkInk = ['#cbd5e1', '#93c5fd', '#fcd34d', '#86efac', '#fca5a5', '#d8b4fe', '#fda4af', '#fdba74'][index]
+  const ink = 'light-dark(' + tone[2] + ', ' + darkInk + ')'
+  const fill = 'light-dark(' + tone[0] + ', color-mix(in srgb, ' + darkInk + ' 10%, var(--agentic-base-surface, Canvas)))'
+  const border = 'light-dark(' + tone[1] + ', color-mix(in srgb, ' + darkInk + ' 52%, var(--agentic-base-surface, Canvas)))'
+  return <span title={value} style={{ display: 'inline-flex', alignItems: 'center', minWidth: 0, maxWidth: '100%', overflow: 'hidden', padding: '2px 8px', border: '1px solid ' + border, borderRadius: 4, background: fill, color: ink, whiteSpace: 'nowrap', fontSize: 12, lineHeight: '15px', fontWeight: 500 }}>
     <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</span>
   </span>
 }

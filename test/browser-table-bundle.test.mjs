@@ -17,3 +17,49 @@ test('a table-only browser consumer retains responsive styles and omits the char
   const css = result.outputFiles.find(file => file.path.endsWith('.css'))
   assert.match(css.text, /data-agentic-table-fit/u)
 })
+
+test('the offline board and layout toolbar use the shared owners', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const manifest = JSON.parse(await readFile(new URL('../packages/views-react/dist/browser-data-view.manifest.json', import.meta.url)))
+  for (const source of ['kanban/KanbanView.tsx', 'kanban/KanbanCard.tsx', 'browser/RecordViewToolbar.tsx']) {
+    assert.ok(manifest.inputs.some(entry => entry.path.endsWith(source)))
+  }
+  const { JSDOM } = await import('jsdom')
+  const dom = new JSDOM('<main></main>', { pretendToBeVisual: true })
+  const prevWindow = globalThis.window, prevDocument = globalThis.document, prevElement = globalThis.Element
+  globalThis.Element = dom.window.Element
+  globalThis.window = dom.window
+  globalThis.document = dom.window.document
+  try {
+    const { mountDataView, mountRecordViewToolbar } = await import('../packages/views-react/dist/browser-data-view.js')
+    const root = document.querySelector('main')
+    const columns = ['Route', 'Status', 'Source'].map(name => ({ id: name, name }))
+    const rows = Array.from({ length: 15 }, (_, i) => ({ id: String(i), cells: [`Item ${i}`, 'Mapped', 'https://example.invalid/'] }))
+    const board = { layout: 'kanban', groupByColumnId: 'Status', columns, rows }
+    assert.throws(() => mountDataView(root, { ...board, groupByColumnId: 'Missing' }), /grouping column/)
+    let selected
+    const handle = mountDataView(root, { ...board, onActivateRow: id => { selected = id } })
+    async function until(fn) {
+      for (let i = 0; i < 100; i++) {
+        const result = fn(); if (result) return result
+        await new Promise(resolve => setTimeout(resolve, 10))
+      }
+      assert.fail('Expected browser state')
+    }
+    await until(() => root.querySelector('[data-base-card]'))
+    assert.equal(root.querySelectorAll('[data-base-card]').length, 12)
+    assert.equal(root.querySelector('a'), null)
+    root.querySelector('[aria-label="Show more Mapped records"]').click()
+    await until(() => root.querySelectorAll('[data-base-card]').length === 15)
+    root.querySelector('[data-base-card]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    assert.equal(selected, '0')
+    handle.destroy()
+    const toolbar = mountRecordViewToolbar(root, { label: 'Record views', layout: 'table', onLayoutChange: value => { selected = value }, actions: [] })
+    const select = await until(() => root.querySelector('select'))
+    select.value = 'kanban'; select.dispatchEvent(new window.Event('change', { bubbles: true }))
+    assert.equal(selected, 'kanban')
+    toolbar.destroy()
+  } finally {
+    globalThis.Element = prevElement; globalThis.window = prevWindow; globalThis.document = prevDocument; dom.window.close()
+  }
+})
