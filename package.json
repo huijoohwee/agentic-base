@@ -56,10 +56,22 @@
     "react-dom": "^18.3.1"
   },
   "peerDependenciesMeta": {
-    "d3": {
+    "agentic-design-system": {
       "optional": true
     },
     "@types/d3": {
+      "optional": true
+    },
+    "d3": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
       "optional": true
     }
   },
