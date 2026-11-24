@@ -1,6 +1,8 @@
 import React from 'react'
 import { mountBrowserView } from './mountBrowserView'
 import { TableHostProvider } from '../table/TableHostContext'
+import { KanbanHostProvider, KanbanView } from '../kanban/KanbanView'
+import { browserKanbanHost } from './BrowserKanbanHost'
 import { TableView } from '../table/TableView'
 import { MultiDimTableView } from '../table/MultiDimTableView'
 import { createBaseTableHost } from '../table/BaseTableHost'
@@ -25,7 +27,8 @@ export type DataViewBrowserState = {
   onDeselectRow?: (rowId: string) => void
   onSelectionChange?: (selectedRowIds: string[]) => void
   onOrientationChange?: (orientation: 'rows' | 'columns') => void
-  layout?: 'table' | 'multiDimensional'
+  layout?: 'table' | 'multiDimensional' | 'kanban'
+  groupByColumnId?: string
   orientation?: 'rows' | 'columns'
   ariaLabel?: string
 }
@@ -76,7 +79,9 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   const orientation = input.orientation ?? 'rows'
   if (orientation !== 'rows' && orientation !== 'columns') throw new TypeError('Invalid data view orientation.')
   const layout = input.layout ?? 'table'
-  if (layout !== 'table' && layout !== 'multiDimensional') throw new TypeError('Invalid data view layout.')
+  if (layout !== 'table' && layout !== 'multiDimensional' && layout !== 'kanban') throw new TypeError('Invalid data view layout.')
+  const groupByColumnId = input.groupByColumnId
+  if (layout === 'kanban' ? !fieldIds.has(groupByColumnId ?? '') : groupByColumnId !== undefined) throw new TypeError('Kanban requires a declared grouping column.')
   if (input.onOrientationChange !== undefined && typeof input.onOrientationChange !== 'function') throw new TypeError('Invalid data view orientation callback.')
   if (input.onOrientationChange !== undefined && layout !== 'multiDimensional') throw new TypeError('Orientation changes require the multi-dimensional layout.')
   const ariaLabel = string(input.ariaLabel ?? 'Table view', limits.labelChars, 'label', true)
@@ -96,7 +101,7 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   }
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
-  const state = { columns, rows, layout, orientation, ariaLabel, selectedRowId, selectedRowIds }
+  const state = { columns, rows, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
   return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange, onOrientationChange: input.onOrientationChange }
 }
@@ -133,7 +138,7 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
       cells: hasHierarchy ? [...row.cells, row.depth ? `L${row.depth}` : ''] : [...row.cells],
     })),
     titleColumnId: columns[0]!.id,
-    groupByColumnId: null,
+    groupByColumnId: state.groupByColumnId ?? null,
   }
   const tableProps = {
     view,
@@ -152,6 +157,14 @@ function BrowserDataView({ state }: { state: DataViewBrowserState }) {
     tableFit: 'container' as const,
     rowHeightPreset: 'comfortable' as const,
     fieldLineMode: 'single' as const,
+  }
+  if (state.layout === 'kanban') {
+    return <div className="agentic-base-data-view base-browser-kanban" role="region" aria-label={state.ariaLabel}>
+      <KanbanHostProvider value={browserKanbanHost}>
+        <KanbanView view={view} canMutate={false} onActivateRow={state.onActivateRow}
+          onUpdateCell={tableProps.onUpdateCell} onNewRecord={tableProps.onUpdateCell} />
+      </KanbanHostProvider>
+    </div>
   }
   return <TableHostProvider value={browserTableHost}>
     {state.layout === 'multiDimensional'

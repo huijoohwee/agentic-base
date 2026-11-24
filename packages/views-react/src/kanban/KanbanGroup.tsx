@@ -60,6 +60,9 @@ export const KanbanGroup = React.memo(function KanbanGroup(props: KanbanGroupPro
     isCommitFlash: !!props.isCommitFlash,
     indicatorColor: host.primaryIndicator,
   })
+  const pageSize = !props.canMutate ? host.initialGroupSize : undefined
+  const [limit, setLimit] = React.useState(pageSize)
+  const visibleRows = limit === undefined ? props.group.rows : props.group.rows.slice(0, limit)
   const [expanded, setExpanded] = React.useState(true)
   const toggleExpanded = React.useCallback(() => {
     setExpanded(prev => !prev)
@@ -152,7 +155,7 @@ export const KanbanGroup = React.memo(function KanbanGroup(props: KanbanGroupPro
             className={host.classes.kanbanCardList}
             aria-label={`Cards in ${groupLabel}`}
           >
-            {props.group.rows.map((row, index) => {
+            {visibleRows.map((row, index) => {
               const title = String(row.cells[props.titleIndex] ?? '')
               const rowGroupValue = String(row.cells[props.groupByIndex] ?? '').trim()
               return (
@@ -190,6 +193,9 @@ export const KanbanGroup = React.memo(function KanbanGroup(props: KanbanGroupPro
               )
             })}
 
+            {limit !== undefined && pageSize && limit < props.group.rows.length ? (
+              <li><button type="button" aria-label={`Show more ${groupLabel} records`} onClick={() => setLimit(limit + pageSize)}>Show more</button></li>
+            ) : null}
             {props.canMutate ? (
               <KanbanNewRecordDividerRow onClick={() => props.onNewRecord({ [groupByColumnId]: groupValue })} />
             ) : null}

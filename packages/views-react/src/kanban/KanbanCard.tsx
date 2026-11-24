@@ -142,6 +142,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
 
   const urlEntries = React.useMemo(() => {
     const out: Array<{ id: string; label: string; href: string }> = []
+    if (host.literalText) return out
     for (const colIndex of props.otherColumnIndices) {
       const col = props.view.columns[colIndex]
       if (col.kind !== 'text') continue
@@ -151,7 +152,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
       out.push({ id: col.id, label: col.name || 'Link', href: raw })
     }
     return out
-  }, [props.otherColumnIndices, props.row.cells, props.view.columns])
+  }, [host.literalText, props.otherColumnIndices, props.row.cells, props.view.columns])
 
   const tags = React.useMemo(() => {
     const out: string[] = []
@@ -175,7 +176,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
         if (col.kind !== 'text') return []
         const raw = String(props.row.cells[colIndex] ?? '').trim()
         if (!raw) return []
-        if (raw.includes('://') || raw.startsWith('mailto:')) return []
+        if (!host.literalText && (raw.includes('://') || raw.startsWith('mailto:'))) return []
         return [{
           id: col.id,
           label: col.name || 'Text',
