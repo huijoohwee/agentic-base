@@ -13,8 +13,8 @@
   "inputs": [
     {
       "path": "packages/views-react/src/InlineCodeList.tsx",
-      "bytes": 417,
-      "sha256": "61162a4e189294e0a93803d0b294b5928999da9382fbb48a67e93ede494973a7"
+      "bytes": 412,
+      "sha256": "4e64b85c3441e332fdd97fa212af558c09962173d48962a34814ca548ffcc574"
     },
     {
       "path": "packages/views-react/src/browser/BrowserKanbanHost.tsx",
@@ -48,8 +48,8 @@
     },
     {
       "path": "packages/views-react/src/browser/browserDataView.css",
-      "bytes": 18875,
-      "sha256": "f3b52dd63cffb7b9593eebd2692e6d299e67e5a5bfa3a9eed9fda6ed5106db6d"
+      "bytes": 18732,
+      "sha256": "60533fbf1b5993ed95d01b7151e19fe57a369666f46c20276097e207e5e6d7be"
     },
     {
       "path": "packages/views-react/src/browser/index.ts",
@@ -240,8 +240,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 388160,
-      "sha256": "97501303978f1d50dd8af42f56c8cdf7cfc3de9d6ce80e431405bc42cfc9441c"
+      "bytes": 388155,
+      "sha256": "db269c027f757b9cb72b086a052f1fd2e9856e6986a3a00600378ba5f647e76e"
     },
     {
       "path": "dropdown-menus.js",
@@ -250,8 +250,8 @@
     },
     {
       "path": "browser-data-view.css",
-      "bytes": 51256,
-      "sha256": "cd5e4269145450805a4ce0f5c90833b6e90bfcd3bc7ebb9dafa82866acca9ab3"
+      "bytes": 51129,
+      "sha256": "4877d86e6b4fbdef93af2f2d6b17295dfa72ac9ef25b45441473d7465254b077"
     }
   ]
 }

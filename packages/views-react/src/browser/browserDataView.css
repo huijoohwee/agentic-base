@@ -331,11 +331,6 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.agentic-base-inline-code {
-  font-family: var(--agentic-font-mono, ui-monospace, monospace);
-  font-size: .92em;
-  overflow-wrap: anywhere;
-}
 .agentic-base-data-empty { color: var(--agentic-base-muted); }
 .agentic-base-data-more {
   min-height: 44px;
