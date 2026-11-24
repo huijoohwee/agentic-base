@@ -58,6 +58,9 @@ test('the offline board and layout toolbar use the shared owners', async () => {
     selected = undefined
     root.querySelector('[data-base-card]').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     assert.equal(selected, '0')
+    handle.update({ layout: 'table', columns, rows })
+    const heading = await until(() => root.querySelector('th button'))
+    assert.equal(heading.style.color, 'inherit', 'column controls inherit the table header contrast')
     handle.destroy()
     const toolbar = mountRecordViewToolbar(root, { label: 'Record views', layout: 'table', onLayoutChange: value => { selected = value }, actions: [] })
     const select = await until(() => root.querySelector('select'))
