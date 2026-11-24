@@ -20,6 +20,7 @@
     <nav id="workbook-actions" class="agentic-toolbar" data-scroll aria-label="Workbook actions">
       <button id="sample" class="agentic-toolbar-item" type="button">Create sample</button>
       <button id="blank" class="agentic-toolbar-item" type="button">Create blank</button>
+      <button id="browse-cells" class="agentic-toolbar-item" type="button" aria-controls="cell-records" aria-expanded="false" disabled>Browse populated cells</button>
       <button id="mark-worksheet" class="agentic-toolbar-item" type="button" aria-controls="grid-section" aria-pressed="false">Mark worksheet</button>
       <button id="download" class="agentic-toolbar-item" type="button" disabled>Download snapshot</button>
       <button id="reload" class="agentic-toolbar-item" type="button">Discard draft &amp; reload</button>
@@ -47,6 +48,7 @@
         <thead id="column-head" class="agentic-table-head"></thead><tbody id="grid-body"></tbody>
       </table>
     </section>
+    <section id="cell-records" hidden aria-label="Worksheet record browser"></section>
     <section id="snapshots" class="agentic-dashboard-card" aria-labelledby="snapshot-title">
       <h2 id="snapshot-title" class="agentic-panel-section-header">Restore a snapshot</h2>
       <p data-dashboard-primitive="text">Download the accepted workbook before replacing it. Restore keeps its identity. An imported clone replaces the active workbook with a new identity.</p>
