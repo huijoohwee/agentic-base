@@ -25,6 +25,7 @@ export type DataViewBrowserState = {
   selectedRowId?: string | null
   revealSelection?: boolean
   selectedRowIds?: readonly string[]
+  onEditField?: (columnId: string) => void
   onActivateRow?: (rowId: string) => void
   onDeselectRow?: (rowId: string) => void
   onSelectionChange?: (selectedRowIds: string[]) => void
@@ -103,6 +104,7 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
       selectedIds.add(rowId)
     }
   }
+  if (input.onEditField !== undefined && typeof input.onEditField !== 'function') throw new TypeError('Invalid field editor callback.')
   if (input.onActivateRow !== undefined && typeof input.onActivateRow !== 'function') throw new TypeError('Invalid data view activation callback.')
   if (input.onDeselectRow !== undefined && typeof input.onDeselectRow !== 'function') throw new TypeError('Invalid data view deselection callback.')
   if (input.wrapText !== undefined && typeof input.wrapText !== 'boolean') throw new TypeError('Invalid text wrapping option.')
@@ -112,7 +114,7 @@ function snapshot(input: DataViewBrowserState): DataViewBrowserState {
   }
   const state = { columns, rows, wrapText: input.wrapText, layout, groupByColumnId, orientation, ariaLabel, selectedRowId, selectedRowIds, revealSelection }
   if (new TextEncoder().encode(JSON.stringify(state)).byteLength > limits.payloadBytes) throw new RangeError('Data view payload limit exceeded.')
-  return { ...state, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange, onOrientationChange: input.onOrientationChange }
+  return { ...state, onEditField: input.onEditField, onActivateRow: input.onActivateRow, onDeselectRow: input.onDeselectRow, onSelectionChange: input.onSelectionChange, onOrientationChange: input.onOrientationChange }
 }
 
 const browserTableHost = createBaseTableHost({
@@ -159,6 +161,7 @@ function BrowserDataView({ state, target }: { state: DataViewBrowserState; targe
     view,
     columnTypesById: Object.fromEntries(state.columns.filter(column => column.kind === 'number').map(column => [column.id, 'number' as const])),
     visibleColumnIds: state.columns.map(column => column.id),
+    onEditField: state.onEditField,
     canMutate: false,
     canConfigure: false,
     ariaLabel: state.ariaLabel,

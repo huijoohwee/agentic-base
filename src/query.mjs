@@ -9,7 +9,7 @@ function compareValue(left, right) {
   if (typeof left === 'boolean' && typeof right === 'boolean') return Number(left) - Number(right);
   const leftText = String(left);
   const rightText = String(right);
-  return leftText < rightText ? -1 : 1;
+  return leftText < rightText ? -1 : leftText > rightText ? 1 : 0;
 }
 
 function matches(node, values) {
@@ -18,7 +18,11 @@ function matches(node, values) {
   if (node.any) return node.any.some(child => matches(child, values));
   const actual = values[node.fieldId];
   if (node.operator === 'isEmpty') return actual === null || actual === undefined || actual === '';
-  if (node.operator === 'contains') return typeof actual === 'string' && actual.includes(node.value);
+  if (node.operator === 'contains') return (typeof actual === 'string' || Array.isArray(actual)) && actual.includes(node.value);
+  if (Array.isArray(actual) && ['eq', 'ne'].includes(node.operator)) {
+    const equal = Array.isArray(node.value) && actual.length === node.value.length && actual.every((id, i) => id === node.value[i]);
+    return node.operator === 'eq' ? equal : !equal;
+  }
   switch (node.operator) {
     case 'eq': return actual === node.value;
     case 'ne': return actual !== node.value;

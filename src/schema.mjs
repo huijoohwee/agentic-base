@@ -14,7 +14,7 @@ export const DEFAULT_LIMITS = Object.freeze({
 });
 
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/u;
-const FIELD_TYPES = new Set(['text', 'number', 'boolean', 'date', 'select']);
+const FIELD_TYPES = new Set(['text', 'number', 'boolean', 'date', 'select', 'recordLink']);
 const FILTER_OPERATORS = new Set(['eq', 'ne', 'contains', 'gt', 'gte', 'lt', 'lte', 'isEmpty']);
 const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 
@@ -52,6 +52,20 @@ export function validateField(field, limits = DEFAULT_LIMITS) {
   assert(FIELD_TYPES.has(field.type), 'INVALID_SCHEMA', `Unsupported field type: ${String(field.type)}`);
   assert(field.required === undefined || typeof field.required === 'boolean', 'INVALID_SCHEMA', 'required must be boolean');
   const result = { id, name, type: field.type, required: field.required === true };
+  if (field.type === 'recordLink') {
+    const link = plainObject(field.link, 'record link settings');
+    assert(Object.keys(link).every(key => ['targetTableId', 'displayFieldId', 'supportingFieldIds', 'multiple'].includes(key)),
+      'INVALID_SCHEMA', 'Unknown record link setting');
+    const targetTableId = validateId(link.targetTableId, 'target table');
+    const displayFieldId = validateId(link.displayFieldId, 'display field');
+    const supportingFieldIds = link.supportingFieldIds ?? [];
+    assert(Array.isArray(supportingFieldIds) && supportingFieldIds.length < limits.maxFieldsPerTable,
+      'INVALID_SCHEMA', 'Invalid picker fields');
+    const ids = supportingFieldIds.map(id => validateId(id, 'picker field'));
+    assert(new Set([displayFieldId, ...ids]).size === ids.length + 1, 'INVALID_SCHEMA', 'Picker fields must be distinct');
+    assert(typeof link.multiple === 'boolean', 'INVALID_SCHEMA', 'Record link multiplicity must be explicit');
+    result.link = { targetTableId, displayFieldId, supportingFieldIds: ids, multiple: link.multiple };
+  } else assert(field.link === undefined, 'INVALID_SCHEMA', 'Only record link fields can define link settings');
   if (field.type === 'select') {
     assert(Array.isArray(field.options) && field.options.length > 0 && field.options.length <= 64,
       'INVALID_SCHEMA', 'Select fields require 1–64 options');
@@ -91,6 +105,12 @@ export function validateFieldValue(field, value) {
     case 'date':
       assert(validDateOnly(value), 'INVALID_RECORD', `Field ${field.id} must be a valid ISO date-only value`);
       return value;
+    case 'recordLink': {
+      assert(Array.isArray(value) && (field.link.multiple || value.length <= 1), 'INVALID_RECORD', 'Invalid number of linked records');
+      const ids = value.map(id => validateId(id, 'linked record'));
+      assert(new Set(ids).size === ids.length && (ids.length || !field.required), 'INVALID_RECORD', 'Invalid linked record selection');
+      return ids.length ? ids : null;
+    }
     case 'select':
       assert(typeof value === 'string' && field.options.includes(value), 'INVALID_RECORD', `Field ${field.id} must match a select option`);
       return value;
@@ -129,13 +149,14 @@ function validateFilterNode(node, fields, limits, depth, state) {
   const field = fields.find(item => item.id === fieldId);
   assert(field, 'INVALID_QUERY', `Unknown filter field: ${fieldId}`);
   assert(FILTER_OPERATORS.has(node.operator), 'INVALID_QUERY', `Unsupported filter operator: ${String(node.operator)}`);
-  if (node.operator === 'contains') assert(field.type === 'text', 'INVALID_QUERY', 'contains is only valid for text fields');
+  if (node.operator === 'contains') assert(['text', 'recordLink'].includes(field.type), 'INVALID_QUERY', 'contains requires text or record links');
   if (['gt', 'gte', 'lt', 'lte'].includes(node.operator)) {
     assert(['number', 'date', 'text'].includes(field.type), 'INVALID_QUERY', 'Ordering requires a number, date, or text field');
   }
   assert(node.operator === 'isEmpty' || hasOwn(node, 'value'), 'INVALID_QUERY', 'Filter comparison requires a value');
   const result = { fieldId, operator: node.operator };
-  if (node.operator !== 'isEmpty') result.value = validateFieldValue({ ...field, required: false }, node.value);
+  if (node.operator === 'contains' && field.type === 'recordLink') result.value = validateId(node.value, 'linked record');
+  else if (node.operator !== 'isEmpty') result.value = validateFieldValue({ ...field, required: false }, node.value);
   return result;
 }
 

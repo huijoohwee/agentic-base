@@ -55,6 +55,7 @@ export function ColumnsTableView(props: {
   toggleAllNestedRows: () => void
   toggleNestedRow: (rowId: string) => void
   onUpdateCell: (args: { rowId: string; columnId: string; nextValue: string }) => void
+  onEditField?: (columnId: string) => void
   onChangeColumnType?: (args: { columnId: string; nextType: ViewColumnType }) => void
   onHideColumnInView?: (columnId: string) => void
   onUpsertColumnFilter?: (args: { columnId: string; columnKind: ViewModel['columns'][number]['kind']; op: 'contains' | 'equals' | 'includes'; value: string }) => void
@@ -118,6 +119,7 @@ export function ColumnsTableView(props: {
                 <TableColumnHeader scope="row">
                   <ColumnHeaderPropertyTypeMenu ariaLabel={`Column type: ${column.name}`} label={column.name} Icon={Icon} portal portalPlacement="bottom-start" toggleTargets="icon+chevron" menu={({ close }: { close: () => void }) => (
                     <ColumnHeaderMenu
+                        onEditField={props.onEditField ? () => props.onEditField?.(column.id) : undefined}
                       ariaLabel={`Column menu: ${column.name}`} closeMenu={close} typeSummaryLabel="Type" typeValueLabel={labelForViewColumnType(type)} disableTypeChange={!allowTypeEdit}
                       renderTypeMenu={() => <ColumnTypeMenu ariaLabel={`Column type: ${column.name}`} value={type} close={close} disabled={!allowTypeEdit} onSelect={(next: ViewColumnType) => { if (allowTypeEdit) props.onChangeColumnType?.({ columnId: column.id, nextType: next }) }} />}
                       onHideInView={props.canConfigure && props.onHideColumnInView ? () => props.onHideColumnInView?.(column.id) : undefined}

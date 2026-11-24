@@ -373,3 +373,9 @@
 .base-browser-kanban button:disabled { display: none; }
 .base-browser-kanban .base-board-count { padding-inline: .25rem; font-variant-numeric: tabular-nums; }
 .base-browser-kanban [data-base-card-actions] { display: flex; }
+
+.agentic-record-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--agentic-dashboard-card-gap); }
+.agentic-record-table { height: min(65dvh, 48rem); min-width: 0; overflow: hidden; border: 1px solid var(--agentic-base-border); border-radius: var(--agentic-control-radius); }
+.agentic-record-form { display: grid; align-items: start; gap: var(--agentic-dashboard-card-gap); }
+.agentic-record-form label, .agentic-record-picker label { display: flex; align-items: center; flex-wrap: wrap; gap: var(--agentic-control-padding-inline); }
+.agentic-record-form fieldset, .agentic-record-picker fieldset { min-width: 0; border: 1px solid var(--agentic-base-border); border-radius: var(--agentic-control-radius); }

@@ -51,7 +51,7 @@
           </form>
         </section>
 
-        <section class="panel agentic-dashboard-card" aria-labelledby="views-title">
+        <section id="projections" class="panel agentic-dashboard-card" aria-labelledby="views-title">
           <div class="section-heading">
             <div>
               <h2 id="views-title" class="title-with-icon">
@@ -61,6 +61,7 @@
               <p id="view-caption" class="muted">Inspect a projection through the shared table view.</p>
             </div>
             <div class="agentic-toolbar" data-scroll role="group" aria-label="View controls">
+              <button type="button" class="secondary" id="open-links">Linked records</button>
               <label class="view-picker">
                 <span class="view-picker-label agentic-fact-label">
                   <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
@@ -95,6 +96,7 @@
           <p id="message" class="message" role="status" aria-live="polite"></p>
           <div id="table-host" class="table-host" role="region" aria-label="Shared interactive table"></div>
         </section>
+        <section id="linked-workspace" class="panel agentic-dashboard-card" aria-label="Linked records" hidden></section>
       </section>
 
       <footer class="agentic-dashboard-detail">

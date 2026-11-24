@@ -136,6 +136,7 @@ export function BaseColumnHeaderMenu(props: AnyProps) {
   const action = (callback: (() => void) | undefined) => () => { callback?.(); props.closeMenu?.() }
   const disabled = (name: string, callback?: (() => void)) => Boolean(props[`disable${name}`] || !callback)
   return <DropdownMenuSurface onDismiss={() => props.closeMenu?.()} role="menu" aria-label={props.ariaLabel} data-kg-selection-target="column-header-menu-content" className="agentic-base-column-menu-list">
+    {props.onEditField && <MenuAction label="Edit field" icon={Link2} target="column-edit-field" onSelect={action(props.onEditField)} />}
     <li>
       {props.renderTypeMenu?.() ?? <BaseColumnTypeMenu ariaLabel={props.ariaLabel} value={props.typeValue} disabled={props.disableTypeChange} close={props.closeMenu} />}
     </li>
