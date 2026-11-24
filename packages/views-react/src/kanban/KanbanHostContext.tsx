@@ -18,7 +18,7 @@ export type KanbanParagraphEntry = { id: string; label: string; value: string }
 
 /** Source-neutral record projection consumed by shared view components. */
 export type ViewColumnKind = 'text' | 'select' | 'multi-select'
-export type ViewColumn = { id: string; name: string; kind: ViewColumnKind; options?: string[] }
+export type ViewColumn = { id: string; name: string; kind: ViewColumnKind; format?: 'code-list'; options?: string[] }
 export type ViewRow = { id: string; cells: string[] }
 export type ViewModel = {
   columns: ViewColumn[]

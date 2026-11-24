@@ -1,4 +1,5 @@
 import React from 'react'
+import { InlineCodeList } from '../InlineCodeList'
 import type { ViewModel } from '../kanban/KanbanHostContext'
 import type { ViewColumnType } from './ViewColumnType'
 import { columnTypeToBaseKind, defaultColumnTypeForInferredKind } from './ViewColumnType'
@@ -481,7 +482,9 @@ export const TableView = React.memo(function TableView(props: TableViewProps) {
                     }}
                     role={canMutate ? 'button' : undefined}
                   >
-                    {renderRichCell(value, { sourceLineNestedTable: c.name === 'Content' ? sourceLineNestedTableCells.get(r.id) : null }) || (uiType === 'checkbox' ? (
+                    {c.format === 'code-list' && value ? (
+                      <InlineCodeList value={value} className={[dataViewTableValueClass, fieldLineClassName].join(' ')} />
+                    ) : renderRichCell(value, { sourceLineNestedTable: c.name === 'Content' ? sourceLineNestedTableCells.get(r.id) : null }) || (uiType === 'checkbox' ? (
                       <span className={['inline-flex items-center gap-2', themeTokens.text.primary].join(' ')}>
                         <input
                           type="checkbox"

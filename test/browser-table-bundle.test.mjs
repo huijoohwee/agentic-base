@@ -54,6 +54,23 @@ test('the offline board and layout toolbar use the shared owners', async () => {
       rows: [{ id: 'family', cells: [value, '12'] }], wrapText: true })
     await until(() => sample.querySelector('tbody td .agentic-base-data-field-wrap')?.textContent === value)
     assert.equal(sample.querySelectorAll('tbody td')[1].textContent, '12')
+    const literals = 'read.catalog, read.candles, <field>'
+    const codeState = {
+      columns: [{ id: 'family', name: 'Family' }, { id: 'status', name: 'Status' }, { id: 'ops', name: 'Operations', format: 'code-list' }],
+      rows: [{ id: 'example', cells: ['Quotes', 'Mapped', literals] }], wrapText: true,
+    }
+    for (const mode of [{ layout: 'table' }, { layout: 'multiDimensional', orientation: 'columns' }, { layout: 'kanban', groupByColumnId: 'status' }]) {
+      grid.update({ ...codeState, ...mode })
+      const target = mode.layout === 'kanban' ? '[data-base-card] code' : 'tbody td code'
+      await until(() => sample.querySelectorAll(target).length === 3)
+      const tokens = [...sample.querySelectorAll(target)]
+      assert.deepEqual(tokens.map(token => token.textContent), ['read.catalog', 'read.candles', '<field>'])
+      assert.equal(tokens[0].parentElement.textContent, literals)
+      assert.equal(sample.querySelector('field'), null)
+      grid.update({ columns, rows: [] })
+      await until(() => !sample.querySelector('code'))
+    }
+    assert.throws(() => grid.update({ ...codeState, columns: [{ id: 'n', name: 'Count', kind: 'number', format: 'code-list' }] }), /text format/)
     grid.destroy()
     await until(() => root.querySelector('[data-base-card]'))
     assert.equal(root.querySelectorAll('[data-base-card]').length, 12)

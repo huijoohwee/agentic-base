@@ -1,4 +1,5 @@
 import React from 'react'
+import { InlineCodeList } from '../InlineCodeList'
 import type { ViewModel, ViewRow } from './KanbanHostContext'
 import { ArrowDown, ArrowRight, ArrowUp, ChevronDown, CircleChevronDown, Expand, Link2, List, MoreHorizontal, Trash2 } from 'lucide-react'
 import { KanbanCardDropPreview } from './KanbanDropPreview'
@@ -145,7 +146,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
     if (host.literalText) return out
     for (const colIndex of props.otherColumnIndices) {
       const col = props.view.columns[colIndex]
-      if (col.kind !== 'text') continue
+      if (col.kind !== 'text' || col.format === 'code-list') continue
       const raw = String(props.row.cells[colIndex] ?? '').trim()
       if (!raw) continue
       if (!raw.includes('://') && !raw.startsWith('mailto:')) continue
@@ -176,7 +177,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
         if (col.kind !== 'text') return []
         const raw = String(props.row.cells[colIndex] ?? '').trim()
         if (!raw) return []
-        if (!host.literalText && (raw.includes('://') || raw.startsWith('mailto:'))) return []
+        if (col.format !== 'code-list' && !host.literalText && (raw.includes('://') || raw.startsWith('mailto:'))) return []
         return [{
           id: col.id,
           label: col.name || 'Text',
@@ -243,7 +244,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
       >
         <section className="flex items-center gap-2 min-w-0 flex-1">
           <KanbanTypeBadge size="sm" />
-          <InlineTextEditor
+          {!props.canMutate && props.view.columns[titleColumnIndex]?.format === 'code-list' ? <InlineCodeList value={props.title} /> : <InlineTextEditor
             value={props.title}
             ariaLabel={`Title for ${props.row.id}`}
             placeholder="Add title"
@@ -259,7 +260,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
             }}
             displayClassName={['text-sm font-semibold leading-5 m-0', host.classes.textTruncate, host.theme.text.primary].join(' ')}
             editorClassName={`${host.classes.cardTitleEditor} text-sm font-semibold leading-5`}
-          />
+          />}
         </section>
         <menu
           {...{ [host.markers.cardActions]: '1' }}
@@ -453,7 +454,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
                   <p className={['m-0 text-xs font-semibold uppercase tracking-normal', host.theme.text.tertiary].join(' ')}>
                     {entry.label}
                   </p>
-                  <InlineTextEditor
+                  {!props.canMutate && props.view.columns.find(column => column.id === entry.id)?.format === 'code-list' ? <InlineCodeList value={entry.value} /> : <InlineTextEditor
                     value={entry.value}
                     ariaLabel={`${entry.label} for ${props.row.id}`}
                     placeholder={`Add ${entry.label.toLowerCase()}`}
@@ -469,7 +470,7 @@ export const KanbanCard = React.memo(function KanbanCard(props: KanbanCardProps)
                     }}
                     displayClassName={['m-0 mt-1 text-xs leading-5', host.theme.text.secondary].join(' ')}
                     editorClassName={`mt-1 ${host.classes.cardMultilineEditor} text-xs leading-5`}
-                  />
+                  />}
                 </section>
               )
             })}
