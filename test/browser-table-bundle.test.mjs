@@ -123,6 +123,16 @@ test('the offline board and layout toolbar use the shared owners', async () => {
     const select = await until(() => root.querySelector('select'))
     select.value = 'kanban'; select.dispatchEvent(new window.Event('change', { bubbles: true }))
     assert.equal(selected, 'kanban')
+    assert.equal(root.querySelector('[aria-label="Export view"]'), null)
+    const changed = { label: 'Records', layout: 'table', onLayoutChange() {}, actions: [],
+      exports: [{ id: 'csv', label: 'CSV', invoke() { selected = 'download' } }] }
+    toolbar.update(changed)
+    const trigger = await until(() => root.querySelector('[aria-label="Export view"]'))
+    trigger.click()
+    const format = await until(() => root.querySelector('[aria-label="Export format"] button'))
+    format.click()
+    assert.equal(selected, 'download')
+    assert.throws(() => toolbar.update({ ...changed, exports: [...changed.exports, ...changed.exports] }), /export action/i)
     toolbar.destroy()
   } finally {
     globalThis.Element = prevElement; globalThis.window = prevWindow; globalThis.document = prevDocument; dom.window.close()

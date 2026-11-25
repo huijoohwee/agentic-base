@@ -33,8 +33,8 @@
     },
     {
       "path": "packages/views-react/src/browser/RecordViewToolbar.tsx",
-      "bytes": 3254,
-      "sha256": "f12b362081d9b8a7fe59924f9931999863ae187072dab8c4f4c89d073152a3ea"
+      "bytes": 5078,
+      "sha256": "5e7724dec64ce8d9715c21853d157f79a6b68469a96765460cbf7dd603fae36f"
     },
     {
       "path": "packages/views-react/src/browser/base-profile.css",
@@ -245,8 +245,8 @@
   "outputs": [
     {
       "path": "browser-data-view.js",
-      "bytes": 391227,
-      "sha256": "aaa10cd2c591857a4c0f07ba9d6c778f4dc3aeeab4998a8e7a6bc67881b34b3e"
+      "bytes": 392738,
+      "sha256": "0080c5715d7dae058bf1e422a8d9acd4019bb6c6e80bb415466c8b962d111184"
     },
     {
       "path": "dropdown-menus.js",
