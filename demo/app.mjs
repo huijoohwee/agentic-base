@@ -1,7 +1,9 @@
 import { createBaseEngine, IndexedDBAdapter, loadRecordWorkspace } from '../src/index.mjs';
-import { mountDataView, mountRecordViewToolbar } from './browser-data-view.js?v=33';
+import { mountDataView, mountRecordViewToolbar } from './browser-data-view.js?v=34';
 import { enhanceSelects } from './dropdown-menus.js?v=31';
-enhanceSelects(document);
+for (const controls of document.querySelectorAll('#task-form, .projection-options, #linked-workspace')) {
+  enhanceSelects(controls);
+}
 
 const BASE_ID = 'demo_base_v1';
 const ACTOR_ID = 'local_demo_operator';
@@ -210,7 +212,9 @@ function renderSharedTable() {
   };
   if (state.layout === 'kanban') {
     // Region headings describe table groups. Only their children represent tasks.
-    if (state.view === 'table') view.rows = view.rows.filter(row => row.depth === 2);
+    if (state.view === 'table') {
+      view.rows = view.rows.filter(row => row.depth === 2).map(({ id, cells }) => ({ id, cells }));
+    }
     view.groupByColumnId = state.view === 'table' ? 'status' : view.columns[0].id;
   }
   if (state.view === 'table') view.onEditField = id => openLinks(id);
