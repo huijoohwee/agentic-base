@@ -29,7 +29,8 @@ for (const token of [
 
 require(html.includes('<body data-agentic-typography') && html.includes('view-picker-label agentic-fact-label'), 'demo must consume shared body and fact label typography')
 require(!/\b(?:font(?:-size|-family)?|line-height)\s*:/u.test(css.match(/:root\s*\{([^}]*)/u)?.[1] ?? ''), 'root font sizing would rescale the shared rem tokens')
-require(html.includes('href="/demo/browser-data-view.css?v=33"'), 'shared offline projection stylesheet is not loaded')
+const viewSheet = html.match(/href="(\/demo\/browser-data-view\.css\?v=\d+)"/u)?.[1]
+require(viewSheet && serviceWorker.includes(viewSheet), 'shared offline projection stylesheet is not loaded')
 require(html.includes('class="shell agentic-dashboard-layout"'), 'demo shell does not use the shared dashboard layout')
 require((html.match(/class="panel agentic-dashboard-card"/gu) ?? []).length >= 3, 'demo panels do not use the shared dashboard card')
 require(!Object.hasOwn(manifest, 'background_color') && !Object.hasOwn(manifest, 'theme_color'), 'PWA manifest duplicates shell colors')

@@ -24,6 +24,7 @@ p { line-height: var(--agentic-line-height-body); }
 .section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--agentic-dashboard-card-gap); }
 .title-with-icon { display: flex; align-items: center; gap: var(--agentic-control-padding-block); }
 .ui-icon { width: var(--agentic-icon-size-default); height: var(--agentic-icon-size-default); min-width: var(--agentic-icon-size-default); min-height: var(--agentic-icon-size-default); flex: none; }
+.projection-options { display: flex; flex-wrap: wrap; gap: var(--agentic-control-padding-inline); align-items: center; }
 .view-picker-label { display: flex; align-items: center; gap: var(--agentic-control-padding-block); }
 .muted { margin-block: var(--agentic-control-padding-block) 0; color: var(--agentic-base-text-secondary); }
 .task-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--agentic-menu-min-width)), 1fr)); gap: var(--agentic-dashboard-card-gap); margin-block-start: var(--agentic-dashboard-card-gap); }
@@ -34,5 +35,6 @@ p { line-height: var(--agentic-line-height-body); }
 .table-host { width: 100%; height: min(65dvh, 48rem); min-height: min(16rem, 40dvh); overflow: hidden; border: 1px solid var(--agentic-base-border); border-radius: var(--agentic-control-radius); background: var(--agentic-base-dashboard-panel-bg, Canvas); }
 .table-host:focus-visible, button:focus-visible { outline: var(--agentic-control-focus-width) solid var(--agentic-dashboard-primary); outline-offset: var(--agentic-control-focus-offset); }
 .message { min-height: var(--agentic-line-height-body); margin-block: var(--agentic-control-padding-block); color: var(--agentic-base-text-secondary); }
+.message:empty { display: none; }
 .message.error { color: var(--agentic-base-text-primary); font-weight: 700; }
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--agentic-control-padding-block) var(--agentic-dashboard-card-gap); padding: var(--agentic-control-padding-block); color: var(--agentic-base-text-secondary); }
