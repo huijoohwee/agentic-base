@@ -35,7 +35,7 @@ export function TableViewHeader(args: {
   return (
         <tr>
             {hasNestedRowHierarchy ? (
-              <TableColumnHeader aria-label="Nested row hierarchy" style={{ width: hierarchyColumnWidthPx }}>
+              <TableColumnHeader data-agentic-base-hierarchy-header="" aria-label="Nested row hierarchy" style={{ width: hierarchyColumnWidthPx }}>
                 <NestedRowsBulkToggle
                   collapsed={areAllNestedRowsCollapsed}
                   onToggle={toggleAllNestedRows}

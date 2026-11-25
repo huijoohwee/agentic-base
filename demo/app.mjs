@@ -1,5 +1,5 @@
 import { createBaseEngine, IndexedDBAdapter, loadRecordWorkspace } from '../src/index.mjs';
-import { mountDataView } from './browser-data-view.js?v=33';
+import { mountDataView, mountRecordViewToolbar } from './browser-data-view.js?v=33';
 import { enhanceSelects } from './dropdown-menus.js?v=31';
 enhanceSelects(document);
 
@@ -18,12 +18,11 @@ const engine = createBaseEngine({
 });
 
 const dom = Object.fromEntries(['setup', 'workspace', 'create-sample', 'reload', 'task-form', 'revision', 'message',
-  'table-host', 'month-picker', 'month', 'connection', 'offline-state', 'view-caption', 'view-kind', 'view-layout']
+  'table-host', 'month-picker', 'month', 'connection', 'offline-state', 'view-toolbar', 'view-kind']
   .map(id => [id, document.getElementById(id)]));
 const state = { tableId: 'demo_tasks_v1', baseRevision: null, view: 'table', layout: 'table', orientation: 'rows',
-  total: 0, showing: 0, refreshTicket: 0, viewData: null, tableHandle: null, selectedRowIds: [] };
+  total: 0, showing: 0, refreshTicket: 0, viewData: null, tableHandle: null, toolbarHandle: null, selectedRowIds: [] };
 const projectionLabels = { table: 'Table', matrix: 'Grouped matrix', kanban: 'Kanban', calendar: 'Calendar' };
-const layoutLabels = { table: 'Table', multiDimensional: 'Multi-dimensional Table' };
 
 function message(text, error = false) {
   dom.message.textContent = text;
@@ -184,12 +183,21 @@ function sharedTableData(projection) {
   throw new TypeError(`Unsupported shared table projection: ${String(projection.kind)}`);
 }
 
-function updateViewCaption() {
+function renderViewToolbar() {
   const subject = state.view === 'matrix' ? 'groups' : state.view === 'kanban' ? 'cards' : state.view === 'calendar' ? 'items' : 'records';
   const count = state.view === 'table' ? state.showing : state.viewData?.rows.length ?? 0;
   const coverage = state.view === 'table' ? `${count} of ${state.total} records`
     : `${count} ${subject} from ${state.showing} selected records (${state.total} total)`;
-  dom['view-caption'].textContent = `${coverage} · ${projectionLabels[state.view]} through ${layoutLabels[state.layout]}.`;
+  const controls = {
+    label: 'Views', status: coverage, layout: state.layout, actions: [],
+    onLayoutChange(layout) {
+      state.layout = layout;
+      renderSharedTable();
+      renderViewToolbar();
+    },
+  };
+  if (state.toolbarHandle) state.toolbarHandle.update(controls);
+  else state.toolbarHandle = mountRecordViewToolbar(dom['view-toolbar'], controls);
 }
 
 function renderSharedTable() {
@@ -200,6 +208,11 @@ function renderSharedTable() {
     orientation: state.layout === 'multiDimensional' ? state.orientation : 'rows',
     ariaLabel: `${projectionLabels[state.view]} projection in the shared table view`,
   };
+  if (state.layout === 'kanban') {
+    // Region headings describe table groups. Only their children represent tasks.
+    if (state.view === 'table') view.rows = view.rows.filter(row => row.depth === 2);
+    view.groupByColumnId = state.view === 'table' ? 'status' : view.columns[0].id;
+  }
   if (state.view === 'table') view.onEditField = id => openLinks(id);
   const visibleRowIds = new Set(view.rows.map(row => row.id));
   view.selectedRowIds = state.selectedRowIds.filter(id => visibleRowIds.has(id));
@@ -234,8 +247,8 @@ async function refresh() {
   setRevision(result.revision);
   state.viewData = sharedTableData(result.projection);
   renderSharedTable();
-  updateViewCaption();
-  message(state.total ? 'Local projection rendered by the shared Base table.' : 'No records yet. Add a task above to populate this shared table.');
+  renderViewToolbar();
+  message(state.total ? '' : 'No records yet. Add a task above to populate this shared table.');
 }
 
 async function addTask(event) {
@@ -289,11 +302,6 @@ dom['view-kind'].addEventListener('change', () => {
   state.view = dom['view-kind'].value;
   dom['month-picker'].hidden = state.view !== 'calendar';
   refresh().catch(error => message(error.message, true));
-});
-dom['view-layout'].addEventListener('change', () => {
-  state.layout = dom['view-layout'].value;
-  renderSharedTable();
-  updateViewCaption();
 });
 window.addEventListener('online', setConnection);
 window.addEventListener('offline', setConnection);

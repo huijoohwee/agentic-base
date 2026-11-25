@@ -58,9 +58,8 @@
                 <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M9 9h12"/></svg>
                 <span>Views</span>
               </h2>
-              <p id="view-caption" class="muted">Inspect a projection through the shared table view.</p>
             </div>
-            <div class="agentic-toolbar" data-scroll role="group" aria-label="View controls">
+            <div class="projection-options" role="group" aria-label="Projection options">
               <button type="button" class="secondary" id="open-links">Linked records</button>
               <label class="view-picker">
                 <span class="view-picker-label agentic-fact-label">
@@ -74,16 +73,6 @@
                   <option value="calendar">Calendar</option>
                 </select>
               </label>
-              <label class="view-picker">
-                <span class="view-picker-label agentic-fact-label">
-                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>
-                  Shared table layout
-                </span>
-                <select id="view-layout">
-                  <option value="table">Table</option>
-                  <option value="multiDimensional">Multi-dimensional Table</option>
-                </select>
-              </label>
               <label id="month-picker" class="month-picker" hidden>
                 <span class="view-picker-label agentic-fact-label">
                   <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
@@ -94,6 +83,7 @@
             </div>
           </div>
           <p id="message" class="message" role="status" aria-live="polite"></p>
+          <div id="view-toolbar"></div>
           <div id="table-host" class="table-host" role="region" aria-label="Shared interactive table"></div>
         </section>
         <section id="linked-workspace" class="panel agentic-dashboard-card" aria-label="Linked records" hidden></section>
