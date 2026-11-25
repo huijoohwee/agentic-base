@@ -42,7 +42,7 @@
 .agentic-base-data-view .agentic-base-menu-panel { color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); border: 1px solid var(--agentic-base-border); border-radius: 6px; box-shadow: var(--agentic-base-shadow-overlay); }
 .agentic-base-data-view .agentic-base-button-hover:hover { background: var(--agentic-base-action-hover); }
 .base-multi-dimensional-table { box-sizing: border-box; min-width: 0; }
-.base-multi-dimensional-table-pivot { box-sizing: border-box; min-height: 44px; padding: 0.55rem 0.8rem; border: 1px solid var(--agentic-base-border); border-radius: 0.65rem; color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); font: inherit; font-size: var(--agentic-font-size-body); font-weight: 600; cursor: pointer; }
+.base-multi-dimensional-table-pivot { box-sizing: border-box; min-height: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: 1px solid var(--agentic-base-border); border-radius: 0.65rem; color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); font: inherit; font-size: var(--agentic-font-size-body); font-weight: 600; cursor: pointer; }
 .base-multi-dimensional-table-pivot:hover { background: var(--agentic-base-action-hover); }
 .base-multi-dimensional-table-pivot:focus-visible { outline: 3px solid var(--agentic-base-focus); outline-offset: 2px; }
 
@@ -124,12 +124,14 @@
   box-sizing: border-box;
   font-size: var(--agentic-font-size-body);
   line-height: var(--agentic-line-height-body);
-  padding: 8px 12px;
   overflow-wrap: anywhere;
   text-align: left;
-  vertical-align: top;
   border-right: 1px solid var(--agentic-base-border);
   border-bottom: 1px solid var(--agentic-base-border);
+}
+.agentic-base-data-view .agentic-base-data-table tbody :is(th, td) {
+  padding: 8px 12px;
+  vertical-align: top;
 }
 .agentic-base-data-table .agentic-base-data-density-compact,
 .agentic-base-data-table .agentic-base-data-density-comfortable {
@@ -347,8 +349,8 @@
 }
 
 .base-record-controls { color: var(--agentic-base-text-primary); background: var(--agentic-base-surface); }
-.base-record-controls .agentic-table-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; padding: .25rem .5rem; border-bottom: 1px solid var(--agentic-base-border); }
-.base-record-controls button, .base-layout-picker { position: relative; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-width: 2.2rem; min-height: 2.2rem; padding: .35rem; border: 0; border-radius: .25rem; background: transparent; color: var(--agentic-base-text-secondary); cursor: pointer; }
+.base-record-controls .agentic-table-toolbar { border-bottom: 1px solid var(--agentic-base-border); }
+.base-record-controls button, .base-layout-picker { position: relative; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-width: var(--agentic-control-height); min-height: var(--agentic-control-height); padding: 0 var(--agentic-control-padding-inline); border: 0; border-radius: .25rem; background: transparent; color: var(--agentic-base-text-secondary); cursor: pointer; }
 .base-layout-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .base-record-controls svg, .base-browser-kanban svg { width: 1rem; height: 1rem; flex: none; }
 .base-record-controls button:enabled:hover, .base-layout-picker:hover, .base-record-controls button[aria-pressed=true] { color: var(--agentic-base-text-primary); background: var(--agentic-base-action-hover); }
