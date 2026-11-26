@@ -12,7 +12,7 @@
     <title>agentic-base local demo</title>
   </head>
   <body data-agentic-typography class="agentic-form-controls">
-    <main class="shell agentic-dashboard-layout">
+    <main class="shell agentic-dashboard-layout" aria-label="Agentic Base local demo" data-selection-target="base-demo">
       <header class="masthead agentic-dashboard-header">
         <div>
           <p class="eyebrow">LOCAL · OFFLINE · HEADLESS CORE</p>
@@ -28,7 +28,7 @@
         <button id="create-sample" class="primary" type="button">Create local sample</button>
       </section>
 
-      <section id="workspace" class="agentic-dashboard-sections" hidden>
+      <section id="workspace" class="agentic-dashboard-sections" aria-label="Task workspace" hidden>
         <section class="panel agentic-dashboard-card" aria-labelledby="add-title">
           <div class="section-heading">
             <div>
@@ -84,7 +84,7 @@
           </div>
           <p id="message" class="message" role="status" aria-live="polite"></p>
           <div id="view-toolbar"></div>
-          <div id="table-host" class="table-host" role="region" aria-label="Shared interactive table"></div>
+          <section id="table-host" class="table-host" role="region" aria-label="Shared interactive table"></section>
         </section>
         <section id="linked-workspace" class="panel agentic-dashboard-card" aria-label="Linked records" hidden></section>
       </section>
