@@ -45,7 +45,10 @@
     "dev": "node scripts/dev-server.mjs",
     "build:sheets": "node scripts/build-sheets.mjs --write",
     "check:sheets": "node --test test/sheets.test.mjs && node scripts/build-sheets.mjs --check",
-    "dev:sheets": "node scripts/build-sheets.mjs --write && node scripts/dev-server.mjs --sheets"
+    "dev:sheets": "node scripts/build-sheets.mjs --write && node scripts/dev-server.mjs --sheets",
+    "land": "agentic-os land",
+    "successor": "agentic-os successor",
+    "sync:canonical": "agentic-os canonical-sync"
   },
   "peerDependencies": {
     "@types/d3": "^7.4.3",
@@ -79,7 +82,7 @@
     "@types/d3": "7.4.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "agentic-design-system": "github:huijoohwee/agentic-design-system#77dd319c0b91104464c121de93f09ebe58358c82",
+    "agentic-design-system": "github:huijoohwee/agentic-design-system#8693ed5ac9a78086bd26cf412e2e734afebb24cb",
     "agentic-os": "https://codeload.github.com/huijoohwee/agentic-os/tar.gz/a6d6f9d3d58a6c6c134dd6056295a1bef04b5769",
     "d3": "7.9.0",
     "esbuild": "0.25.12",
