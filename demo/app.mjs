@@ -98,6 +98,7 @@ async function createSample() {
     ]);
     dom.setup.hidden = true;
     dom.workspace.hidden = false;
+    dom.workspace.dataset.selectionTarget = 'base-workspace';
     await refresh();
   } catch (error) {
     message(error.message, true);
@@ -231,7 +232,10 @@ function renderSharedTable() {
     };
   }
   if (state.tableHandle) state.tableHandle.update(view);
-  else state.tableHandle = mountDataView(dom['table-host'], view);
+  else {
+    state.tableHandle = mountDataView(dom['table-host'], view);
+    dom['table-host'].dataset.selectionTarget = 'base-data-view';
+  }
 }
 
 async function refresh() {
@@ -284,6 +288,7 @@ async function loadExisting() {
     state.baseRevision = base.revision;
     dom.setup.hidden = true;
     dom.workspace.hidden = false;
+    dom.workspace.dataset.selectionTarget = 'base-workspace';
     await refresh();
   } catch (error) {
     if (error.message.startsWith('NOT_FOUND:')) return;
