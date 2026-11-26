@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 22
       - name: Enforce shared owner reuse
-        uses: huijoohwee/agentic-os/.github/actions/owner-reuse@b4471443ad25e100a41c9ac0a7c655a1f1d24beb
+        uses: huijoohwee/agentic-os/.github/actions/owner-reuse@1dc3bf749ea2cf91769eabd41d1c3f83e73b7702
         with:
           baseline: 0157d4c1f34be78096a1588778f23903538dfbe3
       - name: Install the exact development toolchain
