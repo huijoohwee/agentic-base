@@ -82,3 +82,12 @@ test('typed input round trips literal formulas, numeric-looking text and boolean
   for(const item of [{type:'text',value:'=A1'}, {type:'text',value:'001'}, {type:'text',value:'true'}, {type:'text',value:"'x"}, {type:'text',value:''},cell(true),cell(12),cell('name')]) assert.deepEqual(parseInput(inputOf(item)),item);
   assert.equal(parseInput(''),null);
 });
+
+test('the embedded public API returns accepted formula occurrences and canonical targets', async () => {
+  const { extractFormulaReferences } = await import('@agentic-base/views-react/sheets');
+  const input = '=$a$1 + SUM(B$2:$C3)';
+  const refs = extractFormulaReferences(input);
+  assert.deepEqual(refs.map(ref => [input.slice(ref.start, ref.end), ref.addresses]), [
+    ['$a$1', ['A1']], ['B$2:$C3', ['B2', 'C2', 'B3', 'C3']],
+  ]);
+});
